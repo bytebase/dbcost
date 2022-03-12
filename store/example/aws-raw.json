@@ -1,0 +1,99 @@
+{
+  "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json",
+  "formatVersion": "v1.0",
+  "disclaimer": "This pricing list is for informational purposes only. All prices are subject to the additional terms included in the pricing pages on http://aws.amazon.com. All Free Tier prices are also subject to the terms included at https://aws.amazon.com/free/",
+  "offerCode": "AmazonRDS",
+  "version": "20220308234450",
+  "publicationDate": "2022-03-08T23:44:50Z",
+  "products": {
+    "DWU8JKV7X97V997R": {
+      "sku": "DWU8JKV7X97V997R",
+      "productFamily": "Database Instance",
+      "attributes": {
+        "servicecode": "AmazonRDS",
+        "location": "Asia Pacific (Sydney)",
+        "locationType": "AWS Region",
+        "instanceType": "db.t4g.xlarge",
+        "currentGeneration": "Yes",
+        "instanceFamily": "General purpose",
+        "vcpu": "4",
+        "physicalProcessor": "AWS Graviton2",
+        "memory": "16 GiB",
+        "storage": "EBS Only",
+        "networkPerformance": "Up to 5 Gigabit",
+        "processorArchitecture": "64-bit",
+        "engineCode": "2",
+        "databaseEngine": "MySQL",
+        "licenseModel": "No license required",
+        "deploymentOption": "Single-AZ",
+        "usagetype": "APS2-InstanceUsage:db.t4g.xlarge",
+        "operation": "CreateDBInstance:0002",
+        "instanceTypeFamily": "T4G",
+        "normalizationSizeFactor": "8",
+        "regionCode": "ap-southeast-2",
+        "servicename": "Amazon Relational Database Service"
+      }
+    }
+  },
+  "terms": {
+    "OnDemand": {
+      "DWU8JKV7X97V997R": {
+        "DWU8JKV7X97V997R.JRTCKXETXF": {
+          "offerTermCode": "JRTCKXETXF",
+          "sku": "DWU8JKV7X97V997R",
+          "effectiveDate": "2022-03-01T00:00:00Z",
+          "priceDimensions": {
+            "DWU8JKV7X97V997R.JRTCKXETXF.6YS6EN2CT7": {
+              "rateCode": "DWU8JKV7X97V997R.JRTCKXETXF.6YS6EN2CT7",
+              "description": "$ 0.406 per RDS db.t4g.xlarge Single-AZ instance hour (or partial hour) running MySQL",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "0.4060000000"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {}
+        }
+      }
+    },
+    "Reserved": {
+      "9QH3PUGXCYKNCYPB": {
+        "9QH3PUGXCYKNCYPB.HU7G6KETJZ": {
+          "offerTermCode": "HU7G6KETJZ",
+          "sku": "9QH3PUGXCYKNCYPB",
+          "effectiveDate": "2019-05-31T23:59:59Z",
+          "priceDimensions": {
+            "9QH3PUGXCYKNCYPB.HU7G6KETJZ.2TG2D8R56U": {
+              "rateCode": "9QH3PUGXCYKNCYPB.HU7G6KETJZ.2TG2D8R56U",
+              "description": "Upfront Fee",
+              "unit": "Quantity",
+              "pricePerUnit": {
+                "USD": "1577"
+              },
+              "appliesTo": []
+            },
+            "9QH3PUGXCYKNCYPB.HU7G6KETJZ.6YS6EN2CT7": {
+              "rateCode": "9QH3PUGXCYKNCYPB.HU7G6KETJZ.6YS6EN2CT7",
+              "description": "Oracle SE2 (License Included), db.t3.xl reserved instance applied",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "0.1800000000"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "1yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "Partial Upfront"
+          }
+        }
+      }
+    }
+  }
+}

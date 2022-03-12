@@ -1,0 +1,22 @@
+{
+  "url": "// https://rds-buy.aliyun.com/buy/describeClassList.json?OrderType=BUY&CommodityCode=rds&dBInstanceId=&RegionId=us-east-1",
+  "code": "200",
+  "data": {
+    "Items": [
+      {
+        "ClassCode": "pg.n2.2c.1m",
+        "ClassGroup": "通用型(新)",
+        "Cpu": "2 ",
+        "MaxConnections": "400",
+        "MaxIOMBPS": "N/A",
+        "MaxIOPS": "N/A",
+        "MemoryClass": " 4G(通用型新)",
+        "ReferencePrice": "4320"
+      }
+    ],
+    "RegionId": "cn-hongkong",
+    "RequestId": "84DB3D60-B186-5991-BA20-0ADCA6C36B8F"
+  },
+  "requestId": "84DB3D60-B186-5991-BA20-0ADCA6C36B8F",
+  "successResponse": true
+}
