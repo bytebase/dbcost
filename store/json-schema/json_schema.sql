@@ -57,7 +57,7 @@ CREATE TABLE term ();
 
 -- Product 
 -- AWS and GCP are very different in term of their RDS product
--- AWS has coupious instances with different specification to let user choose from
+-- AWS(also aliyun) has coupious instances with different specification to let user choose from
 -- GCP provides great flexibility that allows user to customize their RDS's spec
 CREATE TABLE product (
     id SERIAL PRIMARY KEY,
