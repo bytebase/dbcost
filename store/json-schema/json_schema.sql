@@ -7,6 +7,7 @@ CREATE TYPE row_status AS ENUM ('NORMAL', 'ARCHIVED');
 CREATE TABLE contributor (
     -- 0 is reserverd for system bot
     id SERIAL PRIMARY KEY,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
     created_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
@@ -23,11 +24,14 @@ CREATE TABLE contributor (
 -- cloud provider
 CREATE TABLE cloud_provider (
     id SERIAL PRIMARY KEY,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
+    creator_id INTEGER NOT NULL REFERENCES contributor (id),
     created_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
             now()
     ),
+    updater_id INTEGER NOT NULL REFERENCES contributor (id),
     updated_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
@@ -38,11 +42,14 @@ CREATE TABLE cloud_provider (
 
 CREATE TABLE region (
     id SERIAL PRIMARY KEY,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
+    creator_id INTEGER NOT NULL REFERENCES contributor (id),
     created_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
             now()
     ),
+    updater_id INTEGER NOT NULL REFERENCES contributor (id),
     updated_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
@@ -53,7 +60,26 @@ CREATE TABLE region (
 );
 
 -- maybe splic the price related field in TABLE profuct to TABLE term ?
-CREATE TABLE term ();
+CREATE TABLE term (
+    id SERIAL PRIMARY KEY,
+    external_id TEXT NOT NULL,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
+    creator_id INTEGER NOT NULL REFERENCES contributor (id),
+    created_ts BIGINT NOT NULL DEFAULT extract(
+        epoch
+        from
+            now()
+    ),
+    updater_id INTEGER NOT NULL REFERENCES contributor (id),
+    updated_ts BIGINT NOT NULL DEFAULT extract(
+        epoch
+        from
+            now()
+    ),
+    charge_type TEXT NOT NULL (type in ('OnDemand', 'Reserved')),
+    length TEXT NOT NULL (type in ('hr', '1yr', '2yr', '3yr')),
+    price_usd INTEGER NOT NULL
+);
 
 -- Product 
 -- AWS and GCP are very different in term of their RDS product
@@ -62,11 +88,14 @@ CREATE TABLE term ();
 CREATE TABLE product (
     id SERIAL PRIMARY KEY,
     external_id TEXT NOT NULL,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
+    creator_id INTEGER NOT NULL REFERENCES contributor (id),
     created_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
             now()
     ),
+    updater_id INTEGER NOT NULL REFERENCES contributor (id),
     updated_ts BIGINT NOT NULL DEFAULT extract(
         epoch
         from
@@ -74,10 +103,8 @@ CREATE TABLE product (
     ),
     cloud_provider_id INTEGER NOT NULL REFERENCES cloud_provider(id),
     region_id INTEGER NOT NULL REFERENCES region(id),
-    --
-    type TEXT NOT NULL (type in ('On Demand', 'Reserved')),
-    length TEXT NOT NULL (type in ('hr', '1yr', '2yr', '3yr')),
-    family TEXT NOT NULL (type in ('General', '...')),
+    -- 
+    family TEXT NOT NULL (type in ('GeneralPurpose', 'MemoryOptimized')),
     name TEXT NOT NULL,
     price_usd INTEGER NOT NULL,
     engine TEXT NOT NULL (type IN ('MySQL', 'PostgreSQL')),
@@ -91,6 +118,7 @@ CREATE TABLE product (
 -- benchmark store the relevant benchmark test for DB
 CREATE TABLE benchmark(
     id SERIAL PRIMARY KEY,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
     creator_id INTEGER NOT NULL REFERENCES contributor (id),
     created_ts BIGINT NOT NULL DEFAULT extract(
         epoch
@@ -109,6 +137,7 @@ CREATE TABLE benchmark(
 -- task store the task 
 CREATE TABLE task(
     id SERIAL PRIMARY KEY,
+    row_status row_status NOT NULL DEFAULT 'NORMAL',
     row_status row_status NOT NULL DEFAULT 'NORMAL',
     creator_id INTEGER NOT NULL REFERENCES contributor (id),
     created_ts BIGINT NOT NULL DEFAULT extract(
