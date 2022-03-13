@@ -81,11 +81,11 @@ CREATE TABLE term (
     price_usd INTEGER NOT NULL
 );
 
--- Product 
+-- db_instance 
 -- AWS and GCP are very different in term of their RDS product
 -- AWS(also aliyun) has coupious instances with different specification to let user choose from
 -- GCP provides great flexibility that allows user to customize their RDS's spec
-CREATE TABLE product (
+CREATE TABLE db_instance (
     id SERIAL PRIMARY KEY,
     external_id TEXT NOT NULL,
     row_status row_status NOT NULL DEFAULT 'NORMAL',
@@ -106,12 +106,13 @@ CREATE TABLE product (
     -- 
     family TEXT NOT NULL (type in ('GeneralPurpose', 'MemoryOptimized')),
     name TEXT NOT NULL,
-    price_usd INTEGER NOT NULL,
+    price INTEGER NOT NULL,
+    currency INTEGER NOT NULL,
     engine TEXT NOT NULL (type IN ('MySQL', 'PostgreSQL')),
     vcpu INTEGER NOT NULL,
     memory INTEGER NOT NULL,
     processor TEXT NOT NULL,
-    -- this field this very tricky for different vendors have different way representation
+    -- this field this very tricky for different vendors have different way of representation
     storage TEXT NOT NULL
 );
 
