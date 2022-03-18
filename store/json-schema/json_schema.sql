@@ -76,9 +76,10 @@ CREATE TABLE term (
         from
             now()
     ),
-    charge_type TEXT NOT NULL (type in ('OnDemand', 'Reserved')),
-    length TEXT NOT NULL (type in ('hr', '1yr', '2yr', '3yr')),
-    price_usd INTEGER NOT NULL
+    charge_type TEXT NOT NULL (type in ('ONDEMAND', 'RESERVED')),
+    length TEXT NOT NULL (type in ('1HR', '1YR', '2YR', '3YR')),
+    currency TEXT NOT NULL (type in ('USD')),
+    price INTEGER NOT NULL
 );
 
 -- db_instance 
@@ -104,11 +105,11 @@ CREATE TABLE db_instance (
     cloud_provider_id INTEGER NOT NULL REFERENCES cloud_provider(id),
     region_id INTEGER NOT NULL REFERENCES region(id),
     -- 
-    family TEXT NOT NULL (type in ('GeneralPurpose', 'MemoryOptimized')),
+    family TEXT NOT NULL (type in ('GENERAL', 'MEMORY')),
     name TEXT NOT NULL,
-    price INTEGER NOT NULL,
     currency INTEGER NOT NULL,
-    engine TEXT NOT NULL (type IN ('MySQL', 'PostgreSQL')),
+    price INTEGER NOT NULL,
+    engine TEXT NOT NULL (type IN ('MYSQL', 'POSTGRESQL')),
     vcpu INTEGER NOT NULL,
     memory INTEGER NOT NULL,
     processor TEXT NOT NULL,
