@@ -1,12 +1,10 @@
-<script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
-</script>
-
 <template>
-  <div>
-    <HelloWorld msg="Hello db-cose" />
-  </div>
+  <cost-table />
 </template>
+
+<script setup lang="ts">
+import CostTable from "./components/CostTable.vue";
+</script>
 
 <style>
 #app {
