@@ -2,4 +2,4 @@ export type RowStatus = "ARCHIVED" | "NORMAL";
 
 export type Currency = "USD";
 
-export type EngineType = "MYSQL" | "POSTGRESQL";
+export type EngineType = "MySQL" | "POSTGRESQL";

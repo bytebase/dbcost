@@ -4,6 +4,26 @@
 
 <script setup lang="ts">
 import CostTable from "./components/CostTable.vue";
+import aws from "../../store/example/aws-raw.json";
+import {
+  AWSConvertor,
+  AWSDBInstanceAttributeAdaptor,
+  DBInstance,
+} from "./types";
+import { useDBInstanceStore } from "./stores/dbInstance";
+
+const store = useDBInstanceStore();
+
+const dbInstanceList = Object.entries(aws.products).reduce((pre, cur) => {
+  if (cur[1].productFamily !== "Database Instance") {
+    return pre;
+  }
+  const attr = cur[1].attributes;
+  const converted = AWSConvertor(attr, AWSDBInstanceAttributeAdaptor);
+  return pre.concat(converted);
+}, [] as DBInstance[]);
+
+store.dbInstanceList = dbInstanceList;
 </script>
 
 <style>

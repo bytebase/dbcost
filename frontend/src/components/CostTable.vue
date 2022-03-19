@@ -1,10 +1,10 @@
 <template>
-  <n-data-table :columns="columns"></n-data-table>
+  <n-data-table :columns="columns" :data="store.dbInstanceList"></n-data-table>
 </template>
 
 <script setup lang="ts">
-import { DBInstance } from "../types";
 import { NDataTable } from "naive-ui";
+import { useDBInstanceStore } from "../stores/dbInstance";
 
 const columns = [
   {
@@ -25,9 +25,7 @@ const columns = [
   },
 ];
 
-const props = defineProps<{
-  dbInstanceList?: DBInstance[];
-}>();
+const store = useDBInstanceStore();
 </script>
 
 <style scoped></style>
