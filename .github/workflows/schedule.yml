@@ -1,6 +1,7 @@
 name: schedule
 
-# on:
+# for now we trigger this event manually
+on: workflow_dispatch
 #   schedule:
 #     - cron: "0 * * * *"
 
