@@ -16,11 +16,11 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v2
 
-      - name: \[AWS\] Fetch latest instance & price info
+      - name: ---AWS--- Fetch latest instance & price info
         run: |
-          SAVE_PATH=./store/aws/`date +%Y-%m-%dF`
+          SAVE_PATH=./store/data/`date +%Y-%m-%dF`
           mkdir -p $SAVE_PATH
-          cat ./.github/www/aws | xargs curl > $SAVE_PATH
+          cat ./.github/www/aws | xargs curl > ${SAVE_PATH}/aws.json
 
       - name: Push to the remote repo
         run: |
