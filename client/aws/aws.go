@@ -106,7 +106,7 @@ type Price struct {
 // InfoEndPoint is the instance info endpoint
 const InfoEndPoint = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json"
 
-// GetInstancePrice get the instance and pricing info
+// GetPriceInstance get the pricing and instance info
 func (c *Client) GetPriceInstance() ([]*Price, []*Instance, error) {
 	res, err := http.Get(InfoEndPoint)
 	if err != nil {
@@ -207,4 +207,20 @@ func extractInstance(rawData *rawJSON) ([]*Instance, error) {
 	}
 
 	return instanceList, nil
+}
+
+// RegionInfoEndPoint is the endpoint for the region info mapping, e.g.: ap-east-1 --> Asia Pacific (Hong Kong)
+const RegionInfoEndPoint = "https://github.com/boto/botocore/blob/develop/botocore/data/endpoints.json"
+
+// GetRegionMapping get the mapping between the region code and the human redable description
+func (c *Client) GetRegionMapping() (map[string]string, error) {
+	res, err := http.Get(RegionInfoEndPoint)
+	if err != nil {
+		return nil, fmt.Errorf("Fail to fetch the region file, [internal]: %v", err)
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("An http error occur , [internal]: %v", err)
+	}
+
+	panic("Implement me")
 }
