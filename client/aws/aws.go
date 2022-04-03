@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-	"os"
 )
 
 // Client is the client struct
@@ -19,9 +19,6 @@ func NewClient() Client {
 		httpClient: http.Client{},
 	}
 }
-
-// InfoEndPoint is the instance info endpoint
-const InfoEndPoint = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json"
 
 type rawJSON struct {
 	Product interface{} `json:"products"`
@@ -56,63 +53,6 @@ type ProductEntry struct {
 
 // InstanceRecord is the Record of the instance info
 type InstanceRecord map[ID]ProductEntry
-
-// GetInstance get the instance
-func (c *Client) GetInstance(endpoint string) ([]*Instance, error) {
-	// res, err := http.Get(endpoint)
-	// if err != nil {
-	// 	return false, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
-	// }
-
-	// if res.StatusCode != 200 {
-	// 	return false, fmt.Errorf("An http error , [internal]: %v", err)
-	// }
-
-	file, err := os.ReadFile("../../store/example/aws-raw.json")
-
-	if err != nil {
-		return nil, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
-	}
-
-	rawData := &rawJSON{}
-	if err = json.Unmarshal(file, rawData); err != nil {
-		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
-	}
-
-	byteProducts, err := json.Marshal(rawData.Product)
-	if err != nil {
-		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
-	}
-
-	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
-	var rawEntryList InstanceRecord
-	if err := productsDecoder.Decode(&rawEntryList); err != nil {
-		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
-	}
-
-	var instanceList []*Instance
-	for id, entry := range rawEntryList {
-		if entry.ProductFamily != "Database Instance" /* filter non-db instance */ ||
-			entry.Attributes.DeploymentOption != "Single-AZ" /* filter multi-region deployment */ {
-			continue
-		}
-		instance := &Instance{
-			ID:                 string(id),
-			ServiceCode:        entry.Attributes.ServiceCode,
-			Location:           entry.Attributes.Location,
-			RegionCode:         entry.Attributes.RegionCode,
-			InstanceType:       entry.Attributes.InstanceType,
-			InstanceFamily:     entry.Attributes.InstanceFamily,
-			VCpu:               entry.Attributes.VCpu,
-			Memory:             entry.Attributes.Memory,
-			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
-			NetworkPerformance: entry.Attributes.NetworkPerformance,
-		}
-		instanceList = append(instanceList, instance)
-	}
-
-	return instanceList, nil
-}
 
 // PriceType is the charging type of the price
 type PriceType string
@@ -163,27 +103,43 @@ type Price struct {
 	USD         string
 }
 
-// GetPrice get the price
-func (c *Client) GetPrice(endpoint string) ([]*Price, error) {
-	// res, err := http.Get(endpoint)
-	// if err != nil {
-	// 	return false, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
-	// }
+// InfoEndPoint is the instance info endpoint
+const InfoEndPoint = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json"
 
-	// if res.StatusCode != 200 {
-	// 	return false, fmt.Errorf("An http error , [internal]: %v", err)
-	// }
-
-	file, err := os.ReadFile("../../store/example/aws-raw.json")
+// GetInstancePrice get the instance and pricing info
+func (c *Client) GetPriceInstance() ([]*Price, []*Instance, error) {
+	res, err := http.Get(InfoEndPoint)
 	if err != nil {
-		return nil, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
+		return nil, nil, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
+	}
+	if res.StatusCode != 200 {
+		return nil, nil, fmt.Errorf("An http error occur , [internal]: %v", err)
+	}
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Fail when reading response data , [internal]: %v", err)
 	}
 
 	rawData := &rawJSON{}
-	if err = json.Unmarshal(file, rawData); err != nil {
-		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
+	if err := json.Unmarshal(data, rawData); err != nil {
+		return nil, nil, fmt.Errorf("Fail when unmarshaling response data , [internal]: %v", err)
 	}
 
+	priceInfo, err := extractPrice(rawData)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Fail when extrating pricing info, [internal]: %v", err)
+	}
+
+	instanceInfo, err := extractInstance(rawData)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Fail when extrating instance info, [internal]: %v", err)
+	}
+
+	return priceInfo, instanceInfo, nil
+}
+
+func extractPrice(rawData *rawJSON) ([]*Price, error) {
 	bytePrice, err := json.Marshal(rawData.Term)
 	if err != nil {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
@@ -216,4 +172,39 @@ func (c *Client) GetPrice(endpoint string) ([]*Price, error) {
 	}
 
 	return priceList, nil
+}
+
+func extractInstance(rawData *rawJSON) ([]*Instance, error) {
+	byteProducts, err := json.Marshal(rawData.Product)
+	if err != nil {
+		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
+	}
+	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
+	var rawEntryList InstanceRecord
+	if err := productsDecoder.Decode(&rawEntryList); err != nil {
+		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
+	}
+
+	var instanceList []*Instance
+	for id, entry := range rawEntryList {
+		if entry.ProductFamily != "Database Instance" /* filter non-db instance */ ||
+			entry.Attributes.DeploymentOption != "Single-AZ" /* filter multi-region deployment */ {
+			continue
+		}
+		instance := &Instance{
+			ID:                 string(id),
+			ServiceCode:        entry.Attributes.ServiceCode,
+			Location:           entry.Attributes.Location,
+			RegionCode:         entry.Attributes.RegionCode,
+			InstanceType:       entry.Attributes.InstanceType,
+			InstanceFamily:     entry.Attributes.InstanceFamily,
+			VCpu:               entry.Attributes.VCpu,
+			Memory:             entry.Attributes.Memory,
+			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
+			NetworkPerformance: entry.Attributes.NetworkPerformance,
+		}
+		instanceList = append(instanceList, instance)
+	}
+
+	return instanceList, nil
 }
