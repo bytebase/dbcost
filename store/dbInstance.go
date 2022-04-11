@@ -11,6 +11,7 @@ import (
 	"github.com/bytebase/dbcost/client"
 )
 
+// Term is the pricing term of a given instance
 type Term struct {
 	EngineCode string            `json:"engineCode"`
 	Type       client.ChargeType `json:"type"`
@@ -18,6 +19,7 @@ type Term struct {
 	USD        float64           `json:"usd"`
 }
 
+// Region is region-price info of a given instance
 type Region struct {
 	Name     string  `json:"name"`
 	TermList []*Term `json:"termList"`
@@ -125,6 +127,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 	return dbInstanceList, nil
 }
 
+// Save save DBInstanceList to local .json file
 func Save(dbInstanceList []*DBInstance, filePath string) error {
 	fd, err := os.Create(filePath)
 	if err != nil {
