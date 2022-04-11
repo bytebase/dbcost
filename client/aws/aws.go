@@ -48,7 +48,7 @@ type PriceDimensionRaw struct {
 // PriceRaw is the raw price struct marshaled from the aws json file
 type PriceRaw struct {
 	Dimension map[string]PriceDimensionRaw `json:"priceDimensions"`
-	Term      *client.PriceTerm            `json:"termAttributes"`
+	Term      *client.OfferPayload         `json:"termAttributes"`
 }
 
 // InfoEndPoint is the instance info endpoint
@@ -94,13 +94,13 @@ func extractPrice(rawData *rawJSON) ([]*client.Offer, error) {
 	}
 
 	priceDecoder := json.NewDecoder(bytes.NewReader(bytePrice))
-	var rawEntry map[client.ChargeType]map[string]map[string]PriceRaw
+	var rawEntry map[client.OfferType]map[string]map[string]PriceRaw
 	if err := priceDecoder.Decode(&rawEntry); err != nil {
 		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
 	}
 
 	var priceList []*client.Offer
-	for ChargeType, instanceOfferList := range rawEntry {
+	for chargeType, instanceOfferList := range rawEntry {
 		for instanceID, offerList := range instanceOfferList {
 			for _, offer := range offerList {
 				for rateCode, dimension := range offer.Dimension {
@@ -111,8 +111,8 @@ func extractPrice(rawData *rawJSON) ([]*client.Offer, error) {
 					price := &client.Offer{
 						ID:          string(rateCode),
 						InstanceID:  string(instanceID),
-						Type:        ChargeType,
-						Term:        offer.Term,
+						Type:        chargeType,
+						Payload:     offer.Term,
 						Description: dimension.Description,
 						Unit:        dimension.Unit,
 						USD:         USDFloat,
@@ -154,6 +154,7 @@ func extractInstance(rawData *rawJSON) ([]*client.Instance, error) {
 			Memory:             entry.Attributes.Memory,
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
+			DatabaseEngine:     entry.Attributes.DatabaseEngine,
 		}
 		instanceList = append(instanceList, instance)
 	}

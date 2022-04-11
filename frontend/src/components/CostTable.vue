@@ -16,11 +16,19 @@ const columns = [
     key: "vCPU",
   },
   {
+    title: "Processor",
+    key: "processor",
+  },
+  {
     title: "Memory",
     key: "memory",
   },
   {
-    title: "Price",
+    title: "On Demand",
+    key: "price",
+  },
+  {
+    title: "Reserved",
     key: "price",
   },
 ];

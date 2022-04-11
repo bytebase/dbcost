@@ -13,24 +13,18 @@ type Instance struct {
 	PhysicalProcessor  string `json:"physicalProcessor"`
 	NetworkPerformance string `json:"networkPerformance"`
 	DeploymentOption   string `json:"deploymentOption"`
-	EngineCode         string `json:"engineCode"`
+	DatabaseEngine     string `json:"databaseEngine"`
 }
 
-// ChargeType is the charging type of the price
-type ChargeType string
+// OfferType is the charging type of the price
+type OfferType string
 
 const (
-	// ChargeTypeONDEMAND is the on demand type of the price
-	ChargeTypeONDEMAND ChargeType = "OnDemand"
-	// ChargeTypeReserved is the reserved type of the price
-	ChargeTypeReserved ChargeType = "Reserved"
+	// OfferTypeOnDemand is the on demand type of the price
+	OfferTypeOnDemand OfferType = "OnDemand"
+	// OfferTypeReserved is the reserved type of the price
+	OfferTypeReserved OfferType = "Reserved"
 )
-
-// PriceTerm is the term of the price
-type PriceTerm struct {
-	LeaseContractLength string `json:"LeaseContractLength"`
-	PurchaseOption      string `json:"PurchaseOption"`
-}
 
 // Currency is the type of the currency
 type Currency string
@@ -38,14 +32,20 @@ type Currency string
 // CurrencyUSD is the type of the currency of USC
 const CurrencyUSD = "USD"
 
+// OfferPayload is the term Payload of the price
+type OfferPayload struct {
+	LeaseContractLength string `json:"leaseContractLength"`
+	PurchaseOption      string `json:"purchaseOption"`
+}
+
 // Offer is the api message of an Offer
 type Offer struct {
 	ID         string
 	InstanceID string
 
-	Type ChargeType
+	Type OfferType
 	// Term is nil when the ChargeType is onDemand
-	Term *PriceTerm
+	Payload *OfferPayload
 
 	Description string
 	Unit        string

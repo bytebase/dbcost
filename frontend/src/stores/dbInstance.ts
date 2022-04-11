@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { DBInstance, DBInstanceId } from "../types";
-import aws from "../../../store/example/aws-raw.json";
 
 interface State {
   dbInstanceList: DBInstance[];

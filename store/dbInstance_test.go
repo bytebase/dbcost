@@ -10,7 +10,9 @@ import (
 )
 
 func Test_SaveToLocal(t *testing.T) {
-	priceList, instanceList, err := aws.MockGetPriceInstance("./example/aws-raw.json")
+	priceList, instanceList, err := aws.MockGetPriceInstance("./example/aws-index.json")
+	// c := aws.NewClient()
+	// priceList, instanceList, err := c.GetOfferInstance()
 	if err != nil {
 		t.Fatalf("fail to get price instance info, [internal error]: %v", err)
 	}
@@ -23,7 +25,7 @@ func Test_SaveToLocal(t *testing.T) {
 	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
 		t.Fatalf("fail to mkdir, [internal error]: %v", err)
 	}
-	filePath := fmt.Sprintf("%s/aws.json", dirPath)
+	filePath := fmt.Sprintf("%s/aws-full.json", dirPath)
 	fd, err := os.Create(filePath)
 	if err != nil {
 		t.Fatalf("fail to mk file, [internal error]: %v", err)

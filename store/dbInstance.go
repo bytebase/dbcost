@@ -11,12 +11,20 @@ import (
 	"github.com/bytebase/dbcost/client"
 )
 
+type TermPayload struct {
+	LeaseContractLength string `json:"leaseContractLength"`
+	PurchaseOption      string `json:"purchaseOption"`
+}
+
 // Term is the pricing term of a given instance
 type Term struct {
-	EngineCode string            `json:"engineCode"`
-	Type       client.ChargeType `json:"type"`
-	Unit       string            `json:"unit"`
-	USD        float64           `json:"usd"`
+	DatabaseEngine string           `json:"databaseEngine"`
+	Type           client.OfferType `json:"type"`
+	Payload        *TermPayload     `json:"payload,omitempty"`
+
+	Unit        string  `json:"unit"`
+	USD         float64 `json:"usd"`
+	Description string  `json:"description,omitempty"`
 }
 
 // Region is region-price info of a given instance
@@ -34,7 +42,7 @@ type DBInstance struct {
 	CreatorID  int       `json:"creatorId"`
 	CreatedTs  int64     `json:"createdTs"`
 	UpdaterID  int       `json:"updaterId"`
-	UpdatedTs  int64     `json:"UpdatedTs"`
+	UpdatedTs  int64     `json:"updatedTs"`
 
 	// Region-Price info
 	RegionList []*Region `json:"regionList"`
@@ -55,11 +63,20 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 	offerMap := make(map[string]*Term)
 
 	for _, offer := range priceList {
+		var payload *TermPayload
+		if offer.Type == client.OfferTypeReserved {
+			payload = &TermPayload{
+				LeaseContractLength: offer.Payload.LeaseContractLength,
+				PurchaseOption:      offer.Payload.PurchaseOption,
+			}
+		}
+
 		term := &Term{
-			EngineCode: offer.ID,
-			Type:       offer.Type,
-			Unit:       offer.Unit,
-			USD:        offer.USD,
+			Type:        offer.Type,
+			Payload:     payload,
+			Unit:        offer.Unit,
+			USD:         offer.USD,
+			Description: offer.Description,
 		}
 		offerMap[offer.InstanceID] = term
 	}
@@ -79,6 +96,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 			isRegionExist := false
 			for _, region := range regionList {
 				if region.Name == instance.RegionCode {
+					offerMap[instance.ID].DatabaseEngine = instance.DatabaseEngine
 					region.TermList = append(region.TermList, offerMap[instance.ID])
 					isRegionExist = true
 					break
