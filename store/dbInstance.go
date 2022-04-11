@@ -31,23 +31,20 @@ type DBInstance struct {
 	ID         int       `json:"id"`
 	ExternalID string    `json:"externalId"`
 	RowStatus  RowStatus `json:"rowStatus"`
+	CreatorID  int       `json:"creatorId"`
+	CreatedTs  int64     `json:"createdTs"`
+	UpdaterID  int       `json:"updaterId"`
+	UpdatedTs  int64     `json:"UpdatedTs"`
 
-	CreatorID int   `json:"creatorId"`
-	CreatedTs int64 `json:"createdTs"`
-	UpdaterID int   `json:"updaterId"`
-	UpdatedTs int64 `json:"UpdatedTs"`
-
-	// reference fields
-	CloudProviderID int `json:"cloudProviderId"`
-
-	// Region
+	// Region-Price info
 	RegionList []*Region `json:"regionList"`
 
 	// domain fields
-	Name      string `json:"name"`
-	VCPU      int    `json:"vCpu"`
-	Memory    string `json:"memory"`
-	Processor string `json:"processor"`
+	CloudProvider string `json:"cloudProviderId"`
+	Name          string `json:"name"`
+	VCPU          int    `json:"vCpu"`
+	Memory        string `json:"memory"`
+	Processor     string `json:"processor"`
 }
 
 // Convert convert the client api message to the storage form
@@ -102,20 +99,17 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 				CreatedTs:  now.Unix(),
 				UpdaterID:  SYSTEM_BOT,
 				UpdatedTs:  now.Unix(),
-
-				// reference fields
-				CloudProviderID: 1, // TODO: set cloud provider id
 				RegionList: []*Region{
 					{
 						Name:     instance.RegionCode,
 						TermList: []*Term{offerMap[instance.ID]},
 					},
 				},
-
-				Name:      instance.Type, // e.g. db.t4g.xlarge
-				VCPU:      vCPUInt,
-				Memory:    memoryDigit,
-				Processor: instance.PhysicalProcessor,
+				CloudProvider: CloudProviderAWS,
+				Name:          instance.Type, // e.g. db.t4g.xlarge
+				VCPU:          vCPUInt,
+				Memory:        memoryDigit,
+				Processor:     instance.PhysicalProcessor,
 			}
 			dbInstanceList = append(dbInstanceList, dbInstance)
 			dbInstanceMap[instance.Type] = dbInstance
