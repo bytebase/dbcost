@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bytebase/dbcost/client/aws"
+	"github.com/bytebase/dbcost/client"
 )
 
 type Term struct {
-	EngineCode string        `json:"engineCode"`
-	Type       aws.PriceType `json:"type"`
-	Unit       string        `json:"unit"`
-	USD        float64       `json:"usd"`
+	EngineCode string            `json:"engineCode"`
+	Type       client.ChargeType `json:"type"`
+	Unit       string            `json:"unit"`
+	USD        float64           `json:"usd"`
 }
 
 type Region struct {
@@ -49,20 +49,20 @@ type DBInstance struct {
 }
 
 // Convert convert the client api message to the storage form
-func Convert(priceList []*aws.Price, instanceList []*aws.Instance) ([]*DBInstance, error) {
+func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBInstance, error) {
 
 	var dbInstanceList []*DBInstance
 	dbInstanceMap := make(map[string]*DBInstance)
-	priceMap := make(map[string]*Term)
+	offerMap := make(map[string]*Term)
 
-	for _, price := range priceList {
+	for _, offer := range priceList {
 		term := &Term{
-			EngineCode: price.ID,
-			Type:       price.Type,
-			Unit:       price.Unit,
-			USD:        price.USD,
+			EngineCode: offer.ID,
+			Type:       offer.Type,
+			Unit:       offer.Unit,
+			USD:        offer.USD,
 		}
-		priceMap[price.InstanceID] = term
+		offerMap[offer.InstanceID] = term
 	}
 
 	now := time.Now().UTC()
@@ -80,7 +80,7 @@ func Convert(priceList []*aws.Price, instanceList []*aws.Instance) ([]*DBInstanc
 			isRegionExist := false
 			for _, region := range regionList {
 				if region.Name == instance.RegionCode {
-					region.TermList = append(region.TermList, priceMap[instance.ID])
+					region.TermList = append(region.TermList, offerMap[instance.ID])
 					isRegionExist = true
 					break
 				}
@@ -88,7 +88,7 @@ func Convert(priceList []*aws.Price, instanceList []*aws.Instance) ([]*DBInstanc
 			if !isRegionExist {
 				regionList = append(regionList, &Region{
 					Name:     instance.RegionCode,
-					TermList: []*Term{priceMap[instance.ID]},
+					TermList: []*Term{offerMap[instance.ID]},
 				})
 			}
 		} else {
@@ -106,7 +106,7 @@ func Convert(priceList []*aws.Price, instanceList []*aws.Instance) ([]*DBInstanc
 				RegionList: []*Region{
 					{
 						Name:     instance.RegionCode,
-						TermList: []*Term{priceMap[instance.ID]},
+						TermList: []*Term{offerMap[instance.ID]},
 					},
 				},
 

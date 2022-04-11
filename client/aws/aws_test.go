@@ -39,7 +39,7 @@ func Test_Extraction(t *testing.T) {
 func Test_HTTP(t *testing.T) {
 	c := NewClient()
 	start := time.Now()
-	price, instance, err := c.GetPriceInstance()
+	price, instance, err := c.GetOfferInstance()
 	end := time.Now()
 
 	if err != nil {
