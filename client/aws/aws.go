@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 // Client is the client struct
@@ -34,9 +35,9 @@ type Instance struct {
 	ServiceCode        string `json:"servicecode"`
 	Location           string `json:"location"`
 	RegionCode         string `json:"regionCode"`
-	InstanceType       string `json:"instanceType"`
+	Type               string `json:"instanceType"`
 	InstanceFamily     string `json:"instanceFamily"`
-	VCpu               string `json:"vcpu"`
+	VCPU               string `json:"vcpu"`
 	Memory             string `json:"memory"`
 	PhysicalProcessor  string `json:"physicalProcessor"`
 	NetworkPerformance string `json:"networkPerformance"`
@@ -100,7 +101,7 @@ type Price struct {
 
 	Description string
 	Unit        string
-	USD         string
+	USD         float64
 }
 
 // InfoEndPoint is the instance info endpoint
@@ -156,6 +157,10 @@ func extractPrice(rawData *rawJSON) ([]*Price, error) {
 		for instanceID, offerList := range instanceOfferList {
 			for _, offer := range offerList {
 				for rateCode, dimension := range offer.Dimension {
+					USDFloat, err := strconv.ParseFloat(dimension.PricePerUnit[CurrencyUSD], 64)
+					if err != nil {
+						return nil, fmt.Errorf("Fail to parse the price to type FLOAT64, value: %v, [internal]: %v", dimension.PricePerUnit[CurrencyUSD], err)
+					}
 					price := &Price{
 						ID:          string(rateCode),
 						InstanceID:  string(instanceID),
@@ -163,7 +168,7 @@ func extractPrice(rawData *rawJSON) ([]*Price, error) {
 						Term:        offer.Term,
 						Description: dimension.Description,
 						Unit:        dimension.Unit,
-						USD:         dimension.PricePerUnit[CurrencyUSD],
+						USD:         USDFloat,
 					}
 					priceList = append(priceList, price)
 				}
@@ -196,9 +201,9 @@ func extractInstance(rawData *rawJSON) ([]*Instance, error) {
 			ServiceCode:        entry.Attributes.ServiceCode,
 			Location:           entry.Attributes.Location,
 			RegionCode:         entry.Attributes.RegionCode,
-			InstanceType:       entry.Attributes.InstanceType,
+			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
-			VCpu:               entry.Attributes.VCpu,
+			VCPU:               entry.Attributes.VCPU,
 			Memory:             entry.Attributes.Memory,
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
