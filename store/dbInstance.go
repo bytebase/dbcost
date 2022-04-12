@@ -48,9 +48,9 @@ type DBInstance struct {
 	RegionList []*Region `json:"regionList"`
 
 	// domain fields
-	CloudProvider string `json:"cloudProviderId"`
+	CloudProvider string `json:"cloudProvider"`
 	Name          string `json:"name"`
-	VCPU          int    `json:"vCpu"`
+	VCPU          int    `json:"vCPU"`
 	Memory        string `json:"memory"`
 	Processor     string `json:"processor"`
 }
@@ -131,9 +131,10 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 			}
 			dbInstanceList = append(dbInstanceList, dbInstance)
 			dbInstanceMap[instance.Type] = dbInstance
+
+			incrID++
 		}
 
-		incrID++
 	}
 
 	return dbInstanceList, nil
