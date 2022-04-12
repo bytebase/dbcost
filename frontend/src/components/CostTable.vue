@@ -2,33 +2,51 @@
   <n-data-table
     :columns="columns"
     :data="state.selectedInstance"
+    :pagination="pagination"
   ></n-data-table>
 </template>
 
 <script setup lang="ts">
-import { NDataTable } from "naive-ui";
+import { NDataTable, DataTableColumn } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted } from "vue";
-import { ChargeType, Region, Term } from "../types";
+import { ChargeType } from "../types";
 
 const columns: any = [
   {
     title: "Name",
     key: "name",
+    width: "20%",
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: "Processor",
     key: "processor",
+    width: "30%",
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: "vCPU",
     key: "vCPU",
     align: "center",
+    defaultSortOrder: "ascend",
+    sorter: {
+      compare: (row1: DBInstance, row2: DBInstance) => row1.vCPU - row2.vCPU,
+    },
   },
   {
     title: "Memory",
     key: "memory",
     align: "center",
+    defaultSortOrder: false,
+    sorter: {
+      compare: (row1: DBInstance, row2: DBInstance) =>
+        Number(row1.memory) - Number(row2.memory),
+    },
   },
   {
     title: "On Demand",
@@ -96,6 +114,8 @@ const filterDBInstance = (region: string) => {
     return true;
   });
 };
+
+const pagination = { pageSize: 10 };
 
 onMounted(() => {
   filterDBInstance(props.region);
