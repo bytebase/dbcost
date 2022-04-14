@@ -35,7 +35,7 @@ import CostTableMenu from "./components/CostTableMenu.vue";
 import { ChargeType } from "./types";
 import aws from "../../store/data/test/aws-full.json";
 
-const selectedRegion = "ap-northeast-2";
+const selectedRegion = "us-east-1";
 const selectedChargeType: ChargeType = "OnDemand";
 </script>
 

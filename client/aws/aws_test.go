@@ -9,7 +9,7 @@ import (
 )
 
 func Test_Extraction(t *testing.T) {
-	file, err := os.ReadFile("../../store/example/aws-raw.json")
+	file, err := os.ReadFile("../../store/example/aws.json")
 	if err != nil {
 		t.Fail()
 	}
