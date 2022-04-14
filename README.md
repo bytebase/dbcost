@@ -21,7 +21,7 @@ This project is under development and is very unstable. The way to start this pr
 
 + **Installing Frontend Dependencies** 
 ```
-cd ./frontend && pnpm -i
+cd ./frontend && pnpm i
 ```
 
 + **Fetching Data** 

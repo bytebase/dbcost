@@ -1,13 +1,9 @@
 <template>
-  <n-data-table
-    :columns="columns"
-    :data="state.selectedInstance"
-    :pagination="pagination"
-  ></n-data-table>
+  <n-data-table :columns="columns" :data="state.selectedInstance" />
 </template>
 
 <script setup lang="ts">
-import { NDataTable, DataTableColumn } from "naive-ui";
+import { NDataTable } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted } from "vue";
 import { ChargeType } from "../types";
@@ -100,13 +96,16 @@ const filterDBInstance = (region: string) => {
     if (selectedRegion.length === 0) {
       return false;
     }
-
     const termList = selectedRegion[0].termList.filter((t) => {
       if (t.type === props.chargeType && t.databaseEngine.includes("MySQL")) {
         return true;
       }
       return false;
     });
+
+    // if (termList.length === 0) {
+    //   return false;
+    // }
     selectedRegion[0].termList = termList;
 
     // only keep the selected region
