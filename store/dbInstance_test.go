@@ -10,9 +10,8 @@ import (
 )
 
 func Test_SaveToLocal(t *testing.T) {
-	priceList, instanceList, err := aws.MockGetPriceInstance("./example/aws-index.json")
-	// c := aws.NewClient()
-	// priceList, instanceList, err := c.GetOfferInstance()
+	c := aws.NewClient()
+	priceList, instanceList, err := c.GetOfferInstance()
 	if err != nil {
 		t.Fatalf("fail to get price instance info, [internal error]: %v", err)
 	}
