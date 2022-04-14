@@ -20,11 +20,11 @@ type TermPayload struct {
 type Term struct {
 	DatabaseEngine string           `json:"databaseEngine"`
 	Type           client.OfferType `json:"type"`
-	Payload        *TermPayload     `json:"payload,omitempty"`
+	Payload        *TermPayload     `json:"payload"`
 
 	Unit        string  `json:"unit"`
 	USD         float64 `json:"usd"`
-	Description string  `json:"description,omitempty"`
+	Description string  `json:"description"`
 }
 
 // Region is region-price info of a given instance
@@ -57,10 +57,9 @@ type DBInstance struct {
 
 // Convert convert the client api message to the storage form
 func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBInstance, error) {
-
 	var dbInstanceList []*DBInstance
 	dbInstanceMap := make(map[string]*DBInstance)
-	offerMap := make(map[string]*Term)
+	offerMap := make(map[string][]*Term)
 
 	for _, offer := range priceList {
 		var payload *TermPayload
@@ -78,7 +77,11 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 			USD:         offer.USD,
 			Description: offer.Description,
 		}
-		offerMap[offer.InstanceID] = term
+		if termList, ok := offerMap[offer.InstanceID]; !ok {
+			offerMap[offer.InstanceID] = []*Term{term}
+		} else {
+			termList = append(termList, term)
+		}
 	}
 
 	now := time.Now().UTC()
@@ -96,16 +99,20 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 			isRegionExist := false
 			for _, region := range regionList {
 				if region.Name == instance.RegionCode {
-					offerMap[instance.ID].DatabaseEngine = instance.DatabaseEngine
-					region.TermList = append(region.TermList, offerMap[instance.ID])
-					isRegionExist = true
+					if offerList, ok := offerMap[instance.ID]; ok {
+						for _, offer := range offerList {
+							offer.DatabaseEngine = instance.DatabaseEngine
+						}
+						region.TermList = append(region.TermList, offerMap[instance.ID]...)
+						isRegionExist = true
+					}
 					break
 				}
 			}
 			if !isRegionExist {
 				regionList = append(regionList, &Region{
 					Name:     instance.RegionCode,
-					TermList: []*Term{offerMap[instance.ID]},
+					TermList: offerMap[instance.ID],
 				})
 			}
 		} else {
@@ -120,7 +127,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 				RegionList: []*Region{
 					{
 						Name:     instance.RegionCode,
-						TermList: []*Term{offerMap[instance.ID]},
+						TermList: offerMap[instance.ID],
 					},
 				},
 				CloudProvider: CloudProviderAWS,

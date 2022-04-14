@@ -5,7 +5,7 @@ export type PurchaseOption = "All Upfront" | "Partial Upfront" | "No Upfront";
 export type TermPayload = {
   leaseContractLength: ContractLength;
   purchaseOption: PurchaseOption;
-};
+} | null;
 
 export type Term = {
   databaseEngine: string;
