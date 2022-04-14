@@ -1,11 +1,11 @@
 {
-  "name": "frontend",
+  "name": "dbcost",
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode dev",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 8080"
   },
   "dependencies": {
     "autoprefixer": "^10.4.4",

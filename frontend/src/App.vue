@@ -1,12 +1,11 @@
 <template>
   <!-- header -->
   <div class="inset-0">
-    <div class="px-5 pt-5">
-      <span class="font-bold text-lg">DB COST</span>
+    <div class="px-5 pt-5 items-center">
+      <span class="font-bold text-lg text-center">DB COST</span>
       <img
         class="w-5 ml-5 inline float-right"
         src="./assets/icon/logo-icon.svg"
-        alt="Bytebase"
       />
     </div>
   </div>
@@ -22,21 +21,23 @@
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
-      :db-instance-list="aws"
+      :db-instance-list="my_asw"
       :region="selectedRegion"
       :charge-type="selectedChargeType"
     />
   </div>
 
-  <the-footer class="px-3 mt-5" />
+  <the-footer class="px-3 my-5" />
 </template>
 
 <script setup lang="ts">
 import CostTable from "./components/CostTable.vue";
 import CostTableMenu from "./components/CostTableMenu.vue";
 import TheFooter from "./components/TheFooter.vue";
-import { ChargeType } from "./types";
+import { ChargeType, DBInstance } from "./types";
 import aws from "../../store/data/test/aws-full.json";
+
+const my_asw = aws as DBInstance[];
 
 const selectedRegion = "us-east-1";
 const selectedChargeType: ChargeType = "OnDemand";
