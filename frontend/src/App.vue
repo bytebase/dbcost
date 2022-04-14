@@ -27,11 +27,14 @@
       :charge-type="selectedChargeType"
     />
   </div>
+
+  <the-footer class="px-3 mt-5" />
 </template>
 
 <script setup lang="ts">
 import CostTable from "./components/CostTable.vue";
 import CostTableMenu from "./components/CostTableMenu.vue";
+import TheFooter from "./components/TheFooter.vue";
 import { ChargeType } from "./types";
 import aws from "../../store/data/test/aws-full.json";
 
