@@ -28,19 +28,42 @@ type rawJSON struct {
 	Term    interface{} `json:"terms"`
 }
 
+type EngineType string
+
+const (
+	EngineTypeMySQL      = "MySQL"
+	EngineTypePostgreSQL = "PostgreSQL"
+	EngineTypeSQLServer  = "SQL Server"
+	EngineTypeSQLOracle  = "Oracle"
+)
+
+func (e EngineType) String() string {
+	switch e {
+	case EngineTypeMySQL:
+		return "MYSQL"
+	case EngineTypePostgreSQL:
+		return "POSTGRES"
+	case EngineTypeSQLServer:
+		return "SQLSERVER"
+	case EngineTypeSQLOracle:
+		return "ORACLE"
+	}
+	return ""
+}
+
 // instance is the api message of the instance for AWS specifically
 type instance struct {
 	ID                 string
-	ServiceCode        string `json:"servicecode"`
-	Location           string `json:"location"`
-	Type               string `json:"instanceType"`
-	InstanceFamily     string `json:"instanceFamily"`
-	VCPU               string `json:"vcpu"`
-	Memory             string `json:"memory"`
-	PhysicalProcessor  string `json:"physicalProcessor"`
-	NetworkPerformance string `json:"networkPerformance"`
-	DeploymentOption   string `json:"deploymentOption"`
-	DatabaseEngine     string `json:"databaseEngine"`
+	ServiceCode        string     `json:"servicecode"`
+	Location           string     `json:"location"`
+	Type               string     `json:"instanceType"`
+	InstanceFamily     string     `json:"instanceFamily"`
+	VCPU               string     `json:"vcpu"`
+	Memory             string     `json:"memory"`
+	PhysicalProcessor  string     `json:"physicalProcessor"`
+	NetworkPerformance string     `json:"networkPerformance"`
+	DeploymentOption   string     `json:"deploymentOption"`
+	DatabaseEngine     EngineType `json:"databaseEngine"`
 }
 
 // ProductEntry is the entry of the instance info
@@ -168,7 +191,7 @@ func extractInstance(rawData *rawJSON) ([]*client.Instance, error) {
 			Memory:             entry.Attributes.Memory,
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
-			DatabaseEngine:     entry.Attributes.DatabaseEngine,
+			DatabaseEngine:     client.EngineType(entry.Attributes.DatabaseEngine.String()),
 		}
 		instanceList = append(instanceList, instance)
 	}

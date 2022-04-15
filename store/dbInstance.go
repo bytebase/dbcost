@@ -18,9 +18,9 @@ type TermPayload struct {
 
 // Term is the pricing term of a given instance
 type Term struct {
-	DatabaseEngine string           `json:"databaseEngine"`
-	Type           client.OfferType `json:"type"`
-	Payload        *TermPayload     `json:"payload"`
+	DatabaseEngine client.EngineType `json:"databaseEngine"`
+	Type           client.OfferType  `json:"type"`
+	Payload        *TermPayload      `json:"payload"`
 
 	Unit        string  `json:"unit"`
 	USD         float64 `json:"usd"`

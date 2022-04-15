@@ -15,8 +15,10 @@
     <cost-table-menu
       :region-list="state.selectedRegionList"
       :charge-type="state.selectedChargeType"
+      :engine-type="state.selectedEngineType"
       @update-region="handleUpdateRegion"
       @update-charge-type="handleUpdateChargeType"
+      @update-engine-type="handleUpdateEngineType"
     />
   </div>
 
@@ -26,6 +28,7 @@
       :db-instance-list="dbInstanceStore.dbInstanceList"
       :region-list="state.selectedRegionList"
       :charge-type="state.selectedChargeType"
+      :engine-type="state.selectedEngineType"
     />
   </div>
 
@@ -36,7 +39,7 @@
 import CostTable from "./components/CostTable.vue";
 import CostTableMenu from "./components/CostTableMenu.vue";
 import TheFooter from "./components/TheFooter.vue";
-import { ChargeType, DBInstance } from "./types";
+import { ChargeType, DBInstance, EngineType } from "./types";
 import { useDBInstanceStore } from "./stores/dbInstance";
 import aws from "../../store/data/test/aws-full.json";
 
@@ -48,11 +51,13 @@ dbInstanceStore.dbInstanceList = aws as DBInstance[];
 interface LocalState {
   selectedRegionList: string[];
   selectedChargeType: ChargeType;
+  selectedEngineType: EngineType;
 }
 
 const state = reactive<LocalState>({
   selectedRegionList: ["Asia Pacific (Sydney)"],
   selectedChargeType: "OnDemand",
+  selectedEngineType: "MYSQL",
 });
 
 const handleUpdateRegion = (val: string[]) => {
@@ -62,6 +67,9 @@ const handleUpdateRegion = (val: string[]) => {
 
 const handleUpdateChargeType = (val: ChargeType) => {
   state.selectedChargeType = val;
+};
+const handleUpdateEngineType = (val: EngineType) => {
+  state.selectedEngineType = val;
 };
 </script>
 

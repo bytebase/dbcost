@@ -1,18 +1,27 @@
 package client
 
+type EngineType string
+
+const (
+	EngineTypeMySQL      = "MYSQL"
+	EngineTypePostgreSQL = "POSTGRES"
+	EngineTypeOracle     = "ORACLE"
+	EngineTypeSQLServer  = "SQLSERVER"
+)
+
 // Instance is the api message of the instance
 type Instance struct {
 	ID                 string
-	ServiceCode        string `json:"servicecode"`
-	Region             string `json:"region"`
-	Type               string `json:"instanceType"`
-	InstanceFamily     string `json:"instanceFamily"`
-	VCPU               string `json:"vcpu"`
-	Memory             string `json:"memory"`
-	PhysicalProcessor  string `json:"physicalProcessor"`
-	NetworkPerformance string `json:"networkPerformance"`
-	DeploymentOption   string `json:"deploymentOption"`
-	DatabaseEngine     string `json:"databaseEngine"`
+	ServiceCode        string     `json:"servicecode"`
+	Region             string     `json:"region"`
+	Type               string     `json:"instanceType"`
+	InstanceFamily     string     `json:"instanceFamily"`
+	VCPU               string     `json:"vcpu"`
+	Memory             string     `json:"memory"`
+	PhysicalProcessor  string     `json:"physicalProcessor"`
+	NetworkPerformance string     `json:"networkPerformance"`
+	DeploymentOption   string     `json:"deploymentOption"`
+	DatabaseEngine     EngineType `json:"databaseEngine"`
 }
 
 // OfferType is the charging type of the price

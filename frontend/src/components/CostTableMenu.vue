@@ -14,19 +14,45 @@
     </n-grid>
   </n-checkbox-group>
 
-  <!-- charge type checkbox -->
-  <n-radio-group
-    class="mt-2"
-    :default-value="props.chargeType"
-    @update-value="handleUpdateChargeType"
-  >
-    <n-radio-button key="OnDemand" value="OnDemand" label="On Demand" />
-    <n-radio-button key="Reserved" value="Reserved" label="Reserved" />
-  </n-radio-group>
+  <div class="mt-2 space-x-2">
+    <!-- charge type checkbox -->
+    <n-radio-group
+      :default-value="props.chargeType"
+      @update-value="handleUpdateChargeType"
+    >
+      <n-radio-button key="OnDemand" value="OnDemand" label="On Demand" />
+      <n-radio-button key="Reserved" value="Reserved" label="Reserved" />
+    </n-radio-group>
+
+    <!-- Database Engine Type -->
+    <!-- NOTE that the price of MYSQL and POSTGRES are happened to be identical -->
+    <!-- It is not gurant -->
+    <n-radio-group
+      :default-value="props.engineType"
+      @update-value="handleUpdateEngineType"
+    >
+      <n-radio-button key="MYSQL" value="MYSQL">
+        <n-avatar
+          class="pt-1"
+          size="small"
+          color="none"
+          :src="EngineIconPath.MYSQL"
+        />
+      </n-radio-button>
+      <n-radio-button key="POSTGRES" value="POSTGRES" label="Reserved">
+        <n-avatar
+          class="pt-1"
+          size="small"
+          color="none"
+          :src="EngineIconPath.POSTGRES"
+        />
+      </n-radio-button>
+    </n-radio-group>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ChargeType } from "../types";
+import { ChargeType, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
 import {
   NCheckboxGroup,
@@ -36,6 +62,7 @@ import {
   NRadioGroup,
   NRadioButton,
   NButton,
+  NAvatar,
 } from "naive-ui";
 import { PropType } from "vue";
 
@@ -51,11 +78,21 @@ const props = defineProps({
     type: String as PropType<ChargeType>,
     default: "",
   },
+  engineType: {
+    type: String as PropType<EngineType>,
+    default: "",
+  },
 });
+
+const EngineIconPath = {
+  MYSQL: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
+  POSTGRES: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+};
 
 const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
+  (e: "update-engine-type", selectedEngineType: EngineType): void;
 }>();
 
 const handleUpdateRegion = (val: any[]) => {
@@ -64,6 +101,10 @@ const handleUpdateRegion = (val: any[]) => {
 
 const handleUpdateChargeType = (val: ChargeType) => {
   emit("update-charge-type", val);
+};
+
+const handleUpdateEngineType = (val: EngineType) => {
+  emit("update-engine-type", val);
 };
 </script>
 

@@ -5,8 +5,8 @@
 <script setup lang="ts">
 import { NDataTable } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
-import { PropType, watch, reactive, ref, computed, onMounted } from "vue";
-import { ChargeType } from "../types";
+import { PropType, watch, reactive, onMounted } from "vue";
+import { ChargeType, EngineType } from "../types";
 
 const columns: any = [
   {
@@ -89,7 +89,11 @@ const props = defineProps({
   },
   chargeType: {
     type: String as PropType<ChargeType>,
-    default: "OnDemand",
+    default: "",
+  },
+  engineType: {
+    type: String as PropType<EngineType>,
+    default: "",
   },
 });
 
@@ -134,7 +138,7 @@ const refreshDataTable = () => {
       return false;
     }
     const termList = selectedRegion[0].termList.filter((t) => {
-      if (t.type === props.chargeType && t.databaseEngine.includes("MySQL")) {
+      if (t.type === props.chargeType && t.databaseEngine == props.engineType) {
         return true;
       }
       return false;
