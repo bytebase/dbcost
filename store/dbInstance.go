@@ -98,7 +98,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 			regionList := dbInstance.RegionList
 			isRegionExist := false
 			for _, region := range regionList {
-				if region.Name == instance.RegionCode {
+				if region.Name == instance.Region {
 					if offerList, ok := offerMap[instance.ID]; ok {
 						for _, offer := range offerList {
 							offer.DatabaseEngine = instance.DatabaseEngine
@@ -111,7 +111,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 			}
 			if !isRegionExist {
 				regionList = append(regionList, &Region{
-					Name:     instance.RegionCode,
+					Name:     instance.Region,
 					TermList: offerMap[instance.ID],
 				})
 			}
@@ -126,7 +126,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 				UpdatedTs:  now.Unix(),
 				RegionList: []*Region{
 					{
-						Name:     instance.RegionCode,
+						Name:     instance.Region,
 						TermList: offerMap[instance.ID],
 					},
 				},

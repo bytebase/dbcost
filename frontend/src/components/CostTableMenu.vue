@@ -1,35 +1,70 @@
 <template>
-  <div class="text-center">{{ state.selectedRegion }}</div>
-  <div class="text-center">{{ state.selectedChargeType }}</div>
-</template>
-<script lang="ts" setup>
-import { PropType, reactive } from "vue";
-import { ChargeType } from "../types";
+  <!-- region checkbox -->
+  <n-button class="mb-1" size="small" @click="handleUpdateRegion([])">
+    Clear All
+  </n-button>
+  <n-checkbox-group
+    :value="(regionList as any)"
+    @update-value="handleUpdateRegion"
+  >
+    <n-grid :y-gap="4" :cols="3">
+      <n-gi v-for="(region, i) in availableRegionList" :key="i">
+        <n-checkbox :value="region" :label="region" />
+      </n-gi>
+    </n-grid>
+  </n-checkbox-group>
 
-type LocalState = {
-  selectedRegion: string;
-  selectedChargeType: ChargeType;
-};
+  <!-- charge type checkbox -->
+  <n-radio-group
+    class="mt-2"
+    :default-value="props.chargeType"
+    @update-value="handleUpdateChargeType"
+  >
+    <n-radio-button key="OnDemand" value="OnDemand" label="On Demand" />
+    <n-radio-button key="Reserved" value="Reserved" label="Reserved" />
+  </n-radio-group>
+</template>
+
+<script lang="ts" setup>
+import { ChargeType } from "../types";
+import { useDBInstanceStore } from "../stores/dbInstance";
+import {
+  NCheckboxGroup,
+  NGrid,
+  NCheckbox,
+  NGi,
+  NRadioGroup,
+  NRadioButton,
+  NButton,
+} from "naive-ui";
+import { PropType } from "vue";
+
+const dbInstanceStore = useDBInstanceStore();
+const availableRegionList = dbInstanceStore.getAvailableRegionList();
 
 const props = defineProps({
   regionList: {
-    type: Object as PropType<string>,
-    default: [],
-  },
-  region: {
-    type: String,
-    default: "ap-northeast-2",
+    type: Object as PropType<String[]>,
+    default: "",
   },
   chargeType: {
     type: String as PropType<ChargeType>,
-    default: "OnDemand",
+    default: "",
   },
 });
 
-const state = reactive<LocalState>({
-  selectedRegion: props.region,
-  selectedChargeType: props.chargeType,
-});
+const emit = defineEmits<{
+  (e: "update-region", selectedRegion: string[]): void;
+  (e: "update-charge-type", selectedChargeType: ChargeType): void;
+}>();
+
+const handleUpdateRegion = (val: any[]) => {
+  emit("update-region", val);
+};
+
+const handleUpdateChargeType = (val: ChargeType) => {
+  emit("update-charge-type", val);
+};
 </script>
 
 <style></style>

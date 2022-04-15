@@ -13,17 +13,19 @@
   <!-- menu -->
   <div class="mx-5 mt-1">
     <cost-table-menu
-      :region="selectedRegion"
-      :charge-type="selectedChargeType"
+      :region-list="state.selectedRegionList"
+      :charge-type="state.selectedChargeType"
+      @update-region="handleUpdateRegion"
+      @update-charge-type="handleUpdateChargeType"
     />
   </div>
 
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
-      :db-instance-list="my_asw"
-      :region="selectedRegion"
-      :charge-type="selectedChargeType"
+      :db-instance-list="dbInstanceStore.dbInstanceList"
+      :region-list="state.selectedRegionList"
+      :charge-type="state.selectedChargeType"
     />
   </div>
 
@@ -35,12 +37,32 @@ import CostTable from "./components/CostTable.vue";
 import CostTableMenu from "./components/CostTableMenu.vue";
 import TheFooter from "./components/TheFooter.vue";
 import { ChargeType, DBInstance } from "./types";
+import { useDBInstanceStore } from "./stores/dbInstance";
 import aws from "../../store/data/test/aws-full.json";
 
-const my_asw = aws as DBInstance[];
+import { reactive } from "vue";
 
-const selectedRegion = "us-east-1";
-const selectedChargeType: ChargeType = "OnDemand";
+const dbInstanceStore = useDBInstanceStore();
+dbInstanceStore.dbInstanceList = aws as DBInstance[];
+
+interface LocalState {
+  selectedRegionList: string[];
+  selectedChargeType: ChargeType;
+}
+
+const state = reactive<LocalState>({
+  selectedRegionList: ["Asia Pacific (Sydney)"],
+  selectedChargeType: "OnDemand",
+});
+
+const handleUpdateRegion = (val: string[]) => {
+  console.log("app", val);
+  state.selectedRegionList = val;
+};
+
+const handleUpdateChargeType = (val: ChargeType) => {
+  state.selectedChargeType = val;
+};
 </script>
 
 <style></style>

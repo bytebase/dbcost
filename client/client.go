@@ -4,8 +4,7 @@ package client
 type Instance struct {
 	ID                 string
 	ServiceCode        string `json:"servicecode"`
-	Location           string `json:"location"`
-	RegionCode         string `json:"regionCode"`
+	Region             string `json:"region"`
 	Type               string `json:"instanceType"`
 	InstanceFamily     string `json:"instanceFamily"`
 	VCPU               string `json:"vcpu"`
