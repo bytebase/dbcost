@@ -22,7 +22,22 @@ export const useDBInstanceStore = defineStore("dbInstance", {
         }
         return dbInstance[0];
       },
+    getAvailableRegionList: (state) => (): string[] => {
+      const regionSet = new Set<string>();
+      state.dbInstanceList.forEach((db) => {
+        db.regionList.forEach((r) => {
+          regionSet.add(r.name);
+        });
+      });
+      const regionList: string[] = [];
+      regionSet.forEach((r) => {
+        regionList.push(r);
+      });
+      regionList.sort();
+      return regionList;
+    },
   },
+
   actions: {
     loadDBInstanceList() {
       const receiver = [];

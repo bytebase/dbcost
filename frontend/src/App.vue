@@ -13,17 +13,22 @@
   <!-- menu -->
   <div class="mx-5 mt-1">
     <cost-table-menu
-      :region="selectedRegion"
-      :charge-type="selectedChargeType"
+      :region-list="state.selectedRegionList"
+      :charge-type="state.selectedChargeType"
+      :engine-type="state.selectedEngineType"
+      @update-region="handleUpdateRegion"
+      @update-charge-type="handleUpdateChargeType"
+      @update-engine-type="handleUpdateEngineType"
     />
   </div>
 
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
-      :db-instance-list="my_asw"
-      :region="selectedRegion"
-      :charge-type="selectedChargeType"
+      :db-instance-list="dbInstanceStore.dbInstanceList"
+      :region-list="state.selectedRegionList"
+      :charge-type="state.selectedChargeType"
+      :engine-type="state.selectedEngineType"
     />
   </div>
 
@@ -34,13 +39,37 @@
 import CostTable from "./components/CostTable.vue";
 import CostTableMenu from "./components/CostTableMenu.vue";
 import TheFooter from "./components/TheFooter.vue";
-import { ChargeType, DBInstance } from "./types";
-import aws from "../../store/data/test/aws-full.json";
+import { ChargeType, DBInstance, EngineType } from "./types";
+import { useDBInstanceStore } from "./stores/dbInstance";
+import aws from "../../store/data/test/aws-sample.json";
 
-const my_asw = aws as DBInstance[];
+import { reactive } from "vue";
 
-const selectedRegion = "us-east-1";
-const selectedChargeType: ChargeType = "OnDemand";
+const dbInstanceStore = useDBInstanceStore();
+dbInstanceStore.dbInstanceList = aws as DBInstance[];
+
+interface LocalState {
+  selectedRegionList: string[];
+  selectedChargeType: ChargeType;
+  selectedEngineType: EngineType;
+}
+
+const state = reactive<LocalState>({
+  selectedRegionList: [],
+  selectedChargeType: "OnDemand",
+  selectedEngineType: "MYSQL",
+});
+
+const handleUpdateRegion = (val: string[]) => {
+  state.selectedRegionList = val;
+};
+
+const handleUpdateChargeType = (val: ChargeType) => {
+  state.selectedChargeType = val;
+};
+const handleUpdateEngineType = (val: EngineType) => {
+  state.selectedEngineType = val;
+};
 </script>
 
 <style></style>

@@ -28,11 +28,49 @@ type rawJSON struct {
 	Term    interface{} `json:"terms"`
 }
 
+type EngineType string
+
+const (
+	EngineTypeMySQL      = "MySQL"
+	EngineTypePostgreSQL = "PostgreSQL"
+	EngineTypeSQLServer  = "SQL Server"
+	EngineTypeSQLOracle  = "Oracle"
+)
+
+func (e EngineType) String() string {
+	switch e {
+	case EngineTypeMySQL:
+		return "MYSQL"
+	case EngineTypePostgreSQL:
+		return "POSTGRES"
+	case EngineTypeSQLServer:
+		return "SQLSERVER"
+	case EngineTypeSQLOracle:
+		return "ORACLE"
+	}
+	return ""
+}
+
+// instance is the api message of the instance for AWS specifically
+type instance struct {
+	ID                 string
+	ServiceCode        string     `json:"servicecode"`
+	Location           string     `json:"location"`
+	Type               string     `json:"instanceType"`
+	InstanceFamily     string     `json:"instanceFamily"`
+	VCPU               string     `json:"vcpu"`
+	Memory             string     `json:"memory"`
+	PhysicalProcessor  string     `json:"physicalProcessor"`
+	NetworkPerformance string     `json:"networkPerformance"`
+	DeploymentOption   string     `json:"deploymentOption"`
+	DatabaseEngine     EngineType `json:"databaseEngine"`
+}
+
 // ProductEntry is the entry of the instance info
 type ProductEntry struct {
-	ID            string          `json:"sku"`
-	ProductFamily string          `json:"productFamily"`
-	Attributes    client.Instance `json:"attributes"`
+	ID            string   `json:"sku"`
+	ProductFamily string   `json:"productFamily"`
+	Attributes    instance `json:"attributes"`
 }
 
 // InstanceRecord is the Record of the instance info
@@ -146,34 +184,17 @@ func extractInstance(rawData *rawJSON) ([]*client.Instance, error) {
 		instance := &client.Instance{
 			ID:                 string(id),
 			ServiceCode:        entry.Attributes.ServiceCode,
-			Location:           entry.Attributes.Location,
-			RegionCode:         entry.Attributes.RegionCode,
+			Region:             entry.Attributes.Location,
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
 			VCPU:               entry.Attributes.VCPU,
 			Memory:             entry.Attributes.Memory,
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
-			DatabaseEngine:     entry.Attributes.DatabaseEngine,
+			DatabaseEngine:     client.EngineType(entry.Attributes.DatabaseEngine.String()),
 		}
 		instanceList = append(instanceList, instance)
 	}
 
 	return instanceList, nil
-}
-
-// RegionInfoEndPoint is the endpoint for the region info mapping, e.g.: ap-east-1 --> Asia Pacific (Hong Kong)
-const RegionInfoEndPoint = "https://github.com/boto/botocore/blob/develop/botocore/data/endpoints.json"
-
-// GetRegionMapping get the mapping between the region code and the human redable description
-func (c *Client) GetRegionMapping() (map[string]string, error) {
-	res, err := http.Get(RegionInfoEndPoint)
-	if err != nil {
-		return nil, fmt.Errorf("Fail to fetch the region file, [internal]: %v", err)
-	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("An http error occur , [internal]: %v", err)
-	}
-
-	panic("Implement me")
 }
