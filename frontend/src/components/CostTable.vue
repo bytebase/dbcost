@@ -12,7 +12,6 @@ const columns: any = [
   {
     title: "Name",
     key: "name",
-    width: "20%",
     ellipsis: {
       tooltip: true,
     },
@@ -20,7 +19,6 @@ const columns: any = [
   {
     title: "Processor",
     key: "processor",
-    width: "30%",
     ellipsis: {
       tooltip: true,
     },
@@ -58,6 +56,9 @@ const columns: any = [
     title: "Region",
     render: (dbInstance: DBInstance) => {
       return dbInstance.regionList[0].name;
+    },
+    ellipsis: {
+      tooltip: true,
     },
     sorter: {
       compare: (row1: DBInstance, row2: DBInstance) => {
