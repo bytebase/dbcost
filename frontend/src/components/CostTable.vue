@@ -46,10 +46,19 @@ const columns: any = [
   {
     title: "Pricing",
     render: (dbInstance: DBInstance) => {
-      if (dbInstance.regionList[0].termList.length > 0) {
-        return "$ " + dbInstance.regionList[0].termList[0].usd;
+      const termList = dbInstance.regionList[0].termList;
+      if (termList.length > 0) {
+        const term = termList[0];
+        if (term.type == "OnDemand") {
+          return `$ ${term.usd}`;
+        } else if (term.type == "Reserved") {
+          return `$ ${term.usd} (${term.payload?.leaseContractLength} ${term.payload?.purchaseOption})`;
+        }
       }
       return "N/A";
+    },
+    ellipsis: {
+      tooltip: true,
     },
   },
   {
