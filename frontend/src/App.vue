@@ -41,7 +41,7 @@ import CostTableMenu from "./components/CostTableMenu.vue";
 import TheFooter from "./components/TheFooter.vue";
 import { ChargeType, DBInstance, EngineType } from "./types";
 import { useDBInstanceStore } from "./stores/dbInstance";
-import aws from "../../store/data/test/aws-full.json";
+import aws from "../../store/data/test/aws-sample.json";
 
 import { reactive } from "vue";
 

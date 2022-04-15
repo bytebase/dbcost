@@ -63,6 +63,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 
 	for _, offer := range priceList {
 		var payload *TermPayload
+		// Only reserved type has payload field
 		if offer.Type == client.OfferTypeReserved {
 			payload = &TermPayload{
 				LeaseContractLength: offer.Payload.LeaseContractLength,
@@ -80,7 +81,7 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 		if termList, ok := offerMap[offer.InstanceID]; !ok {
 			offerMap[offer.InstanceID] = []*Term{term}
 		} else {
-			termList = append(termList, term)
+			offerMap[offer.InstanceID] = append(termList, term)
 		}
 	}
 
@@ -104,8 +105,8 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 							offer.DatabaseEngine = instance.DatabaseEngine
 						}
 						region.TermList = append(region.TermList, offerMap[instance.ID]...)
-						isRegionExist = true
 					}
+					isRegionExist = true
 					break
 				}
 			}
