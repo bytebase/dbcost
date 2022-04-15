@@ -25,7 +25,9 @@ cd ./frontend && pnpm i
 ```
 
 + **Fetching Data** 
-We use a unit test to download the data to local for now. You may type in the following script to your terminal.
+A sample data is provided at [here](https://github.com/bytebase/dbcost/store/data/test/aws-semple.json), you may not need to download and scrub the data by yourself.
+
+**(NOT REQUIRED)** If you would like to fetching the newest data online, a unit test is provided to do this thing for now. You may type in the following script to your terminal.
 ```
 go test -timeout 60s -run ^Test_SaveToLocal$ github.com/bytebase/dbcost/store -v
 ```
