@@ -55,13 +55,12 @@ interface LocalState {
 }
 
 const state = reactive<LocalState>({
-  selectedRegionList: ["Asia Pacific (Sydney)"],
+  selectedRegionList: [],
   selectedChargeType: "OnDemand",
   selectedEngineType: "MYSQL",
 });
 
 const handleUpdateRegion = (val: string[]) => {
-  console.log("app", val);
   state.selectedRegionList = val;
 };
 
