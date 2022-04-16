@@ -14,25 +14,42 @@ The market lacks a tool for developers to compare different database products be
 + **JSON-Schema** for schema （ideally, the whole project's data would be stored as json files）
 
 ### Requirement  
-[Go v1.7](https://go.dev/dl/)
-[pnpm](https://pnpm.io) for package management
++ [Go v1.7](https://go.dev/dl/)
++ [pnpm](https://pnpm.io) for package management
+
+## Road Map
+* [ ] Data collector
+  * [x] AWS
+  * [ ] GCP (**On Going**)
+  * [ ] ALIYUN
+* [ ] Cost Table
+  * [x] Basic Table
+  * [ ] Data Refinement Menu (**On Going**)
+* [ ] Maintaining Relevant Services
+  * [ ] Incorporate Terraform
+  * [ ] Database Service Life Cycle Management
+* [ ] Database Benchmark
+  * [ ] Benchmark Test Scheduling / Result Storage
+  * [ ] Benchmark Dashboard
 ## How to start?
+
 This project is under development and is very unstable. The way to start this project may improve as process goes on.
 
-+ **Installing Frontend Dependencies** 
+### Installing Frontend Dependencies
 ```
 cd ./frontend && pnpm i
 ```
 
-+ **Fetching Data** 
-A sample data is provided at [here](https://github.com/bytebase/dbcost/store/data/test/aws-semple.json), you may not need to download and scrub the data by yourself.
+### Fetching Data
 
-**(NOT REQUIRED)** If you would like to fetching the newest data online, a unit test is provided to do this thing for now. You may type in the following script to your terminal.
+A sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/test/aws-sample.json), you may not need to download and scrub the data by yourself.
+
+**(NOT REQUIRED)** If you would like to fetch the newest data online, a unit test is provided to do this thing for now. You may type in the following script to your terminal.
 ```
 go test -timeout 60s -run ^Test_SaveToLocal$ github.com/bytebase/dbcost/store -v
 ```
 
-+ **Starting the Frontend** 
+### Starting the Frontend
 ```
 pnpm dev
 ```
