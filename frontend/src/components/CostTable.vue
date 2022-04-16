@@ -105,6 +105,10 @@ const props = defineProps({
     type: String as PropType<EngineType>,
     default: "",
   },
+  keyword: {
+    type: String,
+    default: "",
+  },
 });
 
 interface LocalState {
@@ -129,6 +133,15 @@ watch(
   }
 );
 
+watch(
+  () => props.keyword,
+  () => {
+    refreshDataTable();
+  }
+);
+
+const KeywordCheckSet = new Set(["name", "processor", "vCPU", "memory"]);
+
 const refreshDataTable = () => {
   const selectedRegionSet = new Set();
   props.regionList.forEach((val) => {
@@ -147,6 +160,7 @@ const refreshDataTable = () => {
     if (selectedRegion.length === 0) {
       return false;
     }
+
     const termList = selectedRegion[0].termList.filter((t) => {
       if (t.type === props.chargeType && t.databaseEngine == props.engineType) {
         return true;
@@ -154,13 +168,24 @@ const refreshDataTable = () => {
       return false;
     });
 
+    // no pricing info available
     if (termList.length === 0) {
       return false;
     }
-    selectedRegion[0].termList = termList;
 
+    selectedRegion[0].termList = termList;
     // only keep the selected region
     e.regionList = selectedRegion;
+
+    // filter by keyword, we only enable this when the keyword is set by user
+    if (props.keyword.length > 0) {
+      for (const [k, v] of Object.entries(e)) {
+        if (KeywordCheckSet.has(k) && `${v}`.includes(props.keyword)) {
+          return true;
+        }
+      }
+      return false;
+    }
 
     return true;
   });

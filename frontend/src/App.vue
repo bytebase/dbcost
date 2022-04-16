@@ -19,6 +19,7 @@
       @update-region="handleUpdateRegion"
       @update-charge-type="handleUpdateChargeType"
       @update-engine-type="handleUpdateEngineType"
+      @update-keyword="handleUpdateKeyword"
     />
   </div>
 
@@ -29,6 +30,7 @@
       :region-list="state.selectedRegionList"
       :charge-type="state.selectedChargeType"
       :engine-type="state.selectedEngineType"
+      :keyword="state.typedKeyword"
     />
   </div>
 
@@ -52,12 +54,14 @@ interface LocalState {
   selectedRegionList: string[];
   selectedChargeType: ChargeType;
   selectedEngineType: EngineType;
+  typedKeyword: string;
 }
 
 const state = reactive<LocalState>({
   selectedRegionList: [],
   selectedChargeType: "OnDemand",
   selectedEngineType: "MYSQL",
+  typedKeyword: "",
 });
 
 const handleUpdateRegion = (val: string[]) => {
@@ -69,6 +73,9 @@ const handleUpdateChargeType = (val: ChargeType) => {
 };
 const handleUpdateEngineType = (val: EngineType) => {
   state.selectedEngineType = val;
+};
+const handleUpdateKeyword = (val: string) => {
+  state.typedKeyword = val;
 };
 </script>
 

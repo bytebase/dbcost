@@ -14,9 +14,10 @@
     </n-grid>
   </n-checkbox-group>
 
-  <div class="mt-2 space-x-2">
+  <div class="mt-2 space-x-2 flex justify-end">
     <!-- charge type checkbox -->
     <n-radio-group
+      class="align-bottom"
       :default-value="props.chargeType"
       @update-value="handleUpdateChargeType"
     >
@@ -28,6 +29,7 @@
     <!-- NOTE that the price of MYSQL and POSTGRES are happened to be identical -->
     <!-- It is not gurant -->
     <n-radio-group
+      class="align-bottom"
       :default-value="props.engineType"
       @update-value="handleUpdateEngineType"
     >
@@ -48,6 +50,19 @@
         />
       </n-radio-button>
     </n-radio-group>
+
+    <!-- Search Bar -->
+    <div class="inline-block align-bottom">
+      <n-input
+        placeholder="Keyword"
+        clearable
+        @update-value="handleUpdateKeyword"
+      >
+        <template #prefix>
+          <heroicons-outline:search class="h-5 w-5 text-green-600" />
+        </template>
+      </n-input>
+    </div>
   </div>
 </template>
 
@@ -63,6 +78,7 @@ import {
   NRadioButton,
   NButton,
   NAvatar,
+  NInput,
 } from "naive-ui";
 import { PropType } from "vue";
 
@@ -93,6 +109,7 @@ const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
   (e: "update-engine-type", selectedEngineType: EngineType): void;
+  (e: "update-keyword", typedKeyword: string): void;
 }>();
 
 const handleUpdateRegion = (val: any[]) => {
@@ -105,6 +122,10 @@ const handleUpdateChargeType = (val: ChargeType) => {
 
 const handleUpdateEngineType = (val: EngineType) => {
   emit("update-engine-type", val);
+};
+
+const handleUpdateKeyword = (val: string) => {
+  emit("update-keyword", val);
 };
 </script>
 
