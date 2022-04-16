@@ -1,14 +1,6 @@
 <template>
   <!-- header -->
-  <div class="inset-0">
-    <div class="px-5 pt-5 items-center">
-      <span class="font-bold text-lg text-center">DB COST</span>
-      <img
-        class="w-5 ml-5 inline float-right"
-        src="./assets/icon/logo-icon.svg"
-      />
-    </div>
-  </div>
+  <the-header />
 
   <!-- menu -->
   <div class="mx-5 mt-1">
@@ -41,6 +33,8 @@
 import CostTable from "./components/CostTable.vue";
 import CostTableMenu from "./components/CostTableMenu.vue";
 import TheFooter from "./components/TheFooter.vue";
+import TheHeader from "./components/TheHeader.vue";
+
 import { ChargeType, DBInstance, EngineType } from "./types";
 import { useDBInstanceStore } from "./stores/dbInstance";
 import aws from "../../store/data/test/aws-sample.json";
