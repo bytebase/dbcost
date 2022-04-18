@@ -49,7 +49,7 @@ const (
 	OfferTypeInstance OfferType = "Instance"
 	// OfferTypeRAM is the offer type that provides RAM as a basic unit
 	OfferTypeRAM OfferType = "RAM"
-	// OfferTypeVCPU is the offer type that provide a VCPU as a basic unit
+	// OfferTypeVCPU is the offer type that provides vCPU as a basic unit
 	OfferTypeVCPU OfferType = "VCPU"
 )
 
