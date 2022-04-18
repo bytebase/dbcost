@@ -30,14 +30,27 @@ type Instance struct {
 	DatabaseEngine     EngineType `json:"databaseEngine"`
 }
 
-// OfferType is the charging type of the price
+// ChargeType is the charge type of the price
+type ChargeType string
+
+const (
+	// ChargeTypeOnDemand is the on demand type of the price
+	ChargeTypeOnDemand ChargeType = "OnDemand"
+	// ChargeTypeReserved is the reserved type of the price
+	ChargeTypeReserved ChargeType = "Reserved"
+)
+
+// OfferType is the type of the smallest offer type of a offer.
+// Some vendors may provide offer at a VCPU/RAM level while others may only provide a specified instance.
 type OfferType string
 
 const (
-	// OfferTypeOnDemand is the on demand type of the price
-	OfferTypeOnDemand OfferType = "OnDemand"
-	// OfferTypeReserved is the reserved type of the price
-	OfferTypeReserved OfferType = "Reserved"
+	// OfferTypeInstance is the offer type that provide a specified instance as a basic unit
+	OfferTypeInstance OfferType = "Instance"
+	// OfferTypeRAM is the offer type that provide a RAM as a basic unit
+	OfferTypeRAM OfferType = "RAM"
+	// OfferTypeVCPU is the offer type that provide a VCPU as a basic unit
+	OfferTypeVCPU OfferType = "VCPU"
 )
 
 // Currency is the type of the currency
@@ -46,21 +59,23 @@ type Currency string
 // CurrencyUSD is the type of the currency of USC
 const CurrencyUSD = "USD"
 
-// OfferPayload is the term Payload of the price
-type OfferPayload struct {
+// ChargePayload is the charge payload of the offer
+type ChargePayload struct {
 	LeaseContractLength string `json:"leaseContractLength"`
 	PurchaseOption      string `json:"purchaseOption"`
 }
 
 // Offer is the api message of an Offer
 type Offer struct {
-	ID         string
-	InstanceID string
+	ID string
 
-	Type OfferType
-	// Term is nil when the ChargeType is onDemand
-	Payload *OfferPayload
+	OfferType  OfferType
+	InstanceID string // If OfferType is not Instance, InstanceID would be nil
 
+	ChargeType    ChargeType
+	ChargePayload *ChargePayload // Payload is nil when the ChargeType is onDemand
+
+	RegionList  []string
 	Description string
 	Unit        string
 	USD         float64

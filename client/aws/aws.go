@@ -86,7 +86,7 @@ type PriceDimensionRaw struct {
 // PriceRaw is the raw price struct marshaled from the aws json file
 type PriceRaw struct {
 	Dimension map[string]PriceDimensionRaw `json:"priceDimensions"`
-	Term      *client.OfferPayload         `json:"termAttributes"`
+	Term      *client.ChargePayload        `json:"termAttributes"`
 }
 
 // InfoEndPoint is the instance info endpoint
@@ -147,13 +147,13 @@ func extractPrice(rawData *rawJSON) ([]*client.Offer, error) {
 						return nil, fmt.Errorf("Fail to parse the price to type FLOAT64, value: %v, [internal]: %v", dimension.PricePerUnit[client.CurrencyUSD], err)
 					}
 					price := &client.Offer{
-						ID:          string(rateCode),
-						InstanceID:  string(instanceID),
-						Type:        chargeType,
-						Payload:     offer.Term,
-						Description: dimension.Description,
-						Unit:        dimension.Unit,
-						USD:         USDFloat,
+						ID:            string(rateCode),
+						InstanceID:    string(instanceID),
+						ChargeType:    client.ChargeType(chargeType),
+						ChargePayload: offer.Term,
+						Description:   dimension.Description,
+						Unit:          dimension.Unit,
+						USD:           USDFloat,
 					}
 					priceList = append(priceList, price)
 				}
