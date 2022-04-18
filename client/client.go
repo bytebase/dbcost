@@ -47,7 +47,7 @@ type OfferType string
 const (
 	// OfferTypeInstance is the offer type that provide a specified instance as a basic unit.
 	OfferTypeInstance OfferType = "Instance"
-	// OfferTypeRAM is the offer type that provide a RAM as a basic unit.
+	// OfferTypeRAM is the offer type that provides RAM as a basic unit
 	OfferTypeRAM OfferType = "RAM"
 	// OfferTypeVCPU is the offer type that provide a VCPU as a basic unit.
 	OfferTypeVCPU OfferType = "VCPU"
