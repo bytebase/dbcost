@@ -1,12 +1,18 @@
 package client
 
+// EngineType is the type of the database engine
+// It should be noticed that the price of different engine may differ
 type EngineType string
 
 const (
-	EngineTypeMySQL      = "MYSQL"
+	// EngineTypeMySQL is the engine type for MySQL
+	EngineTypeMySQL = "MYSQL"
+	// EngineTypePostgreSQL is the engine type for PostgreSQL
 	EngineTypePostgreSQL = "POSTGRES"
-	EngineTypeOracle     = "ORACLE"
-	EngineTypeSQLServer  = "SQLSERVER"
+	// EngineTypeOracle is the engine type for Oracle
+	EngineTypeOracle = "ORACLE"
+	// EngineTypeSQLServer is the engine type for SQLServer
+	EngineTypeSQLServer = "SQLSERVER"
 )
 
 // Instance is the api message of the instance
