@@ -1,3 +1,206 @@
 {
-  "url": "n/a"
+  "skus": [
+    {
+      "name": "services/9662-B51E-5089/skus/0009-6F35-3126",
+      "skuId": "0009-6F35-3126",
+      "description": "Network Internet Egress from EMEA to Seoul",
+      "category": {
+        "serviceDisplayName": "Cloud SQL",
+        "resourceFamily": "Network",
+        "resourceGroup": "PremiumInternetEgress",
+        "usageType": "OnDemand"
+      },
+      "serviceRegions": ["europe-west1"],
+      "pricingInfo": [
+        {
+          "summary": "",
+          "pricingExpression": {
+            "usageUnit": "GiBy",
+            "displayQuantity": 1,
+            "tieredRates": [
+              {
+                "startUsageAmount": 0,
+                "unitPrice": {
+                  "currencyCode": "USD",
+                  "units": "0",
+                  "nanos": 190000000
+                }
+              }
+            ],
+            "usageUnitDescription": "gibibyte",
+            "baseUnit": "By",
+            "baseUnitDescription": "byte",
+            "baseUnitConversionFactor": 1073741824
+          },
+          "currencyConversionRate": 1,
+          "effectiveTime": "2022-04-18T01:08:21.806Z"
+        }
+      ],
+      "serviceProviderName": "Google"
+    },
+    {
+      "name": "services/9662-B51E-5089/skus/000E-8560-3D8D",
+      "skuId": "000E-8560-3D8D",
+      "description": "Cloud SQL for MySQL: Zonal - 96 vCPU + 360GB RAM in Paris",
+      "category": {
+        "serviceDisplayName": "Cloud SQL",
+        "resourceFamily": "ApplicationServices",
+        "resourceGroup": "SQLGen2InstancesN1Standard",
+        "usageType": "OnDemand"
+      },
+      "serviceRegions": ["europe-west9"],
+      "pricingInfo": [
+        {
+          "summary": "",
+          "pricingExpression": {
+            "usageUnit": "h",
+            "displayQuantity": 1,
+            "tieredRates": [
+              {
+                "startUsageAmount": 0,
+                "unitPrice": {
+                  "currencyCode": "USD",
+                  "units": "7",
+                  "nanos": 523600000
+                }
+              }
+            ],
+            "usageUnitDescription": "hour",
+            "baseUnit": "s",
+            "baseUnitDescription": "second",
+            "baseUnitConversionFactor": 3600
+          },
+          "currencyConversionRate": 1,
+          "effectiveTime": "2022-04-18T01:08:21.806Z"
+        }
+      ],
+      "serviceProviderName": "Google"
+    },
+    {
+      "name": "services/9662-B51E-5089/skus/002A-FBB4-3C32",
+      "skuId": "002A-FBB4-3C32",
+      "description": "Cloud SQL for PostgreSQL: Zonal - vCPU in Netherlands",
+      "category": {
+        "serviceDisplayName": "Cloud SQL",
+        "resourceFamily": "ApplicationServices",
+        "resourceGroup": "SQLGen2InstancesCPU",
+        "usageType": "OnDemand"
+      },
+      "serviceRegions": ["europe-west4"],
+      "pricingInfo": [
+        {
+          "summary": "",
+          "pricingExpression": {
+            "usageUnit": "h",
+            "displayQuantity": 1,
+            "tieredRates": [
+              {
+                "startUsageAmount": 0,
+                "unitPrice": {
+                  "currencyCode": "USD",
+                  "units": "0",
+                  "nanos": 45400000
+                }
+              }
+            ],
+            "usageUnitDescription": "hour",
+            "baseUnit": "s",
+            "baseUnitDescription": "second",
+            "baseUnitConversionFactor": 3600
+          },
+          "currencyConversionRate": 1,
+          "effectiveTime": "2022-04-18T01:08:21.806Z"
+        }
+      ],
+      "serviceProviderName": "Google",
+      "geoTaxonomy": {
+        "type": "REGIONAL",
+        "regions": ["europe-west4"]
+      }
+    },
+    {
+      "name": "services/9662-B51E-5089/skus/0033-DF11-C9B7",
+      "skuId": "0033-DF11-C9B7",
+      "description": "Cloud SQL for SQL Server: Regional - RAM in APAC",
+      "category": {
+        "serviceDisplayName": "Cloud SQL",
+        "resourceFamily": "ApplicationServices",
+        "resourceGroup": "SQLGen2InstancesRAM",
+        "usageType": "OnDemand"
+      },
+      "serviceRegions": ["asia-east1"],
+      "pricingInfo": [
+        {
+          "summary": "",
+          "pricingExpression": {
+            "usageUnit": "GiBy.h",
+            "displayQuantity": 1,
+            "tieredRates": [
+              {
+                "startUsageAmount": 0,
+                "unitPrice": {
+                  "currencyCode": "USD",
+                  "units": "0",
+                  "nanos": 14000000
+                }
+              }
+            ],
+            "usageUnitDescription": "gibibyte hour",
+            "baseUnit": "By.s",
+            "baseUnitDescription": "byte second",
+            "baseUnitConversionFactor": 3865470566400
+          },
+          "currencyConversionRate": 1,
+          "effectiveTime": "2022-04-18T01:08:21.806Z"
+        }
+      ],
+      "serviceProviderName": "Google",
+      "geoTaxonomy": {
+        "type": "REGIONAL",
+        "regions": ["asia-east1"]
+      }
+    },
+    {
+      "name": "services/9662-B51E-5089/skus/D74A-49A5-A0F3",
+      "skuId": "D74A-49A5-A0F3",
+      "description": "Commitment - dollar based v1: Cloud SQL database europe-west3 for 1 year",
+      "category": {
+        "serviceDisplayName": "Cloud SQL",
+        "resourceFamily": "ApplicationServices",
+        "resourceGroup": "SQLGen1Instances",
+        "usageType": "OnDemand"
+      },
+      "serviceRegions": ["europe-west3"],
+      "pricingInfo": [
+        {
+          "summary": "",
+          "pricingExpression": {
+            "usageUnit": "h",
+            "displayQuantity": 1,
+            "tieredRates": [
+              {
+                "startUsageAmount": 0,
+                "unitPrice": {
+                  "currencyCode": "USD",
+                  "units": "0",
+                  "nanos": 7500000
+                }
+              }
+            ],
+            "usageUnitDescription": "hour",
+            "baseUnit": "s",
+            "baseUnitDescription": "second",
+            "baseUnitConversionFactor": 3600
+          },
+          "currencyConversionRate": 1,
+          "effectiveTime": "2022-04-18T01:08:21.806Z"
+        }
+      ],
+      "serviceProviderName": "Google",
+      "geoTaxonomy": {
+        "type": "REGIONAL",
+        "regions": ["europe-west3"]
+      }
+    }
+  ]
 }
