@@ -1,21 +1,21 @@
 package client
 
-// EngineType is the type of the database engine
-// It should be noticed that the price of different engine may differ
+// EngineType is the type of the database engine.
+// It should be noticed that the price of different engine may differ.
 type EngineType string
 
 const (
-	// EngineTypeMySQL is the engine type for MySQL
+	// EngineTypeMySQL is the engine type for MySQL.
 	EngineTypeMySQL = "MYSQL"
-	// EngineTypePostgreSQL is the engine type for PostgreSQL
+	// EngineTypePostgreSQL is the engine type for PostgreSQL.
 	EngineTypePostgreSQL = "POSTGRES"
-	// EngineTypeOracle is the engine type for Oracle
+	// EngineTypeOracle is the engine type for Oracle.
 	EngineTypeOracle = "ORACLE"
-	// EngineTypeSQLServer is the engine type for SQLServer
+	// EngineTypeSQLServer is the engine type for SQLServer.
 	EngineTypeSQLServer = "SQLSERVER"
 )
 
-// Instance is the api message of the instance
+// Instance is the api message of the instance.
 type Instance struct {
 	ID                 string
 	ServiceCode        string     `json:"servicecode"`
@@ -30,13 +30,13 @@ type Instance struct {
 	DatabaseEngine     EngineType `json:"databaseEngine"`
 }
 
-// ChargeType is the charge type of the price
+// ChargeType is the charge type of the price.
 type ChargeType string
 
 const (
-	// ChargeTypeOnDemand is the on demand type of the price
+	// ChargeTypeOnDemand is the on demand type of the price.
 	ChargeTypeOnDemand ChargeType = "OnDemand"
-	// ChargeTypeReserved is the reserved type of the price
+	// ChargeTypeReserved is the reserved type of the price.
 	ChargeTypeReserved ChargeType = "Reserved"
 )
 
@@ -45,35 +45,37 @@ const (
 type OfferType string
 
 const (
-	// OfferTypeInstance is the offer type that provide a specified instance as a basic unit
+	// OfferTypeInstance is the offer type that provide a specified instance as a basic unit.
 	OfferTypeInstance OfferType = "Instance"
-	// OfferTypeRAM is the offer type that provide a RAM as a basic unit
+	// OfferTypeRAM is the offer type that provide a RAM as a basic unit.
 	OfferTypeRAM OfferType = "RAM"
-	// OfferTypeVCPU is the offer type that provide a VCPU as a basic unit
+	// OfferTypeVCPU is the offer type that provide a VCPU as a basic unit.
 	OfferTypeVCPU OfferType = "VCPU"
 )
 
-// Currency is the type of the currency
+// Currency is the type of the currency.
 type Currency string
 
-// CurrencyUSD is the type of the currency of USC
+// CurrencyUSD is the type of the currency of USC.
 const CurrencyUSD = "USD"
 
-// ChargePayload is the charge payload of the offer
+// ChargePayload is the charge payload of the offer.
 type ChargePayload struct {
 	LeaseContractLength string `json:"leaseContractLength"`
 	PurchaseOption      string `json:"purchaseOption"`
 }
 
-// Offer is the api message of an Offer
+// Offer is the api message of an Offer.
 type Offer struct {
 	ID string
 
-	OfferType  OfferType
-	InstanceID string // If OfferType is not Instance, InstanceID would be nil
+	OfferType OfferType
+	// If OfferType is not Instance, InstanceID would be empty, otherwise InstanceID may be the sku of that instance.
+	InstanceID string
 
-	ChargeType    ChargeType
-	ChargePayload *ChargePayload // Payload is nil when the ChargeType is onDemand
+	ChargeType ChargeType
+	// Payload is nil when the ChargeType is onDemand.
+	ChargePayload *ChargePayload
 
 	RegionList  []string
 	Description string
@@ -81,7 +83,7 @@ type Offer struct {
 	USD         float64
 }
 
-// Client is the client for http request
+// Client is the client for http request.
 type Client interface {
 	GetInstancePrice()
 }
