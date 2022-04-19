@@ -74,7 +74,7 @@ type Offer struct {
 	InstanceID string
 
 	ChargeType ChargeType
-	// Payload is nil when the ChargeType is onDemand.
+	// Payload is present when the ChargeType is Reserved, otherwise nil.
 	ChargePayload *ChargePayload
 
 	RegionList  []string
