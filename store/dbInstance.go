@@ -19,7 +19,7 @@ type TermPayload struct {
 // Term is the pricing term of a given instance
 type Term struct {
 	DatabaseEngine client.EngineType `json:"databaseEngine"`
-	Type           client.OfferType  `json:"type"`
+	Type           client.ChargeType `json:"type"`
 	Payload        *TermPayload      `json:"payload"`
 
 	Unit        string  `json:"unit"`
@@ -64,15 +64,15 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 	for _, offer := range priceList {
 		var payload *TermPayload
 		// Only reserved type has payload field
-		if offer.Type == client.OfferTypeReserved {
+		if offer.ChargeType == client.ChargeTypeReserved {
 			payload = &TermPayload{
-				LeaseContractLength: offer.Payload.LeaseContractLength,
-				PurchaseOption:      offer.Payload.PurchaseOption,
+				LeaseContractLength: offer.ChargePayload.LeaseContractLength,
+				PurchaseOption:      offer.ChargePayload.PurchaseOption,
 			}
 		}
 
 		term := &Term{
-			Type:        offer.Type,
+			Type:        offer.ChargeType,
 			Payload:     payload,
 			Unit:        offer.Unit,
 			USD:         offer.USD,
