@@ -71,6 +71,7 @@ type Offer struct {
 
 	OfferType OfferType
 	// If OfferType is not Instance, InstanceID would be empty, otherwise InstanceID may be the sku of that instance.
+	// e.g. AWS: 9QH3PUGXCYKNCYPB, GCP: 0009-6F35-3126
 	InstanceID string
 
 	ChargeType ChargeType
