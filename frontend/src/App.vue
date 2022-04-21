@@ -19,7 +19,7 @@
   <div class="mx-5 mt-5">
     <cost-table
       :db-instance-list="dbInstanceStore.dbInstanceList"
-      :region-list="state.selectedRegionList"
+      :region="state.selectedRegion"
       :charge-type="state.selectedChargeType"
       :engine-type="state.selectedEngineType"
       :keyword="state.typedKeyword"
