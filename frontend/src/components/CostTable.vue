@@ -93,9 +93,9 @@ const props = defineProps({
     type: Object as PropType<DBInstance[]>,
     default: [],
   },
-  regionList: {
-    type: Object as PropType<string[]>,
-    default: [],
+  region: {
+    type: String,
+    default: "",
   },
   chargeType: {
     type: String as PropType<ChargeType>,
@@ -127,7 +127,7 @@ watch(
 );
 
 watch(
-  () => props.regionList.length,
+  () => props.region,
   () => {
     refreshDataTable();
   }
@@ -140,54 +140,50 @@ watch(
   }
 );
 
-const KeywordCheckSet = new Set(["name", "processor", "vCPU", "memory"]);
-
 const refreshDataTable = () => {
-  const selectedRegionSet = new Set();
-  props.regionList.forEach((val) => {
-    selectedRegionSet.add(val);
-  });
-
-  state.selectedInstance = props.dbInstanceList.filter((e) => {
+  state.selectedInstance = [];
+  props.dbInstanceList.forEach((e) => {
     const selectedRegion = e.regionList.filter((r) => {
-      if (selectedRegionSet.has(r.name)) {
+      if (r.name == props.region) {
         return true;
       }
       return false;
     });
-
     // no region found
     if (selectedRegion.length === 0) {
-      return false;
+      return;
     }
 
-    const termList = selectedRegion[0].termList.filter((t) => {
+    const selectedTermList = selectedRegion[0].termList.filter((t) => {
       if (t.type === props.chargeType && t.databaseEngine == props.engineType) {
         return true;
       }
       return false;
     });
-
     // no pricing info available
-    if (termList.length === 0) {
-      return false;
+    if (selectedTermList.length === 0) {
+      return;
     }
 
-    selectedRegion[0].termList = termList;
-    // only keep the selected region
-    e.regionList = selectedRegion;
-
+    // make a new copy so that the original one will remain unaffected
+    const selectedInstance = {
+      ...e,
+      regionList: [
+        {
+          name: selectedRegion[0].name,
+          termList: selectedTermList,
+        },
+      ],
+    };
     // filter by keyword, we only enable this when the keyword is set by user
     if (props.keyword.length > 0) {
-      for (const [k, v] of Object.entries(e)) {
-        if (KeywordCheckSet.has(k) && `${v}`.includes(props.keyword)) {
-          return true;
-        }
+      const jsonStr = JSON.stringify(selectedInstance).trim();
+      if (!jsonStr.includes(props.keyword.trim())) {
+        return;
       }
-      return false;
     }
 
-    return true;
+    state.selectedInstance.push(selectedInstance);
   });
 };
 

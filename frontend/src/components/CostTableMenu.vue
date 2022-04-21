@@ -1,20 +1,17 @@
 <template>
-  <!-- region checkbox -->
-  <n-button class="mb-1" size="small" @click="handleUpdateRegion([])">
-    Clear All
-  </n-button>
-  <n-checkbox-group
-    :value="(regionList as any)"
-    @update-value="handleUpdateRegion"
-  >
-    <n-grid :y-gap="4" :cols="3">
-      <n-gi v-for="(region, i) in availableRegionList" :key="i">
-        <n-checkbox :value="region" :label="region" />
-      </n-gi>
-    </n-grid>
-  </n-checkbox-group>
-
   <div class="mt-2 space-x-2 flex justify-end">
+    <!-- region dropdown -->
+    <n-dropdown
+      :options="dropdownOptionList"
+      placement="bottom-start"
+      trigger="click"
+      @select="handleUpdateRegion"
+    >
+      <n-button :type="region.length === 0 ? '' : 'primary'" ghost>{{
+        region.length === 0 ? "Select Region" : region
+      }}</n-button>
+    </n-dropdown>
+
     <!-- charge type checkbox -->
     <n-radio-group
       class="align-bottom"
@@ -70,24 +67,22 @@
 import { ChargeType, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
 import {
-  NCheckboxGroup,
-  NGrid,
-  NCheckbox,
-  NGi,
   NRadioGroup,
   NRadioButton,
   NButton,
+  NDropdown,
   NAvatar,
   NInput,
+  DropdownGroupOption,
 } from "naive-ui";
-import { PropType } from "vue";
+import { computed, PropType } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
 const availableRegionList = dbInstanceStore.getAvailableRegionList();
 
 const props = defineProps({
-  regionList: {
-    type: Object as PropType<String[]>,
+  region: {
+    type: String,
     default: "",
   },
   chargeType: {
@@ -105,14 +100,49 @@ const EngineIconPath = {
   POSTGRES: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
 };
 
+const dropdownOptionList = computed(() => {
+  const dropDownList: any = [];
+  const parentKey = new Set<string>();
+
+  availableRegionList.forEach((region) => {
+    const parentRegion = region.substring(0, region.indexOf("(") - 1);
+    const childRegion = region.substring(
+      region.indexOf("(") + 1,
+      region.indexOf(")")
+    );
+    if (parentKey.has(parentRegion)) {
+      dropDownList.forEach((e: DropdownGroupOption) => {
+        if (e.label == parentRegion) {
+          e.children.push({
+            label: childRegion,
+            key: childRegion,
+          });
+        }
+      });
+    } else {
+      parentKey.add(parentRegion);
+      dropDownList.push({
+        label: parentRegion,
+        key: parentRegion,
+        children: [
+          {
+            label: childRegion,
+            key: region,
+          },
+        ],
+      });
+    }
+  });
+  return dropDownList;
+});
 const emit = defineEmits<{
-  (e: "update-region", selectedRegion: string[]): void;
+  (e: "update-region", selectedRegion: string): void;
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
   (e: "update-engine-type", selectedEngineType: EngineType): void;
   (e: "update-keyword", typedKeyword: string): void;
 }>();
 
-const handleUpdateRegion = (val: any[]) => {
+const handleUpdateRegion = (val: string) => {
   emit("update-region", val);
 };
 
