@@ -61,31 +61,6 @@ const columns: any = [
       tooltip: true,
     },
   },
-  {
-    title: "Region",
-    render: (dbInstance: DBInstance) => {
-      return dbInstance.regionList[0].name;
-    },
-    ellipsis: {
-      tooltip: true,
-    },
-    sorter: {
-      compare: (row1: DBInstance, row2: DBInstance) => {
-        const a = row1.regionList[0].name.toLocaleLowerCase();
-        const b = row2.regionList[0].name.toLocaleLowerCase();
-        const len = a.length > b.length ? b.length : a.length;
-        for (let i = 0; i < len; i++) {
-          if (a[i] < b[i]) {
-            return false;
-          } else if (a[i] > b[i]) {
-            return true;
-          }
-        }
-        return true;
-      },
-      multiple: 1,
-    },
-  },
 ];
 
 const props = defineProps({
