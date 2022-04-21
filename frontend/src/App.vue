@@ -13,7 +13,7 @@
   <!-- menu -->
   <div class="mx-5 mt-4">
     <cost-table-menu
-      :region-list="state.selectedRegionList"
+      :region="state.selectedRegion"
       :charge-type="state.selectedChargeType"
       :engine-type="state.selectedEngineType"
       @update-region="handleUpdateRegion"
@@ -53,21 +53,21 @@ const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as DBInstance[];
 
 interface LocalState {
-  selectedRegionList: string[];
+  selectedRegion: string;
   selectedChargeType: ChargeType;
   selectedEngineType: EngineType;
   typedKeyword: string;
 }
 
 const state = reactive<LocalState>({
-  selectedRegionList: [],
+  selectedRegion: "",
   selectedChargeType: "OnDemand",
   selectedEngineType: "MYSQL",
   typedKeyword: "",
 });
 
-const handleUpdateRegion = (val: string[]) => {
-  state.selectedRegionList = val;
+const handleUpdateRegion = (val: string) => {
+  state.selectedRegion = val;
 };
 
 const handleUpdateChargeType = (val: ChargeType) => {
