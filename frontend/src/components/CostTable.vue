@@ -117,9 +117,9 @@ watch(
 
 const refreshDataTable = () => {
   state.selectedInstance = [];
-  props.dbInstanceList.forEach((e) => {
-    const selectedRegion = e.regionList.filter((r) => {
-      if (r.name == props.region) {
+  props.dbInstanceList.forEach((dbInstance) => {
+    const selectedRegion = dbInstance.regionList.filter((region) => {
+      if (region.name == props.region) {
         return true;
       }
       return false;
@@ -129,8 +129,11 @@ const refreshDataTable = () => {
       return;
     }
 
-    const selectedTermList = selectedRegion[0].termList.filter((t) => {
-      if (t.type === props.chargeType && t.databaseEngine == props.engineType) {
+    const selectedTermList = selectedRegion[0].termList.filter((term) => {
+      if (
+        term.type === props.chargeType &&
+        term.databaseEngine == props.engineType
+      ) {
         return true;
       }
       return false;
@@ -142,7 +145,7 @@ const refreshDataTable = () => {
 
     // make a new copy so that the original one will remain unaffected
     const selectedInstance = {
-      ...e,
+      ...dbInstance,
       regionList: [
         {
           name: selectedRegion[0].name,
@@ -150,12 +153,15 @@ const refreshDataTable = () => {
         },
       ],
     };
+
     // filter by keyword, we only enable this when the keyword is set by user
-    if (props.keyword.length > 0) {
-      const jsonStr = JSON.stringify(selectedInstance).trim();
-      if (!jsonStr.includes(props.keyword.trim())) {
-        return;
-      }
+    const keyword = props.keyword;
+    if (
+      keyword.length > 0 &&
+      !selectedInstance.name.includes(keyword) &&
+      !selectedInstance.processor.includes(keyword)
+    ) {
+      return;
     }
 
     state.selectedInstance.push(selectedInstance);
