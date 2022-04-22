@@ -7,7 +7,7 @@
       trigger="click"
       @select="handleUpdateRegion"
     >
-      <n-button :type="region.length === 0 ? '' : 'primary'" ghost>{{
+      <n-button :type="region.length === 0 ? undefined : 'primary'" ghost>{{
         region.length === 0 ? "Select Region" : region
       }}</n-button>
     </n-dropdown>
@@ -75,7 +75,7 @@ import {
   NInput,
   DropdownGroupOption,
 } from "naive-ui";
-import { computed, PropType } from "vue";
+import { computed, PropType, ComputedRef } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
 const availableRegionList = dbInstanceStore.getAvailableRegionList();
@@ -100,7 +100,7 @@ const EngineIconPath = {
   POSTGRES: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
 };
 
-const dropdownOptionList = computed(() => {
+const dropdownOptionList: ComputedRef<DropdownGroupOption[]> = computed(() => {
   const dropDownList: any = [];
   const parentKey = new Set<string>();
 
