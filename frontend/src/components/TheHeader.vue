@@ -1,8 +1,13 @@
 <template>
   <div class="px-5 pt-4 items-center">
-    <span class="inline font-bold text-xl text-center ml-2">DB Cost</span>
+    <div class="inline-flex flex-row items-center">
+      <a href="https://bytebase.com" target="_blank">
+        <img class="h-7" src="../assets/icon/dbcost.png" alt="Bytebase" />
+      </a>
+      <span class="inline font-bold text-xl text-center">DB Cost</span>
+    </div>
 
-    <div class="flex items-center float-right space-x-4">
+    <div class="inline-flex float-right items-center space-x-4">
       <div class="">
         <div v-is="'script'" async src="https://buttons.github.io/buttons.js" />
         <a
