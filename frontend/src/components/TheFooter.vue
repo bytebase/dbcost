@@ -1,8 +1,23 @@
 <template>
   <div
-    class="mx-2 border-t border-gray-200 max-w-7xl pt-4 md:flex md:items-center md:justify-between"
+    class="mx-2 border-t border-gray-200 pt-4 md:flex md:items-center md:justify-between space-y-4"
   >
-    <div class="flex justify-center space-x-6 md:order-2">
+    <div
+      class="md:order-2 pt-4 flex flex-row justify-center items-center space-x-2"
+    >
+      <span class="text-sm">Missing Something?</span>
+      <span class="text-sm">
+        <a
+          class="text-blue-500 hover:text-blue-800"
+          href="https://github.com/bytebase/dbcost"
+          target="_blank"
+        >
+          Send a Pull Request
+        </a>
+      </span>
+    </div>
+
+    <div class="flex justify-center space-x-6 md:order-3">
       <a
         href="https://twitter.com/Bytebase"
         target="__blank"
@@ -41,11 +56,10 @@
         </svg>
       </a>
     </div>
-    <div class="mt-5 md:mt-0 md:order-1 flex flex-row items-center space-x-4">
-      <img class="h-8" src="../assets/icon/logo-full.svg" alt="Bytebase" />
-      <p class="text-center text-base text-gray-400 mt-1">
-        &copy; {{ year }} Bytebase. All rights reserved.
-      </p>
+    <div class="md:order-1 flex flex-row justify-center space-x-1">
+      <span class="text-sm">Sponsored</span>
+      <span class="text-sm">by</span>
+      <img class="h-5" src="../assets/icon/logo-full.svg" alt="Bytebase" />
     </div>
   </div>
 </template>

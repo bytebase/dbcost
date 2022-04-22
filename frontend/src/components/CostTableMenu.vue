@@ -1,8 +1,6 @@
 <template>
   <!-- region checkbox -->
-  <n-button class="mb-1" size="small" @click="handleUpdateRegion([])">
-    Clear All
-  </n-button>
+  <n-button class="mb-4" size="small" @click="clearAll"> Clear All </n-button>
   <n-checkbox-group
     :value="(regionList as any)"
     @update-value="handleUpdateRegion"
@@ -14,7 +12,7 @@
     </n-grid>
   </n-checkbox-group>
 
-  <div class="mt-2 space-x-2 flex justify-end">
+  <div class="mt-2 space-x-2 flex justify-start">
     <!-- charge type checkbox -->
     <n-radio-group
       class="align-bottom"
@@ -55,6 +53,7 @@
     <div class="inline-block align-bottom">
       <n-input
         placeholder="Keyword"
+        :value="state.searchKeyword"
         clearable
         @update-value="handleUpdateKeyword"
       >
@@ -80,7 +79,7 @@ import {
   NAvatar,
   NInput,
 } from "naive-ui";
-import { PropType } from "vue";
+import { PropType, reactive } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
 const availableRegionList = dbInstanceStore.getAvailableRegionList();
@@ -112,6 +111,14 @@ const emit = defineEmits<{
   (e: "update-keyword", typedKeyword: string): void;
 }>();
 
+interface LocalState {
+  searchKeyword: string;
+}
+
+const state = reactive<LocalState>({
+  searchKeyword: "",
+});
+
 const handleUpdateRegion = (val: any[]) => {
   emit("update-region", val);
 };
@@ -125,7 +132,14 @@ const handleUpdateEngineType = (val: EngineType) => {
 };
 
 const handleUpdateKeyword = (val: string) => {
+  state.searchKeyword = val;
   emit("update-keyword", val);
+};
+
+const clearAll = () => {
+  handleUpdateKeyword("");
+  handleUpdateRegion([]);
+  state.searchKeyword = "";
 };
 </script>
 

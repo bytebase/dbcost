@@ -3,7 +3,7 @@
   <the-header />
 
   <!-- menu -->
-  <div class="mx-5 mt-1">
+  <div class="mx-5 mt-4">
     <cost-table-menu
       :region-list="state.selectedRegionList"
       :charge-type="state.selectedChargeType"
