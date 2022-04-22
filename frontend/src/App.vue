@@ -50,7 +50,7 @@ import aws from "../../store/data/test/aws-sample.json";
 import { reactive } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
-dbInstanceStore.dbInstanceList = aws as DBInstance[];
+dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
 
 interface LocalState {
   selectedRegion: string;

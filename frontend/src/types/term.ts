@@ -11,6 +11,6 @@ export type Term = {
   databaseEngine: string;
   type: ChargeType;
   payload: TermPayload;
-  unit: string;
-  usd: number;
+  hourlyUSD: number;
+  commitmentUSD: number;
 };

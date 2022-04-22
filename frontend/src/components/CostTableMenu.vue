@@ -26,8 +26,8 @@
     </n-radio-group>
 
     <!-- Database Engine Type -->
-    <!-- NOTE that the price of MYSQL and POSTGRES are happened to be identical -->
-    <!-- It is not gurant -->
+    <!-- NOTE that although the price of MYSQL and POSTGRES are happened to be identical -->
+    <!--  it is not guaranteed that prices between different database engine are the sameƒ -->
     <n-radio-group
       class="align-bottom"
       :default-value="props.engineType"
