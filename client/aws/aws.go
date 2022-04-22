@@ -28,27 +28,27 @@ type rawJSON struct {
 	Term    interface{} `json:"terms"`
 }
 
-type EngineType string
+type engineType string
 
 const (
-	EngineTypeMySQL      = "MySQL"
-	EngineTypePostgreSQL = "PostgreSQL"
-	EngineTypeSQLServer  = "SQL Server"
-	EngineTypeSQLOracle  = "Oracle"
+	engineTypeMySQL      = "MySQL"
+	engineTypePostgreSQL = "PostgreSQL"
+	engineTypeSQLServer  = "SQL Server"
+	engineTypeSQLOracle  = "Oracle"
 )
 
-func (e EngineType) String() string {
+func (e engineType) String() string {
 	switch e {
-	case EngineTypeMySQL:
+	case engineTypeMySQL:
 		return "MYSQL"
-	case EngineTypePostgreSQL:
+	case engineTypePostgreSQL:
 		return "POSTGRES"
-	case EngineTypeSQLServer:
+	case engineTypeSQLServer:
 		return "SQLSERVER"
-	case EngineTypeSQLOracle:
+	case engineTypeSQLOracle:
 		return "ORACLE"
 	}
-	return ""
+	return "UNKNOWN"
 }
 
 // instance is the api message of the instance for AWS specifically
@@ -63,7 +63,7 @@ type instance struct {
 	PhysicalProcessor  string     `json:"physicalProcessor"`
 	NetworkPerformance string     `json:"networkPerformance"`
 	DeploymentOption   string     `json:"deploymentOption"`
-	DatabaseEngine     EngineType `json:"databaseEngine"`
+	DatabaseEngine     engineType `json:"databaseEngine"`
 }
 
 // ProductEntry is the entry of the instance info
@@ -92,79 +92,31 @@ type PriceRaw struct {
 // InfoEndPoint is the instance info endpoint
 const InfoEndPoint = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json"
 
-// GetOfferInstance get the offer and instance info
-func (c *Client) GetOfferInstance() ([]*client.Offer, []*client.Instance, error) {
+// GetOffer return offers provides by AWS
+func (c *Client) GetOffer() ([]*client.Offer, error) {
 	res, err := http.Get(InfoEndPoint)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
+		return nil, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
 	}
 	if res.StatusCode != 200 {
-		return nil, nil, fmt.Errorf("An http error occur , [internal]: %v", err)
+		return nil, fmt.Errorf("An http error occur , [internal]: %v", err)
 	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Fail when reading response data , [internal]: %v", err)
+		return nil, fmt.Errorf("Fail when reading response data , [internal]: %v", err)
 	}
 
 	rawData := &rawJSON{}
 	if err := json.Unmarshal(data, rawData); err != nil {
-		return nil, nil, fmt.Errorf("Fail when unmarshaling response data , [internal]: %v", err)
+		return nil, fmt.Errorf("Fail when unmarshaling response data , [internal]: %v", err)
 	}
 
-	priceInfo, err := extractPrice(rawData)
+	offerList, err := extractOffer(rawData)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Fail when extrating pricing info, [internal]: %v", err)
+		return nil, fmt.Errorf("Fail when extrating offer, [internal]: %v", err)
 	}
 
-	instanceInfo, err := extractInstance(rawData)
-	if err != nil {
-		return nil, nil, fmt.Errorf("Fail when extrating instance info, [internal]: %v", err)
-	}
-
-	return priceInfo, instanceInfo, nil
-}
-
-func extractPrice(rawData *rawJSON) ([]*client.Offer, error) {
-	bytePrice, err := json.Marshal(rawData.Term)
-	if err != nil {
-		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
-	}
-
-	priceDecoder := json.NewDecoder(bytes.NewReader(bytePrice))
-	var rawEntry map[client.OfferType]map[string]map[string]PriceRaw
-	if err := priceDecoder.Decode(&rawEntry); err != nil {
-		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
-	}
-
-	var priceList []*client.Offer
-	for chargeType, instanceOfferList := range rawEntry {
-		for instanceID, offerList := range instanceOfferList {
-			for _, offer := range offerList {
-				for rateCode, dimension := range offer.Dimension {
-					USDFloat, err := strconv.ParseFloat(dimension.PricePerUnit[client.CurrencyUSD], 64)
-					if err != nil {
-						return nil, fmt.Errorf("Fail to parse the price to type FLOAT64, value: %v, [internal]: %v", dimension.PricePerUnit[client.CurrencyUSD], err)
-					}
-					price := &client.Offer{
-						ID:            string(rateCode),
-						InstanceID:    string(instanceID),
-						ChargeType:    client.ChargeType(chargeType),
-						ChargePayload: offer.Term,
-						Description:   dimension.Description,
-						Unit:          dimension.Unit,
-						USD:           USDFloat,
-					}
-					priceList = append(priceList, price)
-				}
-			}
-		}
-	}
-
-	return priceList, nil
-}
-
-func extractInstance(rawData *rawJSON) ([]*client.Instance, error) {
 	byteProducts, err := json.Marshal(rawData.Product)
 	if err != nil {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
@@ -175,16 +127,99 @@ func extractInstance(rawData *rawJSON) ([]*client.Instance, error) {
 		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
 	}
 
-	var instanceList []*client.Instance
-	for id, entry := range rawEntryList {
+	fillInstancePayload(rawEntryList, offerList)
+
+	return offerList, nil
+}
+
+func getOfferHashKey(offer *client.Offer) string {
+	var hash string
+	if offer.ChargeType == client.ChargeTypeOnDemand {
+		hash = fmt.Sprintf("%v-%v-%v", offer.SKUID, offer.CommitmentUSD, offer.HourlyUSD)
+	} else {
+		hash = fmt.Sprintf("%v-%v-%v-%v-%v", offer.SKUID,
+			offer.ChargePayload.LeaseContractLength,
+			offer.ChargePayload.PurchaseOption,
+			offer.CommitmentUSD,
+			offer.HourlyUSD,
+		)
+	}
+
+	return hash
+}
+
+func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
+	bytePrice, err := json.Marshal(rawData.Term)
+	if err != nil {
+		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
+	}
+
+	offerDecoder := json.NewDecoder(bytes.NewReader(bytePrice))
+	var rawEntry map[client.OfferType]map[string]map[string]PriceRaw
+	if err := offerDecoder.Decode(&rawEntry); err != nil {
+		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
+	}
+
+	var offerList []*client.Offer
+	offerSet := make(map[string]bool)
+	for chargeType, instanceOfferList := range rawEntry {
+		for instanceID, _offerList := range instanceOfferList {
+			for _, rawOffer := range _offerList {
+				offer := &client.Offer{
+					SKUID: instanceID,
+					// AWS only offer instance-wise product
+					OfferType:     client.OfferTypeInstance,
+					ChargeType:    client.ChargeType(chargeType),
+					ChargePayload: rawOffer.Term,
+				}
+				// an offer may have differnet charging dimension, say upfront fee and it relevant fee charged hourly.
+				for _, dimension := range rawOffer.Dimension {
+					USDFloat, err := strconv.ParseFloat(dimension.PricePerUnit[client.CurrencyUSD], 64)
+					if err != nil {
+						return nil, fmt.Errorf("Fail to parse the price to type FLOAT64, value: %v, [internal]: %v", dimension.PricePerUnit[client.CurrencyUSD], err)
+					}
+					if dimension.Unit == "Quantity" {
+						offer.CommitmentUSD = USDFloat
+					} else {
+						offer.HourlyUSD = USDFloat
+					}
+				}
+				// Filter replica
+				if _, ok := offerSet[getOfferHashKey(offer)]; ok {
+					continue
+				}
+				offerSet[getOfferHashKey(offer)] = true
+
+				offerList = append(offerList, offer)
+			}
+		}
+	}
+
+	return offerList, nil
+}
+
+func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offer) {
+	offerMap := make(map[string][]*client.Offer)
+	for _, offer := range offerList {
+		if _, ok := offerMap[offer.SKUID]; ok {
+			offerMap[offer.SKUID] = append(offerMap[offer.SKUID], offer)
+		} else {
+			offerMap[offer.SKUID] = []*client.Offer{offer}
+		}
+	}
+
+	for skuID, entry := range instanceRecord {
 		if entry.ProductFamily != "Database Instance" /* filter non-db instance */ ||
 			entry.Attributes.DeploymentOption != "Single-AZ" /* filter multi-region deployment */ {
 			continue
 		}
-		instance := &client.Instance{
-			ID:                 string(id),
+		engineType := entry.Attributes.DatabaseEngine.String()
+		if engineType == "UNKNOWN" {
+			continue
+		}
+
+		instance := &client.OfferPayloadInstance{
 			ServiceCode:        entry.Attributes.ServiceCode,
-			Region:             entry.Attributes.Location,
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
 			VCPU:               entry.Attributes.VCPU,
@@ -193,8 +228,12 @@ func extractInstance(rawData *rawJSON) ([]*client.Instance, error) {
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
 			DatabaseEngine:     client.EngineType(entry.Attributes.DatabaseEngine.String()),
 		}
-		instanceList = append(instanceList, instance)
+		if _, ok := offerMap[skuID]; ok {
+			for _, offer := range offerMap[skuID] {
+				// The region info of the offer is stored in the instance, we need store the region info here.
+				offer.RegionList = []string{entry.Attributes.Location}
+				offer.InstancePayload = instance
+			}
+		}
 	}
-
-	return instanceList, nil
 }

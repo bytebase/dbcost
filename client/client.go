@@ -15,15 +15,16 @@ const (
 	EngineTypeSQLServer = "SQLSERVER"
 )
 
-// Instance is the api message of the instance.
-type Instance struct {
-	ID                 string
-	ServiceCode        string     `json:"servicecode"`
-	Region             string     `json:"region"`
-	Type               string     `json:"instanceType"`
-	InstanceFamily     string     `json:"instanceFamily"`
-	VCPU               string     `json:"vcpu"`
-	Memory             string     `json:"memory"`
+// OfferPayloadInstance is the payload of the offer type instance.
+type OfferPayloadInstance struct {
+	ServiceCode string `json:"servicecode"`
+	// e.g. db.lg, N1Standard-1-1
+	Type string `json:"instanceType"`
+	// e.g. HighMem, Generals
+	InstanceFamily string `json:"instanceFamily"`
+	VCPU           string `json:"vcpu"`
+	Memory         string `json:"memory"`
+	// e.g. Intel Lake
 	PhysicalProcessor  string     `json:"physicalProcessor"`
 	NetworkPerformance string     `json:"networkPerformance"`
 	DeploymentOption   string     `json:"deploymentOption"`
@@ -42,6 +43,7 @@ const (
 
 // OfferType is the type of the smallest offer type of a offer.
 // Some vendors may provide offer at a VCPU/RAM level while others may only provide a specified instance.
+// Allowed OfferType are : Instance, RAM, CPU
 type OfferType string
 
 const (
@@ -49,8 +51,8 @@ const (
 	OfferTypeInstance OfferType = "Instance"
 	// OfferTypeRAM is the offer type that provides RAM as a basic unit.
 	OfferTypeRAM OfferType = "RAM"
-	// OfferTypeVCPU is the offer type that provides vCPU as a basic unit.
-	OfferTypeVCPU OfferType = "VCPU"
+	// OfferTypeCPU is the offer type that provides CPU as a basic unit.
+	OfferTypeCPU OfferType = "CPU"
 )
 
 // Currency is the type of the currency.
@@ -67,24 +69,29 @@ type ChargePayload struct {
 
 // Offer is the api message of an Offer.
 type Offer struct {
-	ID string
-
-	OfferType OfferType
-	// If OfferType is not Instance, InstanceID would be empty, otherwise InstanceID may be the sku of that instance.
 	// e.g. AWS: 9QH3PUGXCYKNCYPB, GCP: 0009-6F35-3126
-	InstanceID string
+	SKUID string
 
+	// Allowed OfferType are Instance, RAM, CPU
+	OfferType OfferType
+	// If the offer type is Instance, the payload would be the information of that instance, otherwise this field will be nil
+	InstancePayload *OfferPayloadInstance
+
+	// Possible ChargeType are reserved, onDemand
 	ChargeType ChargeType
 	// Payload is present when the ChargeType is Reserved, otherwise nil.
 	ChargePayload *ChargePayload
 
+	// RegionList is the region that share the same price of this offer
 	RegionList  []string
 	Description string
-	Unit        string
-	USD         float64
+	HourlyUSD   float64
+	// CommitmentUSD is the price need be paid in advance in order to get a discount in the hourly fee.
+	// If commitment is not applicable, CommitmentUSD would be 0.
+	CommitmentUSD float64
 }
 
 // Client is the client for http request.
 type Client interface {
-	GetInstancePrice()
+	GetOffer()
 }

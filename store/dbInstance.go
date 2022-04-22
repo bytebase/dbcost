@@ -22,9 +22,8 @@ type Term struct {
 	Type           client.ChargeType `json:"type"`
 	Payload        *TermPayload      `json:"payload"`
 
-	Unit        string  `json:"unit"`
-	USD         float64 `json:"usd"`
-	Description string  `json:"description"`
+	HourlyUSD     float64 `json:"hourlyUSD"`
+	CommitmentUSD float64 `json:"commitmentUSD"`
 }
 
 // Region is region-price info of a given instance
@@ -55,13 +54,13 @@ type DBInstance struct {
 	Processor     string `json:"processor"`
 }
 
-// Convert convert the client api message to the storage form
-func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBInstance, error) {
+// ConvertAWS convert the offer provided by AWS to DBInstance
+func ConvertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 	var dbInstanceList []*DBInstance
 	dbInstanceMap := make(map[string]*DBInstance)
 	offerMap := make(map[string][]*Term)
 
-	for _, offer := range priceList {
+	for _, offer := range offerList {
 		var payload *TermPayload
 		// Only reserved type has payload field
 		if offer.ChargeType == client.ChargeTypeReserved {
@@ -72,75 +71,78 @@ func Convert(priceList []*client.Offer, instanceList []*client.Instance) ([]*DBI
 		}
 
 		term := &Term{
-			Type:        offer.ChargeType,
-			Payload:     payload,
-			Unit:        offer.Unit,
-			USD:         offer.USD,
-			Description: offer.Description,
+			Type:          offer.ChargeType,
+			Payload:       payload,
+			HourlyUSD:     offer.HourlyUSD,
+			CommitmentUSD: offer.CommitmentUSD,
 		}
-		if termList, ok := offerMap[offer.InstanceID]; !ok {
-			offerMap[offer.InstanceID] = []*Term{term}
+		if termList, ok := offerMap[offer.SKUID]; !ok {
+			offerMap[offer.SKUID] = []*Term{term}
 		} else {
-			offerMap[offer.InstanceID] = append(termList, term)
+			offerMap[offer.SKUID] = append(termList, term)
 		}
 	}
 
 	now := time.Now().UTC()
 	incrID := 0
-	for _, instance := range instanceList {
+	for _, offer := range offerList {
+		// filter the offer does not have a instancePayload (only got price but no goods)
+		if offer.InstancePayload == nil {
+			continue
+		}
+
+		instance := offer.InstancePayload
 		vCPUInt, err := strconv.Atoi(instance.VCPU)
 		if err != nil {
 			return nil, fmt.Errorf("Fail to parse the VCPU value from string to int, [val]: %v", instance.VCPU)
 		}
-
 		memoryDigit := instance.Memory[:strings.Index(instance.Memory, "GiB")-1]
 
-		if dbInstance, ok := dbInstanceMap[instance.Type]; ok {
-			regionList := dbInstance.RegionList
+		if _, ok := dbInstanceMap[instance.Type]; !ok {
+			dbInstance := &DBInstance{
+				ID:            incrID,
+				ExternalID:    offer.SKUID,
+				RowStatus:     RowStatusNormal,
+				CreatorID:     SYSTEM_BOT,
+				CreatedTs:     now.Unix(),
+				UpdaterID:     SYSTEM_BOT,
+				UpdatedTs:     now.Unix(),
+				CloudProvider: CloudProviderAWS,
+
+				Name:      instance.Type, // e.g. db.t4g.xlarge
+				VCPU:      vCPUInt,
+				Memory:    memoryDigit,
+				Processor: instance.PhysicalProcessor,
+
+				RegionList: []*Region{},
+			}
+			dbInstanceList = append(dbInstanceList, dbInstance)
+			dbInstanceMap[instance.Type] = dbInstance
+			incrID++
+		}
+
+		// fill in the region info
+		dbInstance := dbInstanceMap[instance.Type]
+		for _, offerRegion := range offer.RegionList {
 			isRegionExist := false
-			for _, region := range regionList {
-				if region.Name == instance.Region {
-					if offerList, ok := offerMap[instance.ID]; ok {
+			for _, region := range dbInstance.RegionList {
+				if region.Name == offerRegion {
+					if offerList, ok := offerMap[offer.SKUID]; ok {
 						for _, offer := range offerList {
 							offer.DatabaseEngine = instance.DatabaseEngine
 						}
-						region.TermList = append(region.TermList, offerMap[instance.ID]...)
+						region.TermList = append(region.TermList, offerMap[offer.SKUID]...)
 					}
 					isRegionExist = true
 					break
 				}
 			}
 			if !isRegionExist {
-				regionList = append(regionList, &Region{
-					Name:     instance.Region,
-					TermList: offerMap[instance.ID],
+				dbInstance.RegionList = append(dbInstance.RegionList, &Region{
+					Name:     offerRegion,
+					TermList: offerMap[offer.SKUID],
 				})
 			}
-		} else {
-			dbInstance := &DBInstance{
-				ID:         incrID,
-				ExternalID: instance.ID,
-				RowStatus:  RowStatusNormal,
-				CreatorID:  SYSTEM_BOT,
-				CreatedTs:  now.Unix(),
-				UpdaterID:  SYSTEM_BOT,
-				UpdatedTs:  now.Unix(),
-				RegionList: []*Region{
-					{
-						Name:     instance.Region,
-						TermList: offerMap[instance.ID],
-					},
-				},
-				CloudProvider: CloudProviderAWS,
-				Name:          instance.Type, // e.g. db.t4g.xlarge
-				VCPU:          vCPUInt,
-				Memory:        memoryDigit,
-				Processor:     instance.PhysicalProcessor,
-			}
-			dbInstanceList = append(dbInstanceList, dbInstance)
-			dbInstanceMap[instance.Type] = dbInstance
-
-			incrID++
 		}
 
 	}

@@ -1,6 +1,7 @@
 package aws
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -19,32 +20,41 @@ func Test_Extraction(t *testing.T) {
 		t.Fail()
 	}
 
-	getPriceStart := time.Now()
-	priceList, err := extractPrice(rawData)
+	getOfferStart := time.Now()
+	offerList, err := extractOffer(rawData)
 	if err != nil {
 		t.FailNow()
 	}
-	getPriceEnd := time.Now()
-	fmt.Printf("get pricing info: [entry cnt]: %v, [time duration]: %v\n", len(priceList), getPriceEnd.Sub(getPriceStart))
+	getOfferEnd := time.Now()
+	fmt.Printf("get pricing info: [entry cnt]: %v, [time duration]: %v\n", len(offerList), getOfferEnd.Sub(getOfferStart))
 
-	getInstanceStart := time.Now()
-	instanceList, err := extractInstance(rawData)
+	fillInstanceStart := time.Now()
+	byteProducts, err := json.Marshal(rawData.Product)
 	if err != nil {
 		t.FailNow()
 	}
-	getInstanceEnd := time.Now()
-	fmt.Printf("get instance info: [entry cnt]: %v, [time duration]: %v\n", len(instanceList), getInstanceEnd.Sub(getInstanceStart))
+	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
+	var rawEntryList InstanceRecord
+	if err := productsDecoder.Decode(&rawEntryList); err != nil {
+		t.FailNow()
+	}
+	fillInstancePayload(rawEntryList, offerList)
+	if err != nil {
+		t.FailNow()
+	}
+	fillInstanceEnd := time.Now()
+	fmt.Printf("get instance info: [entry cnt]: %v, [time duration]: %v\n", len(offerList), fillInstanceEnd.Sub(fillInstanceStart))
 }
 
 func Test_HTTP(t *testing.T) {
 	c := NewClient()
 	start := time.Now()
-	price, instance, err := c.GetOfferInstance()
+	offerList, err := c.GetOffer()
 	end := time.Now()
 
 	if err != nil {
 		t.Fail()
 	}
 
-	fmt.Printf("get price instance info:\n[price entry cnt]: %v\n[instance entry cnt]: %v\n[time duration]: %v\n", len(price), len(instance), end.Sub(start))
+	fmt.Printf("get offer:\n[offer entry cnt]: %v\n[time duration]: %v\n", len(offerList), end.Sub(start))
 }
