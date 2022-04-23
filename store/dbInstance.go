@@ -56,8 +56,8 @@ type DBInstance struct {
 	Processor     string `json:"processor"`
 }
 
-// ConvertAWS convert the offer provided by AWS to DBInstance
-func ConvertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
+// convertAWS convert the offer provided by AWS to DBInstance
+func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 	termMap := make(map[int][]*Term)
 	for _, offer := range offerList {
 		// filter the offer does not have a instancePayload (only got price but no goods).
@@ -117,11 +117,10 @@ func ConvertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 				UpdaterID:     SYSTEM_BOT,
 				UpdatedTs:     now.Unix(),
 				CloudProvider: CloudProviderAWS,
-
-				Name:      instance.Type, // e.g. db.t4g.xlarge
-				VCPU:      vCPUInt,
-				Memory:    memoryDigit,
-				Processor: instance.PhysicalProcessor,
+				Name:          instance.Type, // e.g. db.t4g.xlarge
+				VCPU:          vCPUInt,
+				Memory:        memoryDigit,
+				Processor:     instance.PhysicalProcessor,
 
 				RegionList: []*Region{},
 			}

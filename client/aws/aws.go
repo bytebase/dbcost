@@ -23,23 +23,24 @@ func NewClient() Client {
 	}
 }
 
-type rawJSON struct {
+// Rawjson is the api message for AWS pricing .json file
+type Rawjson struct {
 	Product interface{} `json:"products"`
 	Term    interface{} `json:"terms"`
 }
 
-// engineType is the engine type specified in AWS api message.
+// EngineType is the engine type specified in AWS api message.
 // we implement its String() method to convert it into the type stored in ours.
-type engineType string
+type EngineType string
 
 const (
 	engineTypeMySQL      = "MySQL"
 	engineTypePostgreSQL = "PostgreSQL"
 	engineTypeSQLServer  = "SQL Server"
-	engineTypeSQLOracle  = "Oracle"
+	engineTypeOracle     = "Oracle"
 )
 
-func (e engineType) String() string {
+func (e EngineType) String() string {
 	switch e {
 	case engineTypeMySQL:
 		return "MYSQL"
@@ -47,14 +48,14 @@ func (e engineType) String() string {
 		return "POSTGRES"
 	case engineTypeSQLServer:
 		return "SQLSERVER"
-	case engineTypeSQLOracle:
+	case engineTypeOracle:
 		return "ORACLE"
 	}
 	return "UNKNOWN"
 }
 
-// instance is the api message of the instance for AWS specifically
-type instance struct {
+// Instance is the api message of the Instance for AWS specifically
+type Instance struct {
 	ID                 string
 	ServiceCode        string     `json:"servicecode"`
 	Location           string     `json:"location"`
@@ -65,14 +66,14 @@ type instance struct {
 	PhysicalProcessor  string     `json:"physicalProcessor"`
 	NetworkPerformance string     `json:"networkPerformance"`
 	DeploymentOption   string     `json:"deploymentOption"`
-	DatabaseEngine     engineType `json:"databaseEngine"`
+	DatabaseEngine     EngineType `json:"databaseEngine"`
 }
 
 // ProductEntry is the entry of the instance info
 type ProductEntry struct {
 	ID            string   `json:"sku"`
 	ProductFamily string   `json:"productFamily"`
-	Attributes    instance `json:"attributes"`
+	Attributes    Instance `json:"attributes"`
 }
 
 // InstanceRecord is the Record of the instance info
@@ -109,7 +110,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		return nil, fmt.Errorf("Fail when reading response data , [internal]: %v", err)
 	}
 
-	rawData := &rawJSON{}
+	rawData := &Rawjson{}
 	if err := json.Unmarshal(data, rawData); err != nil {
 		return nil, fmt.Errorf("Fail when unmarshaling response data , [internal]: %v", err)
 	}
@@ -119,11 +120,11 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		return nil, fmt.Errorf("Fail when extrating offer, [internal]: %v", err)
 	}
 
-	byteProducts, err := json.Marshal(rawData.Product)
+	productBytes, err := json.Marshal(rawData.Product)
 	if err != nil {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
 	}
-	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
+	productsDecoder := json.NewDecoder(bytes.NewReader(productBytes))
 	var rawEntryList InstanceRecord
 	if err := productsDecoder.Decode(&rawEntryList); err != nil {
 		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
@@ -134,7 +135,8 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 	return offerList, nil
 }
 
-func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
+// extractOffer extract the client.offer from the rawData
+func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
 	bytePrice, err := json.Marshal(rawData.Term)
 	if err != nil {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
@@ -152,8 +154,7 @@ func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
 		for instanceSKU, _offerList := range instanceOfferList { /* we use skuID here to track the instance relevant to this offer  */
 			for _, rawOffer := range _offerList {
 				offer := &client.Offer{
-					ID: incrID,
-
+					ID:          incrID,
 					InstanceSKU: instanceSKU,
 					// AWS only offer instance-wise product
 					OfferType:     client.OfferTypeInstance,
@@ -186,11 +187,7 @@ func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offe
 	// there are maybe many offer that are bind to the same instance (i.e. the same SKU).
 	offerMap := make(map[string][]*client.Offer)
 	for _, offer := range offerList {
-		if _, ok := offerMap[offer.InstanceSKU]; ok {
-			offerMap[offer.InstanceSKU] = append(offerMap[offer.InstanceSKU], offer)
-		} else {
-			offerMap[offer.InstanceSKU] = []*client.Offer{offer}
-		}
+		offerMap[offer.InstanceSKU] = append(offerMap[offer.InstanceSKU], offer)
 	}
 
 	for instanceSKU, entry := range instanceRecord {
@@ -204,7 +201,7 @@ func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offe
 			continue
 		}
 
-		instance := &client.OfferPayloadInstance{
+		instance := &client.OfferInstancePayload{
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
 			VCPU:               entry.Attributes.VCPU,
