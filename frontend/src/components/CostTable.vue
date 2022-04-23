@@ -1,5 +1,5 @@
 <template>
-  <n-data-table :columns="columns" :data="state.selectedInstance" />
+  <n-data-table :columns="columns" :data="state.dataRow" />
 </template>
 
 <script setup lang="ts">
@@ -7,6 +7,18 @@ import { NDataTable } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted } from "vue";
 import { ChargeType, EngineType } from "../types";
+import { RowData } from "naive-ui/lib/data-table/src/interface";
+
+type DataRow = {
+  id: number;
+
+  name: string;
+  processor: string;
+  vCPU: number;
+  memory: string;
+  pricing: number;
+  region: string;
+};
 
 const columns: any = [
   {
@@ -28,7 +40,7 @@ const columns: any = [
     key: "vCPU",
     align: "center",
     sorter: {
-      compare: (row1: DBInstance, row2: DBInstance) => row1.vCPU - row2.vCPU,
+      compare: (row1: DataRow, row2: DataRow) => row1.vCPU - row2.vCPU,
       multiple: 2,
     },
   },
@@ -38,24 +50,16 @@ const columns: any = [
     align: "center",
     defaultSortOrder: false,
     sorter: {
-      compare: (row1: DBInstance, row2: DBInstance) =>
+      compare: (row1: DataRow, row2: DataRow) =>
         Number(row1.memory) - Number(row2.memory),
       multiple: 2,
     },
   },
   {
     title: "Pricing",
-    render: (dbInstance: DBInstance) => {
-      const termList = dbInstance.regionList[0].termList;
-      if (termList.length > 0) {
-        const term = termList[0];
-        if (term.type == "OnDemand") {
-          return `$ ${term.usd}`;
-        } else if (term.type == "Reserved") {
-          return `$ ${term.usd} (${term.payload?.leaseContractLength} ${term.payload?.purchaseOption})`;
-        }
-      }
-      return "N/A";
+    key: "pricing",
+    render: (row: RowData) => {
+      return `$${row.pricing}`;
     },
     ellipsis: {
       tooltip: true,
@@ -63,25 +67,32 @@ const columns: any = [
   },
   {
     title: "Region",
-    render: (dbInstance: DBInstance) => {
-      return dbInstance.regionList[0].name;
-    },
+    key: "region",
     ellipsis: {
       tooltip: true,
     },
     sorter: {
-      compare: (row1: DBInstance, row2: DBInstance) => {
-        const a = row1.regionList[0].name.toLocaleLowerCase();
-        const b = row2.regionList[0].name.toLocaleLowerCase();
+      // sort by the case-insensitive alphabetical order
+      compare: (row1: DataRow, row2: DataRow) => {
+        const a = row1.region.toLocaleLowerCase();
+        const b = row2.region.toLocaleLowerCase();
         const len = a.length > b.length ? b.length : a.length;
         for (let i = 0; i < len; i++) {
           if (a[i] < b[i]) {
+            console.log(a, "<", b);
             return false;
           } else if (a[i] > b[i]) {
+            console.log(a, ">", b);
             return true;
           }
         }
-        return true;
+
+        // if tow region are identical, sort them with id
+        if (a.length == b.length) {
+          return row1.id - row2.id;
+        }
+
+        return a.length - b.length;
       },
       multiple: 1,
     },
@@ -112,11 +123,11 @@ const props = defineProps({
 });
 
 interface LocalState {
-  selectedInstance: DBInstance[];
+  dataRow: DataRow[];
 }
 
 const state = reactive<LocalState>({
-  selectedInstance: [],
+  dataRow: [],
 });
 
 watch(
@@ -140,54 +151,71 @@ watch(
   }
 );
 
-const KeywordCheckSet = new Set(["name", "processor", "vCPU", "memory"]);
-
 const refreshDataTable = () => {
-  const selectedRegionSet = new Set();
-  props.regionList.forEach((val) => {
-    selectedRegionSet.add(val);
-  });
+  state.dataRow = [];
+  let rowCnt = 0;
 
-  state.selectedInstance = props.dbInstanceList.filter((e) => {
-    const selectedRegion = e.regionList.filter((r) => {
-      if (selectedRegionSet.has(r.name)) {
+  const selectedRegionSet = new Set<string>([...props.regionList]);
+  props.dbInstanceList.forEach((dbInstance) => {
+    const selectedRegionList = dbInstance.regionList.filter((region) => {
+      if (selectedRegionSet.has(region.name)) {
         return true;
       }
       return false;
     });
-
     // no region found
-    if (selectedRegion.length === 0) {
-      return false;
+    if (selectedRegionList.length === 0) {
+      return;
     }
 
-    const termList = selectedRegion[0].termList.filter((t) => {
-      if (t.type === props.chargeType && t.databaseEngine == props.engineType) {
-        return true;
-      }
-      return false;
-    });
-
-    // no pricing info available
-    if (termList.length === 0) {
-      return false;
-    }
-
-    selectedRegion[0].termList = termList;
-    // only keep the selected region
-    e.regionList = selectedRegion;
-
-    // filter by keyword, we only enable this when the keyword is set by user
-    if (props.keyword.length > 0) {
-      for (const [k, v] of Object.entries(e)) {
-        if (KeywordCheckSet.has(k) && `${v}`.includes(props.keyword)) {
+    const dataRowList: DataRow[] = [];
+    // filter terms provided in each region
+    selectedRegionList.forEach((region) => {
+      const selectedTermList = region.termList.filter((term) => {
+        if (
+          term.type === props.chargeType &&
+          term.databaseEngine == props.engineType
+        ) {
           return true;
         }
-      }
-      return false;
+        return false;
+      });
+
+      selectedTermList.forEach((term) => {
+        // make a new copy so that the original one will remain unaffected
+        rowCnt++;
+        dataRowList.push({
+          id: rowCnt,
+
+          name: dbInstance.name,
+          processor: dbInstance.processor,
+          memory: dbInstance.memory,
+          vCPU: dbInstance.vCPU,
+          pricing: term.usd,
+          region: region.name,
+        });
+      });
+    });
+
+    // filter by keyword, we only enable this when the keyword is set by user
+    const keyword = props.keyword;
+    if (keyword.length > 0) {
+      const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
+        if (
+          row.name.includes(keyword) ||
+          row.memory.includes(keyword) ||
+          row.processor.includes(keyword) ||
+          row.region.includes(keyword)
+        ) {
+          return true;
+        }
+        return false;
+      });
+      state.dataRow.push(...filteredDataRowList);
+      return;
     }
 
-    return true;
+    state.dataRow.push(...dataRowList);
   });
 };
 
