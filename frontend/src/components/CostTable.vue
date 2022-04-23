@@ -16,7 +16,8 @@ type DataRow = {
   processor: string;
   vCPU: number;
   memory: string;
-  pricing: number;
+  commitmentUSD: number;
+  hourlyUSD: number;
   region: string;
 };
 
@@ -58,9 +59,24 @@ const columns: any = [
   {
     title: "Pricing",
     key: "pricing",
-    render: (row: RowData) => {
-      return `$${row.pricing}`;
-    },
+    align: "center",
+    children: [
+      {
+        title: "Commitment",
+        key: "commitmentUSD",
+        render: (row: RowData) => {
+          return `$${row.commitmentUSD}`;
+        },
+      },
+      {
+        title: "Hourly Pay",
+        key: "hourlyUSD",
+        render: (row: RowData) => {
+          return `$${row.hourlyUSD}`;
+        },
+      },
+    ],
+
     ellipsis: {
       tooltip: true,
     },
@@ -154,7 +170,6 @@ watch(
 const refreshDataTable = () => {
   state.dataRow = [];
   let rowCnt = 0;
-
   const selectedRegionSet = new Set<string>([...props.regionList]);
   props.dbInstanceList.forEach((dbInstance) => {
     const selectedRegionList = dbInstance.regionList.filter((region) => {
@@ -191,7 +206,8 @@ const refreshDataTable = () => {
           processor: dbInstance.processor,
           memory: dbInstance.memory,
           vCPU: dbInstance.vCPU,
-          pricing: term.usd,
+          commitmentUSD: term.commitmentUSD,
+          hourlyUSD: term.hourlyUSD,
           region: region.name,
         });
       });

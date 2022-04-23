@@ -17,7 +17,6 @@ const (
 
 // OfferPayloadInstance is the payload of the offer type instance.
 type OfferPayloadInstance struct {
-	ServiceCode string `json:"servicecode"`
 	// e.g. db.lg, N1Standard-1-1
 	Type string `json:"instanceType"`
 	// e.g. HighMem, Generals
@@ -69,9 +68,10 @@ type ChargePayload struct {
 
 // Offer is the api message of an Offer.
 type Offer struct {
-	// e.g. AWS: 9QH3PUGXCYKNCYPB, GCP: 0009-6F35-3126
-	SKUID string
+	ID int
 
+	// e.g. AWS: 9QH3PUGXCYKNCYPB, GCP: 0009-6F35-3126
+	InstanceSKU string
 	// Allowed OfferType are Instance, RAM, CPU
 	OfferType OfferType
 	// If the offer type is Instance, the payload would be the information of that instance, otherwise this field will be nil
