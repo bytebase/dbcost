@@ -20,23 +20,25 @@
 
       <div class="flex items-center -mt-1.5">
         <span>by</span>
-        <a href="https://bytebase.com?ref=dbcost" target="_blank">
-          <img
-            class="h-5 ml-2"
-            src="../assets/icon/logo-full-invert.svg"
-            alt="Bytebase"
-          />
-        </a>
-        <div class="ml-1">
-          <n-tooltip trigger="hover" :show-arrow="false">
-            <template #trigger>
-              <heroicons-outline:information-circle class="h-6" />
-            </template>
-            <template #default>
-              <span>Learn More about Bytebase</span>
-            </template>
-          </n-tooltip>
-        </div>
+        <n-tooltip trigger="hover" :show-arrow="false">
+          <template #trigger>
+            <div class="flex flex-row space-x-1">
+              <a href="https://bytebase.com?ref=dbcost" target="_blank">
+                <img
+                  class="h-6 ml-2"
+                  src="../assets/icon/logo-full-invert.svg"
+                  alt="Bytebase"
+                />
+              </a>
+              <heroicons-outline:information-circle class="ml-1 h-6" />
+            </div>
+          </template>
+          <template #default>
+            <span
+              >Safe Database Schema Change and Version Control for Teams</span
+            >
+          </template>
+        </n-tooltip>
       </div>
     </div>
   </div>
