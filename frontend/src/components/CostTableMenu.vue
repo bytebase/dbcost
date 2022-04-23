@@ -1,18 +1,20 @@
 <template>
   <!-- region checkbox -->
-  <n-button class="mb-4" size="small" @click="clearAll"> Clear All </n-button>
-  <n-checkbox-group
-    :value="(regionList as any)"
-    @update-value="handleUpdateRegion"
-  >
-    <n-grid :y-gap="4" :cols="3">
-      <n-gi v-for="(region, i) in availableRegionList" :key="i">
-        <n-checkbox :value="region" :label="region" />
-      </n-gi>
-    </n-grid>
-  </n-checkbox-group>
+  <div class="border-b pb-4">
+    <n-button class="mb-4" size="small" @click="clearAll"> Clear All </n-button>
+    <n-checkbox-group
+      :value="(regionList as any)"
+      @update-value="handleUpdateRegion"
+    >
+      <n-grid :y-gap="4" :cols="`2 600:3 800:4`">
+        <n-gi v-for="(region, i) in availableRegionList" :key="i">
+          <n-checkbox :value="region" :label="region" />
+        </n-gi>
+      </n-grid>
+    </n-checkbox-group>
+  </div>
 
-  <div class="mt-2 space-x-2 flex justify-start">
+  <div class="mt-4 space-x-2 flex justify-start">
     <!-- charge type checkbox -->
     <n-radio-group
       class="align-bottom"
