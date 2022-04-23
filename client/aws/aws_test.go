@@ -15,7 +15,7 @@ func Test_Extraction(t *testing.T) {
 		t.Fail()
 	}
 
-	rawData := &rawJSON{}
+	rawData := &Rawjson{}
 	if err = json.Unmarshal(file, rawData); err != nil {
 		t.Fail()
 	}

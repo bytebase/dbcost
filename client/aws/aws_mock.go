@@ -13,7 +13,7 @@ import (
 func MockGetOffer(filePath string) ([]*client.Offer, error) {
 	file, err := os.ReadFile(filePath)
 
-	rawData := &rawJSON{}
+	rawData := &Rawjson{}
 	if err = json.Unmarshal(file, rawData); err != nil {
 		return nil, fmt.Errorf("fail to unmarshal json, internal: %v", err)
 	}

@@ -15,8 +15,8 @@ const (
 	EngineTypeSQLServer = "SQLSERVER"
 )
 
-// OfferPayloadInstance is the payload of the offer type instance.
-type OfferPayloadInstance struct {
+// OfferInstancePayload is the payload of the offer type instance.
+type OfferInstancePayload struct {
 	// e.g. db.lg, N1Standard-1-1
 	Type string `json:"instanceType"`
 	// e.g. HighMem, Generals
@@ -75,7 +75,7 @@ type Offer struct {
 	// Allowed OfferType are Instance, RAM, CPU
 	OfferType OfferType
 	// If the offer type is Instance, the payload would be the information of that instance, otherwise this field will be nil
-	InstancePayload *OfferPayloadInstance
+	InstancePayload *OfferInstancePayload
 
 	// Possible ChargeType are reserved, onDemand
 	ChargeType ChargeType
