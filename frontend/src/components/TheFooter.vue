@@ -2,14 +2,9 @@
   <div
     class="pt-4 mx-2 space-y-2 border-t border-gray-200 md:flex md:items-center md:justify-between md:space-y-0"
   >
-    <div class="flex items-center justify-center space-x-2">
-      <a href="https://bytebase.com?ref=dbcost" target="_blank">
-        <img class="h-5" src="../assets/icon/logo-full.svg" alt="Bytebase" />
-      </a>
-      <span>
-        Safer and Faster Database Schema Change and Version Control for
-        Teams</span
-      >
+    <div class="flex items-center justify-center space-x-1">
+      <span>DB Cost -</span>
+      <h2>The ultimate cloud database pricing sheet for RDS</h2>
     </div>
 
     <div class="flex flex-row justify-center items-center space-x-2">

@@ -41,12 +41,28 @@
           :src="EngineIconPath.MYSQL"
         />
       </n-radio-button>
-      <n-radio-button key="POSTGRES" value="POSTGRES" label="Reserved">
+      <n-radio-button key="POSTGRES" value="POSTGRES">
         <n-avatar
           class="pt-1"
           size="small"
           color="none"
           :src="EngineIconPath.POSTGRES"
+        />
+      </n-radio-button>
+      <n-radio-button key="SQLSERVER" value="SQLSERVER">
+        <n-avatar
+          class="pt-1"
+          size="small"
+          color="none"
+          :src="EngineIconPath.SQLSERVER"
+        />
+      </n-radio-button>
+      <n-radio-button key="ORACLE" value="ORACLE">
+        <n-avatar
+          class="pt-1"
+          size="small"
+          color="none"
+          :src="EngineIconPath.ORACLE"
         />
       </n-radio-button>
     </n-radio-group>
@@ -104,6 +120,8 @@ const props = defineProps({
 const EngineIconPath = {
   MYSQL: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
   POSTGRES: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+  SQLSERVER: new URL("../assets/icon/db-sqlserver.png", import.meta.url).href,
+  ORACLE: new URL("../assets/icon/db-oracle.png", import.meta.url).href,
 };
 
 const emit = defineEmits<{

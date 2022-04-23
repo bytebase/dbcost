@@ -162,7 +162,14 @@ watch(
 );
 
 watch(
-  () => props.regionList.length,
+  () => props.regionList,
+  () => {
+    refreshDataTable();
+  }
+);
+
+watch(
+  () => props.engineType,
   () => {
     refreshDataTable();
   }
