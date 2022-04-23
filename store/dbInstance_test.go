@@ -8,35 +8,31 @@ import (
 	"testing"
 
 	"github.com/bytebase/dbcost/client/aws"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_AWSSaveToLocal(t *testing.T) {
 	c := aws.NewClient()
 	offerList, err := c.GetOffer()
-	if err != nil {
-		t.Fatalf("fail to get price instance info, [internal error]: %v", err)
-	}
-	dbInstanceList, err := ConvertAWS(offerList)
-	if err != nil {
-		t.Fatalf("fail to convert to dbInstance, [internal error]: %v", err)
-	}
+	require.NoError(t, err, "Fail to get price instance info")
+
+	dbInstanceList, err := convertAWS(offerList)
+	require.NoError(t, err, "Fail to convert to dbInstance")
 
 	dirPath := fmt.Sprintf("./data/test")
-	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
-		t.Fatalf("fail to mkdir, [internal error]: %v", err)
-	}
+	err = os.MkdirAll(dirPath, os.ModePerm)
+	require.NoError(t, err, "Fail to make dir")
+
 	filePath := fmt.Sprintf("%s/aws.json", dirPath)
 	fd, err := os.Create(filePath)
-	if err != nil {
-		t.Fatalf("fail to mk file, [internal error]: %v", err)
-	}
+	require.NoError(t, err, "Fail to mk file")
+
 	dataByted, err := json.Marshal(dbInstanceList)
-	if err != nil {
-		t.Fatalf("fail to marshal, [internal error]: %v", err)
-	}
-	if _, err := fd.Write(dataByted); err != nil {
-		t.Fatalf("fail to write to file, [internal error]: %v", err)
-	}
+	require.NoError(t, err, "Fail to marshal DBInstanceList")
+
+	_, err = fd.Write(dataByted)
+	require.NoError(t, err)
+
 }
 
 func Test_Replace(t *testing.T) {
