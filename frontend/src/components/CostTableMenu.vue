@@ -89,7 +89,7 @@ const availableRegionList = dbInstanceStore.getAvailableRegionList();
 const props = defineProps({
   regionList: {
     type: Object as PropType<String[]>,
-    default: "",
+    default: [],
   },
   chargeType: {
     type: String as PropType<ChargeType>,

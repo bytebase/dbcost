@@ -28,6 +28,8 @@ type rawJSON struct {
 	Term    interface{} `json:"terms"`
 }
 
+// engineType is the engine type specified in AWS api message.
+// we implement its String() method to convert it into the type stored in ours.
 type engineType string
 
 const (
@@ -132,22 +134,6 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 	return offerList, nil
 }
 
-func getOfferHashKey(offer *client.Offer) string {
-	var hash string
-	if offer.ChargeType == client.ChargeTypeOnDemand {
-		hash = fmt.Sprintf("%v-%v-%v", offer.SKUID, offer.CommitmentUSD, offer.HourlyUSD)
-	} else {
-		hash = fmt.Sprintf("%v-%v-%v-%v-%v", offer.SKUID,
-			offer.ChargePayload.LeaseContractLength,
-			offer.ChargePayload.PurchaseOption,
-			offer.CommitmentUSD,
-			offer.HourlyUSD,
-		)
-	}
-
-	return hash
-}
-
 func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
 	bytePrice, err := json.Marshal(rawData.Term)
 	if err != nil {
@@ -161,12 +147,14 @@ func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
 	}
 
 	var offerList []*client.Offer
-	offerSet := make(map[string]bool)
-	for chargeType, instanceOfferList := range rawEntry {
-		for instanceID, _offerList := range instanceOfferList {
+	incrID := 0
+	for chargeType, instanceOfferList := range rawEntry { /* rawEntry has two charge types, reserved and on-demand.  */
+		for instanceSKU, _offerList := range instanceOfferList { /* we use skuID here to track the instance relevant to this offer  */
 			for _, rawOffer := range _offerList {
 				offer := &client.Offer{
-					SKUID: instanceID,
+					ID: incrID,
+
+					InstanceSKU: instanceSKU,
 					// AWS only offer instance-wise product
 					OfferType:     client.OfferTypeInstance,
 					ChargeType:    client.ChargeType(chargeType),
@@ -184,12 +172,8 @@ func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
 						offer.HourlyUSD = USDFloat
 					}
 				}
-				// Filter replica
-				if _, ok := offerSet[getOfferHashKey(offer)]; ok {
-					continue
-				}
-				offerSet[getOfferHashKey(offer)] = true
 
+				incrID++
 				offerList = append(offerList, offer)
 			}
 		}
@@ -199,38 +183,39 @@ func extractOffer(rawData *rawJSON) ([]*client.Offer, error) {
 }
 
 func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offer) {
+	// there are maybe many offer that are bind to the same instance (i.e. the same SKU).
 	offerMap := make(map[string][]*client.Offer)
 	for _, offer := range offerList {
-		if _, ok := offerMap[offer.SKUID]; ok {
-			offerMap[offer.SKUID] = append(offerMap[offer.SKUID], offer)
+		if _, ok := offerMap[offer.InstanceSKU]; ok {
+			offerMap[offer.InstanceSKU] = append(offerMap[offer.InstanceSKU], offer)
 		} else {
-			offerMap[offer.SKUID] = []*client.Offer{offer}
+			offerMap[offer.InstanceSKU] = []*client.Offer{offer}
 		}
 	}
 
-	for skuID, entry := range instanceRecord {
+	for instanceSKU, entry := range instanceRecord {
 		if entry.ProductFamily != "Database Instance" /* filter non-db instance */ ||
 			entry.Attributes.DeploymentOption != "Single-AZ" /* filter multi-region deployment */ {
 			continue
 		}
+
 		engineType := entry.Attributes.DatabaseEngine.String()
 		if engineType == "UNKNOWN" {
 			continue
 		}
 
 		instance := &client.OfferPayloadInstance{
-			ServiceCode:        entry.Attributes.ServiceCode,
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
 			VCPU:               entry.Attributes.VCPU,
 			Memory:             entry.Attributes.Memory,
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
-			DatabaseEngine:     client.EngineType(entry.Attributes.DatabaseEngine.String()),
+			DatabaseEngine:     client.EngineType(engineType),
 		}
-		if _, ok := offerMap[skuID]; ok {
-			for _, offer := range offerMap[skuID] {
-				// The region info of the offer is stored in the instance, we need store the region info here.
+		if _, ok := offerMap[instanceSKU]; ok {
+			for _, offer := range offerMap[instanceSKU] {
+				// The region info of the offer is stored in the instance, we need set the region info here as well.
 				offer.RegionList = []string{entry.Attributes.Location}
 				offer.InstancePayload = instance
 			}

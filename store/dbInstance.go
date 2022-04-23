@@ -11,9 +11,12 @@ import (
 	"github.com/bytebase/dbcost/client"
 )
 
+// TermPayload is the payload of the term
 type TermPayload struct {
+	// e.g. 3ys 1ms
 	LeaseContractLength string `json:"leaseContractLength"`
-	PurchaseOption      string `json:"purchaseOption"`
+	// e.g. All Upfront, Partail Upfront
+	PurchaseOption string `json:"purchaseOption"`
 }
 
 // Term is the pricing term of a given instance
@@ -35,13 +38,12 @@ type Region struct {
 // DBInstance is the type of DBInstance
 type DBInstance struct {
 	// system fields
-	ID         int       `json:"id"`
-	ExternalID string    `json:"externalId"`
-	RowStatus  RowStatus `json:"rowStatus"`
-	CreatorID  int       `json:"creatorId"`
-	CreatedTs  int64     `json:"createdTs"`
-	UpdaterID  int       `json:"updaterId"`
-	UpdatedTs  int64     `json:"updatedTs"`
+	ID        int       `json:"id"`
+	RowStatus RowStatus `json:"rowStatus"`
+	CreatorID int       `json:"creatorId"`
+	CreatedTs int64     `json:"createdTs"`
+	UpdaterID int       `json:"updaterId"`
+	UpdatedTs int64     `json:"updatedTs"`
 
 	// Region-Price info
 	RegionList []*Region `json:"regionList"`
@@ -56,37 +58,43 @@ type DBInstance struct {
 
 // ConvertAWS convert the offer provided by AWS to DBInstance
 func ConvertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
-	var dbInstanceList []*DBInstance
-	dbInstanceMap := make(map[string]*DBInstance)
-	offerMap := make(map[string][]*Term)
-
+	termMap := make(map[int][]*Term)
 	for _, offer := range offerList {
-		var payload *TermPayload
+		// filter the offer does not have a instancePayload (only got price but no goods).
+		if offer.InstancePayload == nil {
+			continue
+		}
+		var termPayload *TermPayload
 		// Only reserved type has payload field
 		if offer.ChargeType == client.ChargeTypeReserved {
-			payload = &TermPayload{
+			termPayload = &TermPayload{
 				LeaseContractLength: offer.ChargePayload.LeaseContractLength,
 				PurchaseOption:      offer.ChargePayload.PurchaseOption,
 			}
 		}
 
 		term := &Term{
-			Type:          offer.ChargeType,
-			Payload:       payload,
-			HourlyUSD:     offer.HourlyUSD,
-			CommitmentUSD: offer.CommitmentUSD,
+			DatabaseEngine: offer.InstancePayload.DatabaseEngine,
+			Type:           offer.ChargeType,
+			Payload:        termPayload,
+			HourlyUSD:      offer.HourlyUSD,
+			CommitmentUSD:  offer.CommitmentUSD,
 		}
-		if termList, ok := offerMap[offer.SKUID]; !ok {
-			offerMap[offer.SKUID] = []*Term{term}
+		if _, ok := termMap[offer.ID]; !ok {
+			termMap[offer.ID] = []*Term{term}
 		} else {
-			offerMap[offer.SKUID] = append(termList, term)
+			termMap[offer.ID] = append(termMap[offer.ID], term)
 		}
 	}
 
 	now := time.Now().UTC()
 	incrID := 0
+	// dbInstanceMap is used to aggregate the instance by their type (e.g. db.m3.large).
+	dbInstanceMap := make(map[string]*DBInstance)
+	var dbInstanceList []*DBInstance
+	// extract dbInstance from the payload field stored in the offer.
 	for _, offer := range offerList {
-		// filter the offer does not have a instancePayload (only got price but no goods)
+		// filter the offer does not have a instancePayload (only got price but no goods).
 		if offer.InstancePayload == nil {
 			continue
 		}
@@ -98,10 +106,11 @@ func ConvertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 		}
 		memoryDigit := instance.Memory[:strings.Index(instance.Memory, "GiB")-1]
 
+		// we use the instance type (e.g. db.m3.xlarge) differentiate the specification of each instances,
+		// and consider they as the same instance.
 		if _, ok := dbInstanceMap[instance.Type]; !ok {
 			dbInstance := &DBInstance{
 				ID:            incrID,
-				ExternalID:    offer.SKUID,
 				RowStatus:     RowStatusNormal,
 				CreatorID:     SYSTEM_BOT,
 				CreatedTs:     now.Unix(),
@@ -121,26 +130,22 @@ func ConvertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 			incrID++
 		}
 
-		// fill in the region info
+		// fill in the term info of the instance
 		dbInstance := dbInstanceMap[instance.Type]
-		for _, offerRegion := range offer.RegionList {
+		for _, regionName := range offer.RegionList {
 			isRegionExist := false
 			for _, region := range dbInstance.RegionList {
-				if region.Name == offerRegion {
-					if offerList, ok := offerMap[offer.SKUID]; ok {
-						for _, offer := range offerList {
-							offer.DatabaseEngine = instance.DatabaseEngine
-						}
-						region.TermList = append(region.TermList, offerMap[offer.SKUID]...)
-					}
+				if region.Name == regionName {
 					isRegionExist = true
-					break
+					if _, ok := termMap[offer.ID]; ok {
+						region.TermList = append(region.TermList, termMap[offer.ID]...)
+					}
 				}
 			}
 			if !isRegionExist {
 				dbInstance.RegionList = append(dbInstance.RegionList, &Region{
-					Name:     offerRegion,
-					TermList: offerMap[offer.SKUID],
+					Name:     regionName,
+					TermList: termMap[offer.ID],
 				})
 			}
 		}
