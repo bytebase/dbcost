@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/bytebase/dbcost/client/aws"
@@ -32,10 +31,4 @@ func Test_AWSSaveToLocal(t *testing.T) {
 
 	_, err = fd.Write(dataByted)
 	require.NoError(t, err)
-
-}
-
-func Test_Replace(t *testing.T) {
-	a := strings.Replace("SQLGen2InstancesN1Standard", "SQLGen2Instances", "", -1)
-	fmt.Println(a)
 }
