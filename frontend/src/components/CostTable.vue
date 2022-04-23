@@ -16,6 +16,7 @@ type DataRow = {
   processor: string;
   vCPU: number;
   memory: string;
+  leaseLength?: string;
   commitmentUSD: number;
   hourlyUSD: number;
   region: string;
@@ -75,8 +76,15 @@ const columns: any = [
           return `$${row.hourlyUSD}`;
         },
       },
+      {
+        title: "Lease Length",
+        key: "leaseLength",
+        align: "center",
+        render: (row: RowData) => {
+          return row.leaseLength ? row.leaseLength : "INF";
+        },
+      },
     ],
-
     ellipsis: {
       tooltip: true,
     },
@@ -207,6 +215,7 @@ const refreshDataTable = () => {
           memory: dbInstance.memory,
           vCPU: dbInstance.vCPU,
           commitmentUSD: term.commitmentUSD,
+          leaseLength: term.payload?.leaseContractLength,
           hourlyUSD: term.hourlyUSD,
           region: region.name,
         });
