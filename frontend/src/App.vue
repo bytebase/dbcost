@@ -2,6 +2,14 @@
   <!-- header -->
   <the-header />
 
+  <div
+    class="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800"
+  >
+    <span>💰 </span>
+    <h1>The Ultimate RDS Instance Pricing Sheet</h1>
+    <span>💰 </span>
+  </div>
+
   <!-- menu -->
   <div class="mx-5 mt-4">
     <cost-table-menu
