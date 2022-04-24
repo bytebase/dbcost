@@ -45,7 +45,7 @@ import TheHeader from "./components/TheHeader.vue";
 
 import { ChargeType, DBInstance, EngineType } from "./types";
 import { useDBInstanceStore } from "./stores/dbInstance";
-import aws from "../../store/data/test/aws-sample.json";
+import aws from "../../store/data/test/aws.json";
 
 import { reactive } from "vue";
 
