@@ -4,7 +4,7 @@
   >
     <div class="flex items-center justify-center space-x-1">
       <span>DB Cost -</span>
-      <h2>The ultimate cloud database pricing sheet for RDS</h2>
+      <h2>The ultimate cloud database pricing sheet for AWS RDS</h2>
     </div>
 
     <div class="flex flex-row justify-center items-center space-x-2">
