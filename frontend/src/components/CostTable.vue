@@ -17,8 +17,8 @@ type DataRow = {
   vCPU: number;
   memory: string;
   leaseLength?: string;
-  commitmentUSD: number;
-  hourlyUSD: number;
+  commitment: { usd: number };
+  hourly: { usd: number };
   region: string;
 };
 
@@ -64,16 +64,16 @@ const columns: any = [
     children: [
       {
         title: "Commitment",
-        key: "commitmentUSD",
+        key: "commitment.usd",
         render: (row: RowData) => {
-          return `$${row.commitmentUSD}`;
+          return `$${row.commitment.usd}`;
         },
       },
       {
         title: "Hourly Pay",
-        key: "hourlyUSD",
+        key: "hourly.usd",
         render: (row: RowData) => {
-          return `$${row.hourlyUSD}`;
+          return `$${row.hourly.usd}`;
         },
       },
       {
@@ -221,9 +221,9 @@ const refreshDataTable = () => {
           processor: dbInstance.processor,
           memory: dbInstance.memory,
           vCPU: dbInstance.vCPU,
-          commitmentUSD: term.commitmentUSD,
           leaseLength: term.payload?.leaseContractLength,
-          hourlyUSD: term.hourlyUSD,
+          commitment: { usd: term.commitmentUSD },
+          hourly: { usd: term.hourlyUSD },
           region: region.name,
         });
       });
