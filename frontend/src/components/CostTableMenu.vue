@@ -27,7 +27,7 @@
 
     <!-- Database Engine Type -->
     <!-- NOTE that although the price of MYSQL and POSTGRES are happened to be identical -->
-    <!--  it is not guaranteed that prices between different database engine are the sameƒ -->
+    <!--  it is not guaranteed that prices between different database engines are the same -->
     <n-radio-group
       class="align-bottom"
       :default-value="props.engineType"
