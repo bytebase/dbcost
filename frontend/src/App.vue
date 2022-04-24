@@ -2,13 +2,22 @@
   <!-- header -->
   <the-header />
 
-  <div
-    class="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800"
+  <h1
+    class="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800 space-x-2"
   >
-    <span>💰 </span>
-    <h1>The Ultimate RDS Instance Pricing Sheet</h1>
-    <span>💰 </span>
-  </div>
+    <span>💸</span>
+    <span
+      >The Ultimate
+      <a
+        class="text-blue-600 underline"
+        href="https://aws.amazon.com/rds"
+        target="_blank"
+        >AWS RDS</a
+      >
+      Instance Pricing Sheet</span
+    >
+    <span>💸</span>
+  </h1>
 
   <!-- menu -->
   <div class="mx-5 mt-4">
