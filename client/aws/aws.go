@@ -38,6 +38,7 @@ const (
 	engineTypePostgreSQL = "PostgreSQL"
 	engineTypeSQLServer  = "SQL Server"
 	engineTypeOracle     = "Oracle"
+	engineTypeUnknown    = "UNKNOWN"
 )
 
 func (e EngineType) String() string {
@@ -95,7 +96,7 @@ type PriceRaw struct {
 // InfoEndPoint is the instance info endpoint
 const InfoEndPoint = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json"
 
-// GetOffer return offers provides by AWS
+// GetOffer returns the offers provided by AWS.
 func (c *Client) GetOffer() ([]*client.Offer, error) {
 	res, err := http.Get(InfoEndPoint)
 	if err != nil {
@@ -135,7 +136,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 	return offerList, nil
 }
 
-// extractOffer extract the client.offer from the rawData
+// extractOffer extracts the client.offer from the rawData.
 func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
 	bytePrice, err := json.Marshal(rawData.Term)
 	if err != nil {
@@ -150,8 +151,10 @@ func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
 
 	var offerList []*client.Offer
 	incrID := 0
-	for chargeType, instanceOfferList := range rawEntry { /* rawEntry has two charge types, reserved and on-demand.  */
-		for instanceSKU, _offerList := range instanceOfferList { /* we use skuID here to track the instance relevant to this offer  */
+	// rawEntry has two charge types, reserved and on-demand.
+	for chargeType, instanceOfferList := range rawEntry {
+		// we use skuID here to track the instance relevant to this offer
+		for instanceSKU, _offerList := range instanceOfferList {
 			for _, rawOffer := range _offerList {
 				offer := &client.Offer{
 					ID:          incrID,
@@ -184,7 +187,7 @@ func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
 }
 
 func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offer) {
-	// there are maybe many offer that are bind to the same instance (i.e. the same SKU).
+	// There may be many offers that are bind to the same instance with the same SKU.
 	offerMap := make(map[string][]*client.Offer)
 	for _, offer := range offerList {
 		offerMap[offer.InstanceSKU] = append(offerMap[offer.InstanceSKU], offer)
@@ -197,7 +200,7 @@ func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offe
 		}
 
 		engineType := entry.Attributes.DatabaseEngine.String()
-		if engineType == "UNKNOWN" {
+		if engineType == engineTypeUnknown {
 			continue
 		}
 

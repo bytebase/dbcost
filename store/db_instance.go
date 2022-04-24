@@ -80,11 +80,7 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 			HourlyUSD:      offer.HourlyUSD,
 			CommitmentUSD:  offer.CommitmentUSD,
 		}
-		if _, ok := termMap[offer.ID]; !ok {
-			termMap[offer.ID] = []*Term{term}
-		} else {
-			termMap[offer.ID] = append(termMap[offer.ID], term)
-		}
+		termMap[offer.ID] = append(termMap[offer.ID], term)
 	}
 
 	now := time.Now().UTC()
