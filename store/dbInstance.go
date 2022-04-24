@@ -121,8 +121,6 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 				VCPU:          vCPUInt,
 				Memory:        memoryDigit,
 				Processor:     instance.PhysicalProcessor,
-
-				RegionList: []*Region{},
 			}
 			dbInstanceList = append(dbInstanceList, dbInstance)
 			dbInstanceMap[instance.Type] = dbInstance
