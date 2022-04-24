@@ -49,7 +49,8 @@
           :src="EngineIconPath.POSTGRES"
         />
       </n-radio-button>
-      <n-radio-button key="SQLSERVER" value="SQLSERVER">
+      <!-- SQL Server and Oracle need license and have multiple versions; we need more info to tell the different between version and license -->
+      <!-- <n-radio-button key="SQLSERVER" value="SQLSERVER">
         <n-avatar
           class="pt-1"
           size="small"
@@ -64,7 +65,7 @@
           color="none"
           :src="EngineIconPath.ORACLE"
         />
-      </n-radio-button>
+      </n-radio-button> -->
     </n-radio-group>
 
     <!-- Search Bar -->
