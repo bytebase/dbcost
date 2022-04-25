@@ -57,12 +57,14 @@ func (e EngineType) String() string {
 
 // instance is the api message of the Instance for AWS specifically
 type instance struct {
-	ID                 string
-	ServiceCode        string     `json:"servicecode"`
-	Location           string     `json:"location"`
-	Type               string     `json:"instanceType"`
-	InstanceFamily     string     `json:"instanceFamily"`
-	VCPU               string     `json:"vcpu"`
+	ID             string
+	ServiceCode    string `json:"servicecode"`
+	Location       string `json:"location"`
+	Type           string `json:"instanceType"`
+	InstanceFamily string `json:"instanceFamily"`
+	// Noted that this is a api mmessage from AWS, so we still use vcpu for unmarshaling the info,
+	// But in our systems, we use CPU over VCPU.
+	CPU                string     `json:"vcpu"`
 	Memory             string     `json:"memory"`
 	PhysicalProcessor  string     `json:"physicalProcessor"`
 	NetworkPerformance string     `json:"networkPerformance"`
@@ -207,7 +209,7 @@ func fillInstancePayload(instanceRecord instanceRecord, offerList []*client.Offe
 		instance := &client.OfferInstancePayload{
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
-			VCPU:               entry.Attributes.VCPU,
+			CPU:                entry.Attributes.CPU,
 			Memory:             entry.Attributes.Memory,
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,

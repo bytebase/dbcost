@@ -22,7 +22,7 @@ export type DBInstance = {
 
   cloudProvider: CloudProvider;
   name: string;
-  vCPU: number;
+  cpu: number;
   memory: string;
   processor: string;
 };

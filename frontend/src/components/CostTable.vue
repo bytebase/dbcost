@@ -14,7 +14,7 @@ type DataRow = {
 
   name: string;
   processor: string;
-  vCPU: number;
+  cpu: number;
   memory: string;
   leaseLength?: string;
   commitment: { usd: number };
@@ -38,11 +38,11 @@ const columns: any = [
     },
   },
   {
-    title: "vCPU",
-    key: "vCPU",
+    title: "CPU",
+    key: "cpu",
     align: "center",
     sorter: {
-      compare: (row1: DataRow, row2: DataRow) => row1.vCPU - row2.vCPU,
+      compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
       multiple: 2,
     },
   },
@@ -220,7 +220,7 @@ const refreshDataTable = () => {
           name: dbInstance.name,
           processor: dbInstance.processor,
           memory: dbInstance.memory,
-          vCPU: dbInstance.vCPU,
+          cpu: dbInstance.cpu,
           leaseLength: term.payload?.leaseContractLength,
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
