@@ -103,10 +103,8 @@ const columns: any = [
         const len = a.length > b.length ? b.length : a.length;
         for (let i = 0; i < len; i++) {
           if (a[i] < b[i]) {
-            console.log(a, "<", b);
             return false;
           } else if (a[i] > b[i]) {
-            console.log(a, ">", b);
             return true;
           }
         }
@@ -209,10 +207,9 @@ const refreshDataTable = () => {
   let rowCnt = 0;
   const selectedRegionSet = new Set<string>([...props.regionList]);
   props.dbInstanceList.forEach((dbInstance) => {
-    console.log(props.minVCPU);
     if (
       Number(dbInstance.memory) < props.minRAM ||
-      Number(dbInstance.vCPU) < props.minVCPU
+      Number(dbInstance.cpu) < props.minVCPU
     ) {
       return;
     }
