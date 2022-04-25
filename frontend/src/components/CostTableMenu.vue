@@ -15,28 +15,32 @@
   </div>
 
   <div class="mt-2 flex flex-wrap">
-    <!-- Min specification for Memory & vCPU -->
-    <div class="inline-block align-bottom max-w-min mr-2 pt-2">
+    <!-- Min specification for Memory & CPU -->
+    <div class="w-28 mr-2 pt-2 text-right">
       <n-input-number
         placeholder=""
-        @update-value="handleUpdateMinVCPU"
-        :value="state.minVCPU"
+        @update-value="handleUpdateMinCPU"
+        :value="state.minCPU"
         :min="0"
+        :max="999"
+        :show-button="false"
       >
         <template #prefix>
-          <span class="text-gray-500">Min vCPU {{ state.minVCPU }}</span>
+          <span class="text-gray-500">Min CPU</span>
         </template>
       </n-input-number>
     </div>
-    <div class="inline-block align-bottom max-w-min mr-2 pt-2">
+    <div class="w-28 mr-2 pt-2 text-right">
       <n-input-number
         placeholder=""
         @update-value="handleUpdateMinRAM"
         :value="state.minRAM"
         :min="0"
+        :max="999"
+        :show-button="false"
       >
         <template #prefix>
-          <span class="text-gray-500">Min RAM {{ state.minRAM }}</span>
+          <span class="text-gray-500">Min RAM</span>
         </template>
       </n-input-number>
     </div>
@@ -162,19 +166,19 @@ const emit = defineEmits<{
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
   (e: "update-engine-type", selectedEngineType: EngineType): void;
   (e: "update-keyword", typedKeyword: string): void;
-  (e: "update-min-vcpu", minVCPU: number): void;
+  (e: "update-min-vcpu", minCPU: number): void;
   (e: "update-min-ram", minRAM: number): void;
 }>();
 
 interface LocalState {
   searchKeyword: string;
-  minVCPU: number;
+  minCPU: number;
   minRAM: number;
 }
 
 const state = reactive<LocalState>({
   searchKeyword: "",
-  minVCPU: 0,
+  minCPU: 0,
   minRAM: 0,
 });
 
@@ -200,15 +204,15 @@ const handleUpdateMinRAM = (val: any) => {
   emit("update-min-ram", val);
 };
 
-const handleUpdateMinVCPU = (val: any) => {
-  state.minVCPU = val;
+const handleUpdateMinCPU = (val: any) => {
+  state.minCPU = val;
   emit("update-min-vcpu", val);
 };
 
 const clearAll = () => {
   handleUpdateKeyword("");
   handleUpdateRegion([]);
-  handleUpdateMinVCPU(0);
+  handleUpdateMinCPU(0);
   handleUpdateMinRAM(0);
 };
 

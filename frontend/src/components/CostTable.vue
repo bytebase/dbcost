@@ -142,7 +142,7 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  minVCPU: {
+  minCPU: {
     type: Number,
     default: 0,
   },
@@ -189,7 +189,7 @@ watch(
 );
 
 watch(
-  () => props.minVCPU,
+  () => props.minCPU,
   () => {
     refreshDataTable();
   }
@@ -209,7 +209,7 @@ const refreshDataTable = () => {
   props.dbInstanceList.forEach((dbInstance) => {
     if (
       Number(dbInstance.memory) < props.minRAM ||
-      Number(dbInstance.cpu) < props.minVCPU
+      Number(dbInstance.cpu) < props.minCPU
     ) {
       return;
     }
