@@ -144,6 +144,14 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  minVCPU: {
+    type: Number,
+    default: 0,
+  },
+  minRAM: {
+    type: Number,
+    default: 0,
+  },
 });
 
 interface LocalState {
@@ -182,11 +190,33 @@ watch(
   }
 );
 
+watch(
+  () => props.minVCPU,
+  () => {
+    refreshDataTable();
+  }
+);
+
+watch(
+  () => props.minRAM,
+  () => {
+    refreshDataTable();
+  }
+);
+
 const refreshDataTable = () => {
   state.dataRow = [];
   let rowCnt = 0;
   const selectedRegionSet = new Set<string>([...props.regionList]);
   props.dbInstanceList.forEach((dbInstance) => {
+    console.log(props.minVCPU);
+    if (
+      Number(dbInstance.memory) < props.minRAM ||
+      Number(dbInstance.vCPU) < props.minVCPU
+    ) {
+      return;
+    }
+
     const selectedRegionList = dbInstance.regionList.filter((region) => {
       if (selectedRegionSet.has(region.name)) {
         return true;

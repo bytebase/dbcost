@@ -15,6 +15,32 @@
   </div>
 
   <div class="mt-4 space-x-2 flex justify-start">
+    <!-- Min specification for Memory & vCPU -->
+    <div class="inline-block align-bottom max-w-min">
+      <n-input-number
+        placeholder=""
+        @update-value="handleUpdateMinVCPU"
+        :value="state.minVCPU"
+        :min="0"
+      >
+        <template #prefix>
+          <span class="text-gray-500">Min vCPU {{ state.minVCPU }}</span>
+        </template>
+      </n-input-number>
+    </div>
+    <div class="inline-block align-bottom max-w-min">
+      <n-input-number
+        placeholder=""
+        @update-value="handleUpdateMinRAM"
+        :value="state.minRAM"
+        :min="0"
+      >
+        <template #prefix>
+          <span class="text-gray-500">Min RAM {{ state.minRAM }}</span>
+        </template>
+      </n-input-number>
+    </div>
+
     <!-- charge type checkbox -->
     <n-radio-group
       class="align-bottom"
@@ -97,8 +123,9 @@ import {
   NButton,
   NAvatar,
   NInput,
+  NInputNumber,
 } from "naive-ui";
-import { PropType, reactive } from "vue";
+import { onMounted, PropType, reactive } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
 const availableRegionList = dbInstanceStore.getAvailableRegionList();
@@ -130,14 +157,20 @@ const emit = defineEmits<{
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
   (e: "update-engine-type", selectedEngineType: EngineType): void;
   (e: "update-keyword", typedKeyword: string): void;
+  (e: "update-min-vcpu", minVCPU: number): void;
+  (e: "update-min-ram", minRAM: number): void;
 }>();
 
 interface LocalState {
   searchKeyword: string;
+  minVCPU: number;
+  minRAM: number;
 }
 
 const state = reactive<LocalState>({
   searchKeyword: "",
+  minVCPU: 0,
+  minRAM: 0,
 });
 
 const handleUpdateRegion = (val: any[]) => {
@@ -157,11 +190,26 @@ const handleUpdateKeyword = (val: string) => {
   emit("update-keyword", val);
 };
 
+const handleUpdateMinRAM = (val: any) => {
+  state.minRAM = val;
+  emit("update-min-ram", val);
+};
+
+const handleUpdateMinVCPU = (val: any) => {
+  state.minVCPU = val;
+  emit("update-min-vcpu", val);
+};
+
 const clearAll = () => {
   handleUpdateKeyword("");
   handleUpdateRegion([]);
-  state.searchKeyword = "";
+  handleUpdateMinVCPU(0);
+  handleUpdateMinRAM(0);
 };
+
+onMounted(() => {
+  clearAll();
+});
 </script>
 
 <style></style>
