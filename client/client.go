@@ -71,7 +71,7 @@ type Offer struct {
 	ID int
 
 	// e.g. AWS: 9QH3PUGXCYKNCYPB, GCP: 0009-6F35-3126
-	InstanceSKU string
+	SKU string
 	// Allowed OfferType are Instance, RAM, CPU
 	OfferType OfferType
 	// If the offer type is Instance, the payload would be the information of that instance, otherwise this field will be nil

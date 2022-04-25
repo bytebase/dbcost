@@ -23,8 +23,8 @@ func NewClient() Client {
 	}
 }
 
-// Rawjson is the api message for AWS pricing .json file
-type Rawjson struct {
+//  pricing is the api message for AWS pricing .json file
+type pricing struct {
 	Product interface{} `json:"products"`
 	Term    interface{} `json:"terms"`
 }
@@ -55,8 +55,8 @@ func (e EngineType) String() string {
 	return "UNKNOWN"
 }
 
-// Instance is the api message of the Instance for AWS specifically
-type Instance struct {
+// instance is the api message of the Instance for AWS specifically
+type instance struct {
 	ID                 string
 	ServiceCode        string     `json:"servicecode"`
 	Location           string     `json:"location"`
@@ -70,26 +70,26 @@ type Instance struct {
 	DatabaseEngine     EngineType `json:"databaseEngine"`
 }
 
-// ProductEntry is the entry of the instance info
-type ProductEntry struct {
+// productEntry is the entry of the instance info
+type productEntry struct {
 	ID            string   `json:"sku"`
 	ProductFamily string   `json:"productFamily"`
-	Attributes    Instance `json:"attributes"`
+	Attributes    instance `json:"attributes"`
 }
 
-// InstanceRecord is the Record of the instance info
-type InstanceRecord map[string]ProductEntry
+// instanceRecord is the Record of the instance info
+type instanceRecord map[string]productEntry
 
-// PriceDimensionRaw is the raw dimension struct marshaled from the aws json file
-type PriceDimensionRaw struct {
+// priceDimensionRaw is the raw dimension struct marshaled from the aws json file
+type priceDimensionRaw struct {
 	Description  string                     `json:"description"`
 	Unit         string                     `json:"unit"`
 	PricePerUnit map[client.Currency]string `json:"pricePerUnit"`
 }
 
-// PriceRaw is the raw price struct marshaled from the aws json file
-type PriceRaw struct {
-	Dimension map[string]PriceDimensionRaw `json:"priceDimensions"`
+// priceRaw is the raw price struct marshaled from the aws json file
+type priceRaw struct {
+	Dimension map[string]priceDimensionRaw `json:"priceDimensions"`
 	Term      *client.ChargePayload        `json:"termAttributes"`
 }
 
@@ -111,7 +111,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		return nil, fmt.Errorf("Fail when reading response data , [internal]: %v", err)
 	}
 
-	rawData := &Rawjson{}
+	rawData := &pricing{}
 	if err := json.Unmarshal(data, rawData); err != nil {
 		return nil, fmt.Errorf("Fail when unmarshaling response data , [internal]: %v", err)
 	}
@@ -126,7 +126,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
 	}
 	productsDecoder := json.NewDecoder(bytes.NewReader(productBytes))
-	var rawEntryList InstanceRecord
+	var rawEntryList instanceRecord
 	if err := productsDecoder.Decode(&rawEntryList); err != nil {
 		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
 	}
@@ -137,14 +137,14 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 }
 
 // extractOffer extracts the client.offer from the rawData.
-func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
+func extractOffer(rawData *pricing) ([]*client.Offer, error) {
 	bytePrice, err := json.Marshal(rawData.Term)
 	if err != nil {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
 	}
 
 	offerDecoder := json.NewDecoder(bytes.NewReader(bytePrice))
-	var rawEntry map[client.OfferType]map[string]map[string]PriceRaw
+	var rawEntry map[client.OfferType]map[string]map[string]priceRaw
 	if err := offerDecoder.Decode(&rawEntry); err != nil {
 		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
 	}
@@ -157,8 +157,8 @@ func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
 		for instanceSKU, _offerList := range instanceOfferList {
 			for _, rawOffer := range _offerList {
 				offer := &client.Offer{
-					ID:          incrID,
-					InstanceSKU: instanceSKU,
+					ID:  incrID,
+					SKU: instanceSKU,
 					// AWS only offer instance-wise product
 					OfferType:     client.OfferTypeInstance,
 					ChargeType:    client.ChargeType(chargeType),
@@ -186,11 +186,11 @@ func extractOffer(rawData *Rawjson) ([]*client.Offer, error) {
 	return offerList, nil
 }
 
-func fillInstancePayload(instanceRecord InstanceRecord, offerList []*client.Offer) {
+func fillInstancePayload(instanceRecord instanceRecord, offerList []*client.Offer) {
 	// There may be many offers that are bind to the same instance with the same SKU.
 	offerMap := make(map[string][]*client.Offer)
 	for _, offer := range offerList {
-		offerMap[offer.InstanceSKU] = append(offerMap[offer.InstanceSKU], offer)
+		offerMap[offer.SKU] = append(offerMap[offer.SKU], offer)
 	}
 
 	for instanceSKU, entry := range instanceRecord {

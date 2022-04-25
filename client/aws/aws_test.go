@@ -13,7 +13,7 @@ func Test_Extraction(t *testing.T) {
 	file, err := os.ReadFile("../../store/example/aws.json")
 	require.NoError(t, err)
 
-	rawData := &Rawjson{}
+	rawData := &pricing{}
 	err = json.Unmarshal(file, rawData)
 	require.NoError(t, err)
 
@@ -23,7 +23,7 @@ func Test_Extraction(t *testing.T) {
 	byteProducts, err := json.Marshal(rawData.Product)
 	require.NoError(t, err)
 	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
-	var rawEntryList InstanceRecord
+	var rawEntryList instanceRecord
 	err = productsDecoder.Decode(&rawEntryList)
 	require.NoError(t, err)
 }

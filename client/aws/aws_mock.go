@@ -13,7 +13,7 @@ import (
 func MockGetOffer(filePath string) ([]*client.Offer, error) {
 	file, err := os.ReadFile(filePath)
 
-	rawData := &Rawjson{}
+	rawData := &pricing{}
 	if err = json.Unmarshal(file, rawData); err != nil {
 		return nil, fmt.Errorf("fail to unmarshal json, internal: %v", err)
 	}
@@ -28,7 +28,7 @@ func MockGetOffer(filePath string) ([]*client.Offer, error) {
 		return nil, fmt.Errorf("Fail to unmarshal the result, [internal]: %v", err)
 	}
 	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
-	var rawEntryList InstanceRecord
+	var rawEntryList instanceRecord
 	if err := productsDecoder.Decode(&rawEntryList); err != nil {
 		return nil, fmt.Errorf("Fail to decode the result, [internal]: %v", err)
 	}
