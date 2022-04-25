@@ -26,8 +26,8 @@
     </n-radio-group>
 
     <!-- Database Engine Type -->
-    <!-- NOTE that the price of MYSQL and POSTGRES are happened to be identical -->
-    <!-- It is not gurant -->
+    <!-- NOTE that although the price of MYSQL and POSTGRES are happened to be identical -->
+    <!--  it is not guaranteed that prices between different database engines are the same -->
     <n-radio-group
       class="align-bottom"
       :default-value="props.engineType"
@@ -41,7 +41,7 @@
           :src="EngineIconPath.MYSQL"
         />
       </n-radio-button>
-      <n-radio-button key="POSTGRES" value="POSTGRES" label="Reserved">
+      <n-radio-button key="POSTGRES" value="POSTGRES">
         <n-avatar
           class="pt-1"
           size="small"
@@ -49,6 +49,23 @@
           :src="EngineIconPath.POSTGRES"
         />
       </n-radio-button>
+      <!-- SQL Server and Oracle need license and have multiple versions; we need more info to tell the different between version and license -->
+      <!-- <n-radio-button key="SQLSERVER" value="SQLSERVER">
+        <n-avatar
+          class="pt-1"
+          size="small"
+          color="none"
+          :src="EngineIconPath.SQLSERVER"
+        />
+      </n-radio-button>
+      <n-radio-button key="ORACLE" value="ORACLE">
+        <n-avatar
+          class="pt-1"
+          size="small"
+          color="none"
+          :src="EngineIconPath.ORACLE"
+        />
+      </n-radio-button> -->
     </n-radio-group>
 
     <!-- Search Bar -->
@@ -89,7 +106,7 @@ const availableRegionList = dbInstanceStore.getAvailableRegionList();
 const props = defineProps({
   regionList: {
     type: Object as PropType<String[]>,
-    default: "",
+    default: [],
   },
   chargeType: {
     type: String as PropType<ChargeType>,
@@ -104,6 +121,8 @@ const props = defineProps({
 const EngineIconPath = {
   MYSQL: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
   POSTGRES: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+  SQLSERVER: new URL("../assets/icon/db-sqlserver.png", import.meta.url).href,
+  ORACLE: new URL("../assets/icon/db-oracle.png", import.meta.url).href,
 };
 
 const emit = defineEmits<{

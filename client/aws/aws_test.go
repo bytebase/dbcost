@@ -1,50 +1,35 @@
 package aws
 
 import (
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
-	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func Test_Extraction(t *testing.T) {
 	file, err := os.ReadFile("../../store/example/aws.json")
-	if err != nil {
-		t.Fail()
-	}
+	require.NoError(t, err)
 
-	rawData := &rawJSON{}
-	if err = json.Unmarshal(file, rawData); err != nil {
-		t.Fail()
-	}
+	rawData := &pricing{}
+	err = json.Unmarshal(file, rawData)
+	require.NoError(t, err)
 
-	getPriceStart := time.Now()
-	priceList, err := extractPrice(rawData)
-	if err != nil {
-		t.FailNow()
-	}
-	getPriceEnd := time.Now()
-	fmt.Printf("get pricing info: [entry cnt]: %v, [time duration]: %v\n", len(priceList), getPriceEnd.Sub(getPriceStart))
+	_, err = extractOffer(rawData)
+	require.NoError(t, err)
 
-	getInstanceStart := time.Now()
-	instanceList, err := extractInstance(rawData)
-	if err != nil {
-		t.FailNow()
-	}
-	getInstanceEnd := time.Now()
-	fmt.Printf("get instance info: [entry cnt]: %v, [time duration]: %v\n", len(instanceList), getInstanceEnd.Sub(getInstanceStart))
+	byteProducts, err := json.Marshal(rawData.Product)
+	require.NoError(t, err)
+	productsDecoder := json.NewDecoder(bytes.NewReader(byteProducts))
+	var rawEntryList instanceRecord
+	err = productsDecoder.Decode(&rawEntryList)
+	require.NoError(t, err)
 }
 
 func Test_HTTP(t *testing.T) {
 	c := NewClient()
-	start := time.Now()
-	price, instance, err := c.GetOfferInstance()
-	end := time.Now()
-
-	if err != nil {
-		t.Fail()
-	}
-
-	fmt.Printf("get price instance info:\n[price entry cnt]: %v\n[instance entry cnt]: %v\n[time duration]: %v\n", len(price), len(instance), end.Sub(start))
+	_, err := c.GetOffer()
+	require.NoError(t, err)
 }

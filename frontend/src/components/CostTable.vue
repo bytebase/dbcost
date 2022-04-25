@@ -16,7 +16,9 @@ type DataRow = {
   processor: string;
   vCPU: number;
   memory: string;
-  pricing: number;
+  leaseLength?: string;
+  commitment: { usd: number };
+  hourly: { usd: number };
   region: string;
 };
 
@@ -58,9 +60,31 @@ const columns: any = [
   {
     title: "Pricing",
     key: "pricing",
-    render: (row: RowData) => {
-      return `$${row.pricing}`;
-    },
+    align: "center",
+    children: [
+      {
+        title: "Commitment",
+        key: "commitment.usd",
+        render: (row: RowData) => {
+          return `$${row.commitment.usd}`;
+        },
+      },
+      {
+        title: "Hourly Pay",
+        key: "hourly.usd",
+        render: (row: RowData) => {
+          return `$${row.hourly.usd}`;
+        },
+      },
+      {
+        title: "Lease Length",
+        key: "leaseLength",
+        align: "center",
+        render: (row: RowData) => {
+          return row.leaseLength ? row.leaseLength : "INF";
+        },
+      },
+    ],
     ellipsis: {
       tooltip: true,
     },
@@ -138,7 +162,14 @@ watch(
 );
 
 watch(
-  () => props.regionList.length,
+  () => props.regionList,
+  () => {
+    refreshDataTable();
+  }
+);
+
+watch(
+  () => props.engineType,
   () => {
     refreshDataTable();
   }
@@ -154,7 +185,6 @@ watch(
 const refreshDataTable = () => {
   state.dataRow = [];
   let rowCnt = 0;
-
   const selectedRegionSet = new Set<string>([...props.regionList]);
   props.dbInstanceList.forEach((dbInstance) => {
     const selectedRegionList = dbInstance.regionList.filter((region) => {
@@ -191,7 +221,9 @@ const refreshDataTable = () => {
           processor: dbInstance.processor,
           memory: dbInstance.memory,
           vCPU: dbInstance.vCPU,
-          pricing: term.usd,
+          leaseLength: term.payload?.leaseContractLength,
+          commitment: { usd: term.commitmentUSD },
+          hourly: { usd: term.hourlyUSD },
           region: region.name,
         });
       });
