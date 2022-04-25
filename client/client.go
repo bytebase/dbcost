@@ -21,7 +21,7 @@ type OfferInstancePayload struct {
 	Type string `json:"instanceType"`
 	// e.g. HighMem, Generals
 	InstanceFamily string `json:"instanceFamily"`
-	VCPU           string `json:"vcpu"`
+	CPU            string `json:"cpu"`
 	Memory         string `json:"memory"`
 	// e.g. Intel Lake
 	PhysicalProcessor  string     `json:"physicalProcessor"`
@@ -41,7 +41,7 @@ const (
 )
 
 // OfferType is the type of the smallest offer type of a offer.
-// Some vendors may provide offer at a VCPU/RAM level while others may only provide a specified instance.
+// Some vendors may provide offer at a CPU/RAM level while others may only provide a specified instance.
 // Allowed OfferType are : Instance, RAM, CPU
 type OfferType string
 

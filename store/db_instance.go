@@ -51,7 +51,7 @@ type DBInstance struct {
 	// domain fields
 	CloudProvider string `json:"cloudProvider"`
 	Name          string `json:"name"`
-	VCPU          int    `json:"vCPU"`
+	CPU           int    `json:"cpu"`
 	Memory        string `json:"memory"`
 	Processor     string `json:"processor"`
 }
@@ -96,9 +96,9 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 		}
 
 		instance := offer.InstancePayload
-		vCPUInt, err := strconv.Atoi(instance.VCPU)
+		cpuInt, err := strconv.Atoi(instance.CPU)
 		if err != nil {
-			return nil, fmt.Errorf("Fail to parse the VCPU value from string to int, [val]: %v", instance.VCPU)
+			return nil, fmt.Errorf("Fail to parse the CPU value from string to int, [val]: %v", instance.CPU)
 		}
 		memoryDigit := instance.Memory[:strings.Index(instance.Memory, "GiB")-1]
 
@@ -114,7 +114,7 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 				UpdatedTs:     now.Unix(),
 				CloudProvider: CloudProviderAWS,
 				Name:          instance.Type, // e.g. db.t4g.xlarge
-				VCPU:          vCPUInt,
+				CPU:           cpuInt,
 				Memory:        memoryDigit,
 				Processor:     instance.PhysicalProcessor,
 			}

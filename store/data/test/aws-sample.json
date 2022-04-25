@@ -248,7 +248,7 @@
     ],
     "cloudProvider": "AWS",
     "name": "db.m4.10xlarge",
-    "vCPU": 40,
+    "cpu": 40,
     "memory": "160",
     "processor": "Intel Xeon E5-2676 v3 (Haswell)"
   }
