@@ -58,50 +58,21 @@
     </div>
 
     <!-- Database Engine Type -->
-    <!-- NOTE that although the price of MYSQL and POSTGRES are happened to be identical -->
-    <!--  it is not guaranteed that prices between different database engines are the same -->
-    <div class="mr-2 pt-2">
-      <n-radio-group
-        class="align-bottom"
-        :default-value="props.engineType"
-        @update-value="handleUpdateEngineType"
+    <n-checkbox-group
+      class="mr-2 pt-2"
+      :value="props.engineType"
+      @update:value="handleUpdateEngineType"
+    >
+      <n-checkbox
+        class="align-middle pt-1.5"
+        v-for="val in EngineCheckbox"
+        :value="val.key"
       >
-        <n-radio-button key="MYSQL" value="MYSQL">
-          <n-avatar
-            class="pt-1"
-            size="small"
-            color="none"
-            :src="EngineIconPath.MYSQL"
-          />
-        </n-radio-button>
-        <n-radio-button key="POSTGRES" value="POSTGRES">
-          <n-avatar
-            condense
-            class="pt-1"
-            size="small"
-            color="none"
-            :src="EngineIconPath.POSTGRES"
-          />
-        </n-radio-button>
-        <!-- SQL Server and Oracle need license and have multiple versions; we need more info to tell the different between version and license -->
-        <!-- <n-radio-button key="SQLSERVER" value="SQLSERVER">
-        <n-avatar
-          class="pt-1"
-          size="small"
-          color="none"
-          :src="EngineIconPath.SQLSERVER"
-        />
-      </n-radio-button>
-      <n-radio-button key="ORACLE" value="ORACLE">
-        <n-avatar
-          class="pt-1"
-          size="small"
-          color="none"
-          :src="EngineIconPath.ORACLE"
-        />
-      </n-radio-button> -->
-      </n-radio-group>
-    </div>
+        <template #default>
+          <n-avatar size="small" color="none" :src="val.iconPath" />
+        </template>
+      </n-checkbox>
+    </n-checkbox-group>
 
     <!-- Search Bar -->
     <div class="pt-2">
@@ -149,22 +120,26 @@ const props = defineProps({
     default: "",
   },
   engineType: {
-    type: String as PropType<EngineType>,
-    default: "",
+    type: Object as PropType<EngineType[]>,
+    default: [""],
   },
 });
 
-const EngineIconPath = {
-  MYSQL: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
-  POSTGRES: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
-  SQLSERVER: new URL("../assets/icon/db-sqlserver.png", import.meta.url).href,
-  ORACLE: new URL("../assets/icon/db-oracle.png", import.meta.url).href,
-};
+const EngineCheckbox = [
+  {
+    key: "MYSQL",
+    iconPath: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
+  },
+  {
+    key: "POSTGRES",
+    iconPath: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+  },
+];
 
 const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
-  (e: "update-engine-type", selectedEngineType: EngineType): void;
+  (e: "update-engine-type", selectedEngineType: EngineType[]): void;
   (e: "update-keyword", typedKeyword: string): void;
   (e: "update-min-vcpu", minCPU: number): void;
   (e: "update-min-ram", minRAM: number): void;
@@ -190,7 +165,7 @@ const handleUpdateChargeType = (val: ChargeType) => {
   emit("update-charge-type", val);
 };
 
-const handleUpdateEngineType = (val: EngineType) => {
+const handleUpdateEngineType = (val: any) => {
   emit("update-engine-type", val);
 };
 
@@ -211,6 +186,7 @@ const handleUpdateMinCPU = (val: any) => {
 
 const clearAll = () => {
   handleUpdateKeyword("");
+  handleUpdateEngineType([]);
   handleUpdateRegion([]);
   handleUpdateMinCPU(0);
   handleUpdateMinRAM(0);

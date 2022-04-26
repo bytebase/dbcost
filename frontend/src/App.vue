@@ -68,7 +68,7 @@ dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
 interface LocalState {
   selectedRegionList: string[];
   selectedChargeType: ChargeType;
-  selectedEngineType: EngineType;
+  selectedEngineType: EngineType[];
   typedKeyword: string;
   minCPU: number;
   minRAM: number;
@@ -77,7 +77,7 @@ interface LocalState {
 const state = reactive<LocalState>({
   selectedRegionList: [],
   selectedChargeType: "OnDemand",
-  selectedEngineType: "MYSQL",
+  selectedEngineType: ["MYSQL"],
   typedKeyword: "",
   minCPU: 0,
   minRAM: 0,
@@ -90,7 +90,7 @@ const handleUpdateRegion = (val: string[]) => {
 const handleUpdateChargeType = (val: ChargeType) => {
   state.selectedChargeType = val;
 };
-const handleUpdateEngineType = (val: EngineType) => {
+const handleUpdateEngineType = (val: EngineType[]) => {
   state.selectedEngineType = val;
 };
 const handleUpdateKeyword = (val: string) => {
