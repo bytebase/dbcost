@@ -14,43 +14,77 @@
     </n-checkbox-group>
   </div>
 
-  <div class="mt-4 space-x-2 flex justify-start">
+  <div class="mt-2 flex flex-wrap">
+    <!-- Min specification for Memory & CPU -->
+    <div class="w-28 mr-2 pt-2 text-right">
+      <n-input-number
+        placeholder=""
+        @update-value="handleUpdateMinCPU"
+        :value="state.minCPU"
+        :min="0"
+        :max="999"
+        :show-button="false"
+      >
+        <template #prefix>
+          <span class="text-gray-500">Min CPU</span>
+        </template>
+      </n-input-number>
+    </div>
+    <div class="w-28 mr-2 pt-2 text-right">
+      <n-input-number
+        placeholder=""
+        @update-value="handleUpdateMinRAM"
+        :value="state.minRAM"
+        :min="0"
+        :max="999"
+        :show-button="false"
+      >
+        <template #prefix>
+          <span class="text-gray-500">Min RAM</span>
+        </template>
+      </n-input-number>
+    </div>
+
     <!-- charge type checkbox -->
-    <n-radio-group
-      class="align-bottom"
-      :default-value="props.chargeType"
-      @update-value="handleUpdateChargeType"
-    >
-      <n-radio-button key="OnDemand" value="OnDemand" label="On Demand" />
-      <n-radio-button key="Reserved" value="Reserved" label="Reserved" />
-    </n-radio-group>
+    <div class="mr-2 pt-2">
+      <n-radio-group
+        class="align-bottom"
+        :default-value="props.chargeType"
+        @update-value="handleUpdateChargeType"
+      >
+        <n-radio-button key="OnDemand" value="OnDemand" label="On Demand" />
+        <n-radio-button key="Reserved" value="Reserved" label="Reserved" />
+      </n-radio-group>
+    </div>
 
     <!-- Database Engine Type -->
     <!-- NOTE that although the price of MYSQL and POSTGRES are happened to be identical -->
     <!--  it is not guaranteed that prices between different database engines are the same -->
-    <n-radio-group
-      class="align-bottom"
-      :default-value="props.engineType"
-      @update-value="handleUpdateEngineType"
-    >
-      <n-radio-button key="MYSQL" value="MYSQL">
-        <n-avatar
-          class="pt-1"
-          size="small"
-          color="none"
-          :src="EngineIconPath.MYSQL"
-        />
-      </n-radio-button>
-      <n-radio-button key="POSTGRES" value="POSTGRES">
-        <n-avatar
-          class="pt-1"
-          size="small"
-          color="none"
-          :src="EngineIconPath.POSTGRES"
-        />
-      </n-radio-button>
-      <!-- SQL Server and Oracle need license and have multiple versions; we need more info to tell the different between version and license -->
-      <!-- <n-radio-button key="SQLSERVER" value="SQLSERVER">
+    <div class="mr-2 pt-2">
+      <n-radio-group
+        class="align-bottom"
+        :default-value="props.engineType"
+        @update-value="handleUpdateEngineType"
+      >
+        <n-radio-button key="MYSQL" value="MYSQL">
+          <n-avatar
+            class="pt-1"
+            size="small"
+            color="none"
+            :src="EngineIconPath.MYSQL"
+          />
+        </n-radio-button>
+        <n-radio-button key="POSTGRES" value="POSTGRES">
+          <n-avatar
+            condense
+            class="pt-1"
+            size="small"
+            color="none"
+            :src="EngineIconPath.POSTGRES"
+          />
+        </n-radio-button>
+        <!-- SQL Server and Oracle need license and have multiple versions; we need more info to tell the different between version and license -->
+        <!-- <n-radio-button key="SQLSERVER" value="SQLSERVER">
         <n-avatar
           class="pt-1"
           size="small"
@@ -66,10 +100,11 @@
           :src="EngineIconPath.ORACLE"
         />
       </n-radio-button> -->
-    </n-radio-group>
+      </n-radio-group>
+    </div>
 
     <!-- Search Bar -->
-    <div class="inline-block align-bottom">
+    <div class="pt-2">
       <n-input
         placeholder="Keyword"
         :value="state.searchKeyword"
@@ -97,8 +132,9 @@ import {
   NButton,
   NAvatar,
   NInput,
+  NInputNumber,
 } from "naive-ui";
-import { PropType, reactive } from "vue";
+import { onMounted, PropType, reactive } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
 const availableRegionList = dbInstanceStore.getAvailableRegionList();
@@ -130,14 +166,20 @@ const emit = defineEmits<{
   (e: "update-charge-type", selectedChargeType: ChargeType): void;
   (e: "update-engine-type", selectedEngineType: EngineType): void;
   (e: "update-keyword", typedKeyword: string): void;
+  (e: "update-min-vcpu", minCPU: number): void;
+  (e: "update-min-ram", minRAM: number): void;
 }>();
 
 interface LocalState {
   searchKeyword: string;
+  minCPU: number;
+  minRAM: number;
 }
 
 const state = reactive<LocalState>({
   searchKeyword: "",
+  minCPU: 0,
+  minRAM: 0,
 });
 
 const handleUpdateRegion = (val: any[]) => {
@@ -157,11 +199,26 @@ const handleUpdateKeyword = (val: string) => {
   emit("update-keyword", val);
 };
 
+const handleUpdateMinRAM = (val: any) => {
+  state.minRAM = val;
+  emit("update-min-ram", val);
+};
+
+const handleUpdateMinCPU = (val: any) => {
+  state.minCPU = val;
+  emit("update-min-vcpu", val);
+};
+
 const clearAll = () => {
   handleUpdateKeyword("");
   handleUpdateRegion([]);
-  state.searchKeyword = "";
+  handleUpdateMinCPU(0);
+  handleUpdateMinRAM(0);
 };
+
+onMounted(() => {
+  clearAll();
+});
 </script>
 
 <style></style>

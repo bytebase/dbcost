@@ -29,6 +29,8 @@
       @update-charge-type="handleUpdateChargeType"
       @update-engine-type="handleUpdateEngineType"
       @update-keyword="handleUpdateKeyword"
+      @update-min-vcpu="handleUpdateMinCPU"
+      @update-min-ram="handleUpdateMinRAM"
     />
   </div>
 
@@ -40,6 +42,8 @@
       :charge-type="state.selectedChargeType"
       :engine-type="state.selectedEngineType"
       :keyword="state.typedKeyword"
+      :minCPU="state.minCPU"
+      :minRAM="state.minRAM"
     />
   </div>
 
@@ -66,6 +70,8 @@ interface LocalState {
   selectedChargeType: ChargeType;
   selectedEngineType: EngineType;
   typedKeyword: string;
+  minCPU: number;
+  minRAM: number;
 }
 
 const state = reactive<LocalState>({
@@ -73,6 +79,8 @@ const state = reactive<LocalState>({
   selectedChargeType: "OnDemand",
   selectedEngineType: "MYSQL",
   typedKeyword: "",
+  minCPU: 0,
+  minRAM: 0,
 });
 
 const handleUpdateRegion = (val: string[]) => {
@@ -87,6 +95,14 @@ const handleUpdateEngineType = (val: EngineType) => {
 };
 const handleUpdateKeyword = (val: string) => {
   state.typedKeyword = val;
+};
+
+const handleUpdateMinRAM = (val: any) => {
+  state.minRAM = val;
+};
+
+const handleUpdateMinCPU = (val: any) => {
+  state.minCPU = val;
 };
 </script>
 

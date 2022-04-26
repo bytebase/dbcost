@@ -103,10 +103,8 @@ const columns: any = [
         const len = a.length > b.length ? b.length : a.length;
         for (let i = 0; i < len; i++) {
           if (a[i] < b[i]) {
-            console.log(a, "<", b);
             return false;
           } else if (a[i] > b[i]) {
-            console.log(a, ">", b);
             return true;
           }
         }
@@ -143,6 +141,14 @@ const props = defineProps({
   keyword: {
     type: String,
     default: "",
+  },
+  minCPU: {
+    type: Number,
+    default: 0,
+  },
+  minRAM: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -182,11 +188,32 @@ watch(
   }
 );
 
+watch(
+  () => props.minCPU,
+  () => {
+    refreshDataTable();
+  }
+);
+
+watch(
+  () => props.minRAM,
+  () => {
+    refreshDataTable();
+  }
+);
+
 const refreshDataTable = () => {
   state.dataRow = [];
   let rowCnt = 0;
   const selectedRegionSet = new Set<string>([...props.regionList]);
   props.dbInstanceList.forEach((dbInstance) => {
+    if (
+      Number(dbInstance.memory) < props.minRAM ||
+      Number(dbInstance.cpu) < props.minCPU
+    ) {
+      return;
+    }
+
     const selectedRegionList = dbInstance.regionList.filter((region) => {
       if (selectedRegionSet.has(region.name)) {
         return true;
