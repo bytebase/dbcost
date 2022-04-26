@@ -3,11 +3,32 @@
 </template>
 
 <script setup lang="ts">
-import { NDataTable } from "naive-ui";
+import { NDataTable, NAvatar } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
-import { PropType, watch, reactive, onMounted } from "vue";
+import { PropType, watch, reactive, onMounted, h } from "vue";
 import { ChargeType, EngineType } from "../types";
 import { RowData } from "naive-ui/lib/data-table/src/interface";
+
+const EngineIconRender = {
+  MYSQL: h(
+    NAvatar,
+    {
+      src: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
+      size: 16,
+      color: "none",
+    },
+    {}
+  ),
+  POSTGRES: h(
+    NAvatar,
+    {
+      src: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+      size: 16,
+      color: "none",
+    },
+    {}
+  ),
+};
 
 type DataRow = {
   id: number;
@@ -17,9 +38,12 @@ type DataRow = {
   cpu: number;
   memory: string;
   leaseLength?: string;
+  region: string;
+  engineType: string;
   commitment: { usd: number };
   hourly: { usd: number };
-  region: string;
+
+  childCnt: number;
 };
 
 const columns: any = [
@@ -29,12 +53,18 @@ const columns: any = [
     ellipsis: {
       tooltip: true,
     },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
   },
   {
     title: "Processor",
     key: "processor",
     ellipsis: {
       tooltip: true,
+    },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
     },
   },
   {
@@ -44,6 +74,9 @@ const columns: any = [
     sorter: {
       compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
       multiple: 2,
+    },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
     },
   },
   {
@@ -56,6 +89,9 @@ const columns: any = [
         Number(row1.memory) - Number(row2.memory),
       multiple: 2,
     },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
   },
   {
     title: "Pricing",
@@ -63,15 +99,25 @@ const columns: any = [
     align: "center",
     children: [
       {
+        title: "Engine",
+        align: "center",
+        render: (row: RowData) => {
+          if (row.engineType == "MYSQL") {
+            return EngineIconRender.MYSQL;
+          }
+          return EngineIconRender.POSTGRES;
+        },
+      },
+      {
         title: "Commitment",
-        key: "commitment.usd",
+        align: "right",
         render: (row: RowData) => {
           return `$${row.commitment.usd}`;
         },
       },
       {
         title: "Hourly Pay",
-        key: "hourly.usd",
+        align: "right",
         render: (row: RowData) => {
           return `$${row.hourly.usd.toFixed(2)}`;
         },
@@ -79,7 +125,7 @@ const columns: any = [
       {
         title: "Lease Length",
         key: "leaseLength",
-        align: "center",
+        align: "right",
         render: (row: RowData) => {
           return row.leaseLength ? row.leaseLength : "INF";
         },
@@ -118,6 +164,9 @@ const columns: any = [
       },
       multiple: 1,
     },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
   },
 ];
 
@@ -135,8 +184,8 @@ const props = defineProps({
     default: "",
   },
   engineType: {
-    type: String as PropType<EngineType>,
-    default: "",
+    type: Object as PropType<EngineType[]>,
+    default: [""],
   },
   keyword: {
     type: String,
@@ -206,6 +255,8 @@ const refreshDataTable = () => {
   state.dataRow = [];
   let rowCnt = 0;
   const selectedRegionSet = new Set<string>([...props.regionList]);
+  const selectedEngineSet = new Set<string>([...props.engineType]);
+
   props.dbInstanceList.forEach((dbInstance) => {
     if (
       Number(dbInstance.memory) < props.minRAM ||
@@ -226,12 +277,14 @@ const refreshDataTable = () => {
     }
 
     const dataRowList: DataRow[] = [];
+    const dataRowMap: Map<string, DataRow[]> = new Map();
+
     // filter terms provided in each region
     selectedRegionList.forEach((region) => {
       const selectedTermList = region.termList.filter((term) => {
         if (
           term.type === props.chargeType &&
-          term.databaseEngine == props.engineType
+          selectedEngineSet.has(term.databaseEngine)
         ) {
           return true;
         }
@@ -239,21 +292,36 @@ const refreshDataTable = () => {
       });
 
       selectedTermList.forEach((term) => {
-        // make a new copy so that the original one will remain unaffected
-        rowCnt++;
-        dataRowList.push({
-          id: rowCnt,
-
+        const key = `${dbInstance.name}-${term.payload?.leaseContractLength}-${region.name}`;
+        const newRow: DataRow = {
+          id: -1,
+          childCnt: 1,
           name: dbInstance.name,
           processor: dbInstance.processor,
-          memory: dbInstance.memory,
           cpu: dbInstance.cpu,
-          leaseLength: term.payload?.leaseContractLength,
+          memory: dbInstance.memory,
+          engineType: term.databaseEngine,
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
+          leaseLength: term.payload?.leaseContractLength,
           region: region.name,
-        });
+        };
+
+        if (dataRowMap.has(key)) {
+          const existedDataRowList = dataRowMap.get(key) as DataRow[];
+          existedDataRowList[0].childCnt++;
+          newRow.id = existedDataRowList[0].id;
+          existedDataRowList.push(newRow);
+        } else {
+          rowCnt++;
+          newRow.id = rowCnt;
+          dataRowMap.set(key, [newRow]);
+        }
       });
+    });
+
+    dataRowMap.forEach((val) => {
+      dataRowList.push(...val);
     });
 
     // filter by keyword, we only enable this when the keyword is set by user
