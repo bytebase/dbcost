@@ -46,16 +46,15 @@
     </div>
 
     <!-- charge type checkbox -->
-    <div class="mr-2 pt-2">
-      <n-radio-group
-        class="align-bottom"
-        :default-value="props.chargeType"
-        @update-value="handleUpdateChargeType"
-      >
-        <n-radio-button key="OnDemand" value="OnDemand" label="On Demand" />
-        <n-radio-button key="Reserved" value="Reserved" label="Reserved" />
-      </n-radio-group>
-    </div>
+
+    <n-checkbox-group
+      class="mr-2 pt-2"
+      :value="props.chargeType"
+      @update:value="handleUpdateChargeType"
+    >
+      <n-checkbox class="pt-1.5" value="OnDemand" label="On Demand" />
+      <n-checkbox class="pt-1.5" value="Reserved" label="Reserved" />
+    </n-checkbox-group>
 
     <!-- Database Engine Type -->
     <n-checkbox-group
@@ -98,8 +97,6 @@ import {
   NGrid,
   NCheckbox,
   NGi,
-  NRadioGroup,
-  NRadioButton,
   NButton,
   NAvatar,
   NInput,
@@ -116,8 +113,8 @@ const props = defineProps({
     default: [],
   },
   chargeType: {
-    type: String as PropType<ChargeType>,
-    default: "",
+    type: Object as PropType<ChargeType[]>,
+    default: [""],
   },
   engineType: {
     type: Object as PropType<EngineType[]>,
@@ -138,7 +135,7 @@ const EngineCheckbox = [
 
 const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
-  (e: "update-charge-type", selectedChargeType: ChargeType): void;
+  (e: "update-charge-type", selectedChargeType: ChargeType[]): void;
   (e: "update-engine-type", selectedEngineType: EngineType[]): void;
   (e: "update-keyword", typedKeyword: string): void;
   (e: "update-min-vcpu", minCPU: number): void;
@@ -161,7 +158,7 @@ const handleUpdateRegion = (val: any[]) => {
   emit("update-region", val);
 };
 
-const handleUpdateChargeType = (val: ChargeType) => {
+const handleUpdateChargeType = (val: any) => {
   emit("update-charge-type", val);
 };
 

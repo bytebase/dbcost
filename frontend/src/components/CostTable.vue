@@ -37,7 +37,7 @@ type DataRow = {
   processor: string;
   cpu: number;
   memory: string;
-  leaseLength?: string;
+  leaseLength: string;
   region: string;
   engineType: string;
   commitment: { usd: number };
@@ -127,7 +127,7 @@ const columns: any = [
         key: "leaseLength",
         align: "right",
         render: (row: RowData) => {
-          return row.leaseLength ? row.leaseLength : "INF";
+          return row.leaseLength;
         },
       },
     ],
@@ -180,8 +180,8 @@ const props = defineProps({
     default: [],
   },
   chargeType: {
-    type: String as PropType<ChargeType>,
-    default: "",
+    type: Object as PropType<ChargeType[]>,
+    default: [""],
   },
   engineType: {
     type: Object as PropType<EngineType[]>,
@@ -255,7 +255,8 @@ const refreshDataTable = () => {
   state.dataRow = [];
   let rowCnt = 0;
   const selectedRegionSet = new Set<string>([...props.regionList]);
-  const selectedEngineSet = new Set<string>([...props.engineType]);
+  const engineSet = new Set<string>([...props.engineType]);
+  const chargeTypeSet = new Set<string>([...props.chargeType]);
 
   props.dbInstanceList.forEach((dbInstance) => {
     if (
@@ -283,8 +284,8 @@ const refreshDataTable = () => {
     selectedRegionList.forEach((region) => {
       const selectedTermList = region.termList.filter((term) => {
         if (
-          term.type === props.chargeType &&
-          selectedEngineSet.has(term.databaseEngine)
+          chargeTypeSet.has(term.type) &&
+          engineSet.has(term.databaseEngine)
         ) {
           return true;
         }
@@ -292,7 +293,7 @@ const refreshDataTable = () => {
       });
 
       selectedTermList.forEach((term) => {
-        const key = `${dbInstance.name}-${term.payload?.leaseContractLength}-${region.name}`;
+        const key = `${dbInstance.name}-${region.name}`;
         const newRow: DataRow = {
           id: -1,
           childCnt: 1,
@@ -303,13 +304,14 @@ const refreshDataTable = () => {
           engineType: term.databaseEngine,
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
-          leaseLength: term.payload?.leaseContractLength,
+          leaseLength: term.payload?.leaseContractLength
+            ? term.payload?.leaseContractLength
+            : "INF",
           region: region.name,
         };
 
         if (dataRowMap.has(key)) {
           const existedDataRowList = dataRowMap.get(key) as DataRow[];
-          existedDataRowList[0].childCnt++;
           newRow.id = existedDataRowList[0].id;
           existedDataRowList.push(newRow);
         } else {
@@ -321,6 +323,18 @@ const refreshDataTable = () => {
     });
 
     dataRowMap.forEach((val) => {
+      val.sort((a, b) => {
+        // sort the row according to the following criteria
+        // 1. charge type
+        // 2. ascend by lease length
+        if (a.leaseLength == "INF") {
+          return -1;
+        } else if (b.leaseLength == "INF") {
+          return 1;
+        }
+        return Number(a.leaseLength[0]) - Number(b.leaseLength[0]);
+      });
+      val[0].childCnt = val.length;
       dataRowList.push(...val);
     });
 
