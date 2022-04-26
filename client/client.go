@@ -9,10 +9,12 @@ const (
 	EngineTypeMySQL = "MYSQL"
 	// EngineTypePostgreSQL is the engine type for PostgreSQL.
 	EngineTypePostgreSQL = "POSTGRES"
+
+	// TODO: add support to ORACLE & SQLSERVER
 	// EngineTypeOracle is the engine type for Oracle.
-	EngineTypeOracle = "ORACLE"
+	// EngineTypeOracle = "ORACLE"
 	// EngineTypeSQLServer is the engine type for SQLServer.
-	EngineTypeSQLServer = "SQLSERVER"
+	// EngineTypeSQLServer = "SQLSERVER"
 )
 
 // OfferInstancePayload is the payload of the offer type instance.

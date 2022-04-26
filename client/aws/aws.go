@@ -36,9 +36,10 @@ type EngineType string
 const (
 	engineTypeMySQL      = "MySQL"
 	engineTypePostgreSQL = "PostgreSQL"
-	engineTypeSQLServer  = "SQL Server"
-	engineTypeOracle     = "Oracle"
-	engineTypeUnknown    = "UNKNOWN"
+	// TODO: Add support to SQLSERVER & ORACLE
+	// engineTypeSQLServer  = "SQL Server"
+	// engineTypeOracle     = "Oracle"
+	engineTypeUnknown = "UNKNOWN"
 )
 
 func (e EngineType) String() string {
@@ -47,10 +48,6 @@ func (e EngineType) String() string {
 		return "MYSQL"
 	case engineTypePostgreSQL:
 		return "POSTGRES"
-	case engineTypeSQLServer:
-		return "SQLSERVER"
-	case engineTypeOracle:
-		return "ORACLE"
 	}
 	return "UNKNOWN"
 }
