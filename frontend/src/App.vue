@@ -75,7 +75,7 @@ interface LocalState {
 }
 
 const state = reactive<LocalState>({
-  selectedRegionList: [],
+  selectedRegionList: ["US East (N. Virginia)"],
   selectedChargeType: "OnDemand",
   selectedEngineType: ["MYSQL"],
   typedKeyword: "",
