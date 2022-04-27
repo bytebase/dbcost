@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
-import { PropType, watch, reactive, onMounted, h } from "vue";
+import { PropType, watch, reactive, onMounted, h, computed } from "vue";
 import { ChargeType, EngineType } from "../types";
 import { RowData } from "naive-ui/lib/data-table/src/interface";
 
@@ -46,7 +46,60 @@ type DataRow = {
   childCnt: number;
 };
 
-const columns: any = [
+// pricingContent is the col of the pricing, we need to dynamic render this section.
+// e.g. when user only select single engine, the engine icon is unnecessary
+const pricingContent = {
+  engine: {
+    title: "Engine",
+    align: "center",
+    render: (row: RowData) => {
+      if (row.engineType == "MYSQL") {
+        return EngineIconRender.MYSQL;
+      }
+      return EngineIconRender.POSTGRES;
+    },
+  },
+  commitment: {
+    title: "Commitment",
+    align: "right",
+    render: (row: RowData) => {
+      return `$${row.commitment.usd}`;
+    },
+  },
+  hourlyPay: {
+    title: "Hourly Pay",
+    align: "right",
+    render: (row: RowData) => {
+      return `$${row.hourly.usd.toFixed(2)}`;
+    },
+  },
+  leaseLength: {
+    title: "Lease Length",
+    key: "leaseLength",
+    align: "right",
+  },
+};
+
+// the order of the array will affect the order of the column of the table
+// the desired order is: [engine, hourly pay, commitment, lease length]
+const getPricingContent = () => {
+  const col = [];
+  // we show the engine icon when user select muti-engine
+  if (props.engineType.length > 1) {
+    col.push(pricingContent.engine);
+  }
+  col.push(pricingContent.commitment);
+  col.push(pricingContent.hourlyPay);
+  // we show the lease length only when user select 'Reserved' charge type or muti-chargeType
+  const chargeTypeSet = new Set(props.chargeType);
+  if (props.chargeType.length > 1 || chargeTypeSet.has("Reserved")) {
+    col.push(pricingContent.leaseLength);
+  }
+
+  return col;
+};
+
+const columns: any = computed(() => [
   {
     title: "Name",
     key: "name",
@@ -97,40 +150,7 @@ const columns: any = [
     title: "Pricing",
     key: "pricing",
     align: "center",
-    children: [
-      {
-        title: "Engine",
-        align: "center",
-        render: (row: RowData) => {
-          if (row.engineType == "MYSQL") {
-            return EngineIconRender.MYSQL;
-          }
-          return EngineIconRender.POSTGRES;
-        },
-      },
-      {
-        title: "Commitment",
-        align: "right",
-        render: (row: RowData) => {
-          return `$${row.commitment.usd}`;
-        },
-      },
-      {
-        title: "Hourly Pay",
-        align: "right",
-        render: (row: RowData) => {
-          return `$${row.hourly.usd.toFixed(2)}`;
-        },
-      },
-      {
-        title: "Lease Length",
-        key: "leaseLength",
-        align: "right",
-        render: (row: RowData) => {
-          return row.leaseLength;
-        },
-      },
-    ],
+    children: getPricingContent(),
     ellipsis: {
       tooltip: true,
     },
@@ -168,7 +188,7 @@ const columns: any = [
       return rowData.childCnt;
     },
   },
-];
+]);
 
 const props = defineProps({
   dbInstanceList: {
@@ -306,7 +326,7 @@ const refreshDataTable = () => {
           hourly: { usd: term.hourlyUSD },
           leaseLength: term.payload?.leaseContractLength
             ? term.payload?.leaseContractLength
-            : "INF",
+            : "N/A",
           region: region.name,
         };
 
@@ -327,9 +347,9 @@ const refreshDataTable = () => {
         // sort the row according to the following criteria
         // 1. charge type
         // 2. ascend by lease length
-        if (a.leaseLength == "INF") {
+        if (a.leaseLength == "N/A") {
           return -1;
-        } else if (b.leaseLength == "INF") {
+        } else if (b.leaseLength == "N/A") {
           return 1;
         }
         return Number(a.leaseLength[0]) - Number(b.leaseLength[0]);
