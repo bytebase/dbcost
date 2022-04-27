@@ -192,20 +192,20 @@ const columns: any = computed(() => [
 
 const props = defineProps({
   dbInstanceList: {
-    type: Object as PropType<DBInstance[]>,
-    default: [],
+    type: Array as PropType<DBInstance[]>,
+    default: () => [],
   },
   regionList: {
-    type: Object as PropType<string[]>,
-    default: [],
+    type: Array as PropType<string[]>,
+    default: () => [],
   },
   chargeType: {
-    type: Object as PropType<ChargeType[]>,
-    default: [""],
+    type: Array as PropType<ChargeType[]>,
+    default: () => [],
   },
   engineType: {
-    type: Object as PropType<EngineType[]>,
-    default: [""],
+    type: Array as PropType<EngineType[]>,
+    default: () => [],
   },
   keyword: {
     type: String,
@@ -324,9 +324,7 @@ const refreshDataTable = () => {
           engineType: term.databaseEngine,
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
-          leaseLength: term.payload?.leaseContractLength
-            ? term.payload?.leaseContractLength
-            : "N/A",
+          leaseLength: term.payload?.leaseContractLength ?? "N/A",
           region: region.name,
         };
 
