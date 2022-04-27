@@ -119,7 +119,7 @@ const columns: any = [
         title: "Hourly Pay",
         align: "right",
         render: (row: RowData) => {
-          return `$${row.hourly.usd}`;
+          return `$${row.hourly.usd.toFixed(2)}`;
         },
       },
       {
