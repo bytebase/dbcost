@@ -191,10 +191,6 @@ const clearAll = () => {
   handleUpdateMinCPU(0);
   handleUpdateMinRAM(0);
 };
-
-onMounted(() => {
-  clearAll();
-});
 </script>
 
 <style></style>
