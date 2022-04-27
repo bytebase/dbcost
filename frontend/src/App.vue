@@ -21,11 +21,17 @@
 
   <!-- menu -->
   <div class="mx-5 mt-4">
-    <cost-table-menu
+    <n-button class="mb-4" @click="clearAll">Clear All</n-button>
+
+    <cost-table-region-menu
+      class="border-b pb-4"
       :region-list="state.selectedRegionList"
+      @update-region="handleUpdateRegion"
+    />
+
+    <cost-table-menu
       :charge-type="state.selectedChargeType"
       :engine-type="state.selectedEngineType"
-      @update-region="handleUpdateRegion"
       @update-charge-type="handleUpdateChargeType"
       @update-engine-type="handleUpdateEngineType"
       @update-keyword="handleUpdateKeyword"
@@ -59,6 +65,7 @@ import TheHeader from "./components/TheHeader.vue";
 import { ChargeType, DBInstance, EngineType } from "./types";
 import { useDBInstanceStore } from "./stores/dbInstance";
 import aws from "../../store/data/test/aws.json";
+import { NButton } from "naive-ui";
 
 import { reactive } from "vue";
 
@@ -96,13 +103,19 @@ const handleUpdateEngineType = (val: EngineType[]) => {
 const handleUpdateKeyword = (val: string) => {
   state.typedKeyword = val;
 };
-
 const handleUpdateMinRAM = (val: any) => {
   state.minRAM = val;
 };
-
 const handleUpdateMinCPU = (val: any) => {
   state.minCPU = val;
+};
+
+const clearAll = () => {
+  handleUpdateKeyword("");
+  handleUpdateEngineType([]);
+  handleUpdateRegion([]);
+  handleUpdateMinCPU(0);
+  handleUpdateMinRAM(0);
 };
 </script>
 
