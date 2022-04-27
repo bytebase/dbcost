@@ -1,19 +1,4 @@
 <template>
-  <!-- region checkbox -->
-  <div class="border-b pb-4">
-    <n-button class="mb-4" size="small" @click="clearAll"> Clear All </n-button>
-    <n-checkbox-group
-      :value="(regionList as any)"
-      @update-value="handleUpdateRegion"
-    >
-      <n-grid :y-gap="4" :cols="`2 600:3 800:4`">
-        <n-gi v-for="(region, i) in availableRegionList" :key="i">
-          <n-checkbox :value="region" :label="region" />
-        </n-gi>
-      </n-grid>
-    </n-checkbox-group>
-  </div>
-
   <div class="mt-2 flex flex-wrap">
     <!-- Min specification for Memory & CPU -->
     <div class="w-28 mr-2 pt-2 text-right">
@@ -91,27 +76,16 @@
 
 <script lang="ts" setup>
 import { ChargeType, EngineType } from "../types";
-import { useDBInstanceStore } from "../stores/dbInstance";
 import {
   NCheckboxGroup,
-  NGrid,
   NCheckbox,
-  NGi,
-  NButton,
   NAvatar,
   NInput,
   NInputNumber,
 } from "naive-ui";
 import { onMounted, PropType, reactive } from "vue";
 
-const dbInstanceStore = useDBInstanceStore();
-const availableRegionList = dbInstanceStore.getAvailableRegionList();
-
 const props = defineProps({
-  regionList: {
-    type: Object as PropType<String[]>,
-    default: [],
-  },
   chargeType: {
     type: Object as PropType<ChargeType[]>,
     default: [""],
@@ -134,7 +108,6 @@ const EngineCheckbox = [
 ];
 
 const emit = defineEmits<{
-  (e: "update-region", selectedRegion: string[]): void;
   (e: "update-charge-type", selectedChargeType: ChargeType[]): void;
   (e: "update-engine-type", selectedEngineType: EngineType[]): void;
   (e: "update-keyword", typedKeyword: string): void;
@@ -153,10 +126,6 @@ const state = reactive<LocalState>({
   minCPU: 0,
   minRAM: 0,
 });
-
-const handleUpdateRegion = (val: any[]) => {
-  emit("update-region", val);
-};
 
 const handleUpdateChargeType = (val: any) => {
   emit("update-charge-type", val);
@@ -179,14 +148,6 @@ const handleUpdateMinRAM = (val: any) => {
 const handleUpdateMinCPU = (val: any) => {
   state.minCPU = val;
   emit("update-min-vcpu", val);
-};
-
-const clearAll = () => {
-  handleUpdateKeyword("");
-  handleUpdateEngineType([]);
-  handleUpdateRegion([]);
-  handleUpdateMinCPU(0);
-  handleUpdateMinRAM(0);
 };
 </script>
 
