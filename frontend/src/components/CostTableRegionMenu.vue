@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import { PropType, defineProps, defineEmits } from "vue";
 import { useDBInstanceStore } from "../stores/dbInstance";
-import { NGrid, NButton, NGi, NCheckboxGroup, NCheckbox } from "naive-ui";
+import { NGrid, NGi, NCheckboxGroup, NCheckbox } from "naive-ui";
 
 const dbInstanceStore = useDBInstanceStore();
 const availableRegionList = dbInstanceStore.getAvailableRegionList();
@@ -34,9 +34,5 @@ const emit = defineEmits<{
 
 const handleUpdateRegion = (val: any[]) => {
   emit("update-region", val);
-};
-
-const clearAll = () => {
-  handleUpdateRegion([]);
 };
 </script>
