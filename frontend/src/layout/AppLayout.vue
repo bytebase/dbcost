@@ -66,6 +66,7 @@ import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
 import aws from "../../../store/data/test/aws-sample.json";
+import { RouteParam } from "../router";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
@@ -93,13 +94,25 @@ const handleUpdateMinCPU = (val: any) => {
 
 const router = useRouter();
 watch(
-  () => [searchConfigStore.searchConfig],
+  () => searchConfigStore.searchConfig,
   () => {
     const config = searchConfigStore.searchConfig;
-    router.replace({
+    const queryParam: RouteParam = {
+      cloudProvider: config.cloudProvider,
+      region: config.region.join(","),
+      engineType: config.engineType.join(","),
+      chargeType: config.chargeType.join(","),
+      minCPU: config.minCPU,
+      minRAM: config.minRAM,
+      keyword: config.keyword,
+    };
+    router.push({
       name: "app",
-      query: config,
+      query: queryParam,
     });
+  },
+  {
+    deep: true,
   }
 );
 

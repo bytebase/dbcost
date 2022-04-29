@@ -13,9 +13,9 @@ export type SearchConfig = {
 
 export const SearchConfigEmpty: SearchConfig = {
   cloudProvider: "AWS",
-  engineType: [""],
-  chargeType: [""],
-  region: [""],
+  engineType: [],
+  chargeType: [],
+  region: [],
   minCPU: 0,
   minRAM: 0,
   keyword: "",
