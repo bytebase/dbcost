@@ -46,7 +46,7 @@ A sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main
 
 **(NOT REQUIRED)** If you would like to fetch the newest data online, a unit test is provided to do this thing for now. You may type in the following script to your terminal.
 ```
-go test -timeout 60s -run ^Test_SaveToLocal$ github.com/bytebase/dbcost/store -v
+go test -timeout 60s -run ^Test_AWSSaveToLocal$ github.com/bytebase/dbcost/store -v
 ```
 
 ### Starting the Frontend
