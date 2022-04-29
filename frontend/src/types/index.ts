@@ -3,3 +3,4 @@ export * from "./dbInstance";
 export * from "./region";
 export * from "./term";
 export * from "./common";
+export * from "./searchConfig";

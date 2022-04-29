@@ -25,13 +25,13 @@
 
     <cost-table-region-menu
       class="border-b pb-4"
-      :region-list="state.selectedRegionList"
+      :region-list="searchConfigStore.searchConfig.region"
       @update-region="handleUpdateRegion"
     />
 
     <cost-table-menu
-      :charge-type="state.selectedChargeType"
-      :engine-type="state.selectedEngineType"
+      :charge-type="searchConfigStore.searchConfig.chargeType"
+      :engine-type="searchConfigStore.searchConfig.engineType"
       @update-charge-type="handleUpdateChargeType"
       @update-engine-type="handleUpdateEngineType"
       @update-keyword="handleUpdateKeyword"
@@ -44,12 +44,7 @@
   <div class="mx-5 mt-5">
     <cost-table
       :db-instance-list="dbInstanceStore.dbInstanceList"
-      :region-list="state.selectedRegionList"
-      :charge-type="state.selectedChargeType"
-      :engine-type="state.selectedEngineType"
-      :keyword="state.typedKeyword"
-      :minCPU="state.minCPU"
-      :minRAM="state.minRAM"
+      :config="searchConfigStore.searchConfig"
     />
   </div>
 
@@ -57,94 +52,59 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
+
 import CostTable from "../components/CostTable.vue";
 import CostTableMenu from "../components/CostTableMenu.vue";
 import TheFooter from "../components/TheFooter.vue";
 import TheHeader from "../components/TheHeader.vue";
+import { NButton } from "naive-ui";
 
 import { ChargeType, DBInstance, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
+import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
-import { routeParam } from "../router";
 
 import aws from "../../../store/data/test/aws-sample.json";
-import { NButton } from "naive-ui";
-
-import { reactive, watch } from "vue";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
 
-interface LocalState {
-  selectedRegionList: string[];
-  selectedChargeType: ChargeType[];
-  selectedEngineType: EngineType[];
-  typedKeyword: string;
-  minCPU: number;
-  minRAM: number;
-}
-
-const state = reactive<LocalState>({
-  selectedRegionList: ["US East (N. Virginia)"],
-  selectedChargeType: ["OnDemand"],
-  selectedEngineType: ["MYSQL"],
-  typedKeyword: "",
-  minCPU: 0,
-  minRAM: 0,
-});
+const searchConfigStore = useSearchConfigStore();
 
 const handleUpdateRegion = (val: string[]) => {
-  state.selectedRegionList = val;
+  searchConfigStore.searchConfig.region = val;
 };
 const handleUpdateChargeType = (val: ChargeType[]) => {
-  state.selectedChargeType = val;
+  searchConfigStore.searchConfig.chargeType = val;
 };
 const handleUpdateEngineType = (val: EngineType[]) => {
-  state.selectedEngineType = val;
+  searchConfigStore.searchConfig.engineType = val;
 };
 const handleUpdateKeyword = (val: string) => {
-  state.typedKeyword = val;
+  searchConfigStore.searchConfig.keyword = val;
 };
 const handleUpdateMinRAM = (val: any) => {
-  state.minRAM = val;
+  searchConfigStore.searchConfig.minRAM = val;
 };
 const handleUpdateMinCPU = (val: any) => {
-  state.minCPU = val;
+  searchConfigStore.searchConfig.minCPU = val;
 };
 
 const router = useRouter();
 watch(
-  () => [
-    state.minCPU,
-    state.minRAM,
-    state.selectedChargeType,
-    state.selectedEngineType,
-    state.selectedRegionList,
-    state.typedKeyword,
-  ],
+  () => [searchConfigStore.searchConfig],
   () => {
-    const params: routeParam = {
-      provider: "AWS",
-      engine: state.selectedEngineType.join("&"),
-      region: state.selectedRegionList.join("&"),
-      chargeType: state.selectedChargeType.join("&"),
-      minCPU: state.minCPU,
-      minRAM: state.minRAM,
-      keyword: state.typedKeyword ?? "",
-    };
+    const config = searchConfigStore.searchConfig;
     router.replace({
       name: "app",
-      query: params,
+      query: config,
     });
   }
 );
 
 const clearAll = () => {
-  handleUpdateKeyword("");
-  handleUpdateEngineType([]);
-  handleUpdateRegion([]);
-  handleUpdateMinCPU(0);
-  handleUpdateMinRAM(0);
+  searchConfigStore.clearAll();
 };
 </script>
 

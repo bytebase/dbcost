@@ -6,7 +6,7 @@
 import { NDataTable, NAvatar } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted, h, computed } from "vue";
-import { ChargeType, EngineType } from "../types";
+import { SearchConfig } from "../types";
 import { RowData } from "naive-ui/lib/data-table/src/interface";
 
 const EngineIconRender = {
@@ -83,16 +83,17 @@ const pricingContent = {
 // the order of the array will affect the order of the column of the table
 // the desired order is: [engine, hourly pay, commitment, lease length]
 const getPricingContent = () => {
+  const config = props.config;
   const col = [];
   // we show the engine icon when user select muti-engine
-  if (props.engineType.length > 1) {
+  if (config.engineType.length > 1) {
     col.push(pricingContent.engine);
   }
   col.push(pricingContent.commitment);
   col.push(pricingContent.hourlyPay);
   // we show the lease length only when user select 'Reserved' charge type or muti-chargeType
-  const chargeTypeSet = new Set(props.chargeType);
-  if (props.chargeType.length > 1 || chargeTypeSet.has("Reserved")) {
+  const chargeTypeSet = new Set(config.chargeType);
+  if (config.chargeType.length > 1 || chargeTypeSet.has("Reserved")) {
     col.push(pricingContent.leaseLength);
   }
 
@@ -195,29 +196,9 @@ const props = defineProps({
     type: Array as PropType<DBInstance[]>,
     default: () => [],
   },
-  regionList: {
-    type: Array as PropType<string[]>,
-    default: () => [],
-  },
-  chargeType: {
-    type: Array as PropType<ChargeType[]>,
-    default: () => [],
-  },
-  engineType: {
-    type: Array as PropType<EngineType[]>,
-    default: () => [],
-  },
-  keyword: {
-    type: String,
-    default: "",
-  },
-  minCPU: {
-    type: Number,
-    default: 0,
-  },
-  minRAM: {
-    type: Number,
-    default: 0,
+  config: {
+    type: Object as PropType<SearchConfig>,
+    default: () => {},
   },
 });
 
@@ -230,58 +211,29 @@ const state = reactive<LocalState>({
 });
 
 watch(
-  () => props.chargeType,
+  () => props.config,
   () => {
     refreshDataTable();
-  }
-);
-
-watch(
-  () => props.regionList,
-  () => {
-    refreshDataTable();
-  }
-);
-
-watch(
-  () => props.engineType,
-  () => {
-    refreshDataTable();
-  }
-);
-
-watch(
-  () => props.keyword,
-  () => {
-    refreshDataTable();
-  }
-);
-
-watch(
-  () => props.minCPU,
-  () => {
-    refreshDataTable();
-  }
-);
-
-watch(
-  () => props.minRAM,
-  () => {
-    refreshDataTable();
+  },
+  {
+    deep: true,
   }
 );
 
 const refreshDataTable = () => {
+  const config = props.config;
+  const dbInstanceList = props.dbInstanceList;
+
   state.dataRow = [];
   let rowCnt = 0;
-  const selectedRegionSet = new Set<string>([...props.regionList]);
-  const engineSet = new Set<string>([...props.engineType]);
-  const chargeTypeSet = new Set<string>([...props.chargeType]);
+  const selectedRegionSet = new Set<string>([...config.region]);
+  const engineSet = new Set<string>([...config.engineType]);
+  const chargeTypeSet = new Set<string>([...config.chargeType]);
 
-  props.dbInstanceList.forEach((dbInstance) => {
+  dbInstanceList.forEach((dbInstance) => {
     if (
-      Number(dbInstance.memory) < props.minRAM ||
-      Number(dbInstance.cpu) < props.minCPU
+      Number(dbInstance.memory) < config.minRAM ||
+      Number(dbInstance.cpu) < config.minCPU
     ) {
       return;
     }
@@ -357,7 +309,7 @@ const refreshDataTable = () => {
     });
 
     // filter by keyword, we only enable this when the keyword is set by user
-    const keyword = props.keyword;
+    const keyword = config.keyword;
     if (keyword.length > 0) {
       const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
         if (

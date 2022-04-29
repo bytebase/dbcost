@@ -2,6 +2,8 @@ export type RowStatus = "ARCHIVED" | "NORMAL";
 
 export type Currency = "USD";
 
-export type EngineType = "MYSQL" | "POSTGRES" | "ORACLE" | "SQLSERVER";
+// "" meas empty engine type
+export type EngineType = "MYSQL" | "POSTGRES" | "ORACLE" | "SQLSERVER" | "";
 
-export type CloudProvider = "AWS" | "ALIYUN" | "GCP";
+// "" meas empty cloud provider
+export type CloudProvider = "AWS" | "ALIYUN" | "GCP" | "";
