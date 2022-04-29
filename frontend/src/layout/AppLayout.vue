@@ -99,9 +99,9 @@ watch(
     const config = searchConfigStore.searchConfig;
     const queryParam: RouteParam = {
       cloudProvider: config.cloudProvider,
-      region: config.region.join("-"),
-      engineType: config.engineType.join("-"),
-      chargeType: config.chargeType.join("-"),
+      region: config.region.join(","),
+      engineType: config.engineType.join(","),
+      chargeType: config.chargeType.join(","),
       minCPU: config.minCPU,
       minRAM: config.minRAM,
       keyword: config.keyword,

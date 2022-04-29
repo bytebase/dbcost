@@ -46,9 +46,9 @@ router.beforeEach((to, from, next) => {
     const query = to.query;
 
     config.cloudProvider = query.cloudProvider as CloudProvider;
-    config.region = (query.region as string).split("-");
-    config.chargeType = (query.chargeType as string).split("-") as ChargeType[];
-    config.engineType = (query.engineType as string).split("-") as EngineType[];
+    config.region = (query.region as string).split(",");
+    config.chargeType = (query.chargeType as string).split(",") as ChargeType[];
+    config.engineType = (query.engineType as string).split(",") as EngineType[];
     config.keyword = query.keyword as string;
     config.minCPU = Number(query.minCPU as string);
     config.minRAM = Number(query.minRAM as string);
