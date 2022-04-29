@@ -14,3 +14,13 @@ export type Term = {
   hourlyUSD: number;
   commitmentUSD: number;
 };
+
+export const isValidChargeType = (valList: string[]): boolean => {
+  valList.forEach((chargeType) => {
+    if (chargeType !== "OnDemand" && chargeType !== "Reserved") {
+      return false;
+    }
+  });
+
+  return true;
+};
