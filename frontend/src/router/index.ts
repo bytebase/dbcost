@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import App from "@/layout/AppLayout.vue";
+import App from "../layout/AppLayout.vue";
 
 export type routeParam = {
   provider: string;
