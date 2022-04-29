@@ -5,7 +5,7 @@
       <n-input-number
         placeholder=""
         @update-value="handleUpdateMinCPU"
-        :value="state.minCPU"
+        :value="props.minCPU"
         :min="0"
         :max="999"
         :show-button="false"
@@ -19,7 +19,7 @@
       <n-input-number
         placeholder=""
         @update-value="handleUpdateMinRAM"
-        :value="state.minRAM"
+        :value="props.minRAM"
         :min="0"
         :max="999"
         :show-button="false"
@@ -62,7 +62,7 @@
     <div class="pt-2">
       <n-input
         placeholder="Keyword"
-        :value="state.searchKeyword"
+        :value="props.keyword"
         clearable
         @update-value="handleUpdateKeyword"
       >
@@ -83,7 +83,7 @@ import {
   NInput,
   NInputNumber,
 } from "naive-ui";
-import { onMounted, PropType, reactive } from "vue";
+import { PropType, reactive } from "vue";
 
 const props = defineProps({
   chargeType: {
@@ -93,6 +93,18 @@ const props = defineProps({
   engineType: {
     type: Object as PropType<EngineType[]>,
     default: [""],
+  },
+  keyword: {
+    type: String,
+    default: "",
+  },
+  minRAM: {
+    type: Number,
+    default: 0,
+  },
+  minCPU: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -115,18 +127,6 @@ const emit = defineEmits<{
   (e: "update-min-ram", minRAM: number): void;
 }>();
 
-interface LocalState {
-  searchKeyword: string;
-  minCPU: number;
-  minRAM: number;
-}
-
-const state = reactive<LocalState>({
-  searchKeyword: "",
-  minCPU: 0,
-  minRAM: 0,
-});
-
 const handleUpdateChargeType = (val: any) => {
   emit("update-charge-type", val);
 };
@@ -136,17 +136,14 @@ const handleUpdateEngineType = (val: any) => {
 };
 
 const handleUpdateKeyword = (val: string) => {
-  state.searchKeyword = val;
   emit("update-keyword", val);
 };
 
 const handleUpdateMinRAM = (val: any) => {
-  state.minRAM = val;
   emit("update-min-ram", val);
 };
 
 const handleUpdateMinCPU = (val: any) => {
-  state.minCPU = val;
   emit("update-min-vcpu", val);
 };
 </script>

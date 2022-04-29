@@ -32,6 +32,9 @@
     <cost-table-menu
       :charge-type="searchConfigStore.searchConfig.chargeType"
       :engine-type="searchConfigStore.searchConfig.engineType"
+      :keyword="searchConfigStore.searchConfig.keyword"
+      :min-r-a-m="searchConfigStore.searchConfig.minRAM"
+      :min-c-p-u="searchConfigStore.searchConfig.minCPU"
       @update-charge-type="handleUpdateChargeType"
       @update-engine-type="handleUpdateEngineType"
       @update-keyword="handleUpdateKeyword"
