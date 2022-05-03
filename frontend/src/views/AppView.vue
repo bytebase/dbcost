@@ -62,6 +62,7 @@ import { useRouter } from "vue-router";
 
 import aws from "../../../store/data/test/aws-sample.json";
 import { RouteParam } from "../router";
+import { isEmptyArray } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
@@ -94,12 +95,18 @@ watch(
     const config = searchConfigStore.searchConfig;
     const queryParam: RouteParam = {
       cloudProvider: config.cloudProvider,
-      region: config.region.join(","),
-      engineType: config.engineType.join(","),
-      chargeType: config.chargeType.join(","),
-      minCPU: config.minCPU,
-      minRAM: config.minRAM,
-      keyword: config.keyword,
+      region: isEmptyArray(config.region)
+        ? undefined
+        : config.region?.join(","),
+      engineType: isEmptyArray(config.engineType)
+        ? undefined
+        : config.engineType?.join(","),
+      chargeType: isEmptyArray(config.chargeType)
+        ? undefined
+        : config.chargeType?.join(","),
+      minCPU: config.minCPU === 0 ? undefined : config.minCPU,
+      minRAM: config.minRAM === 0 ? undefined : config.minRAM,
+      keyword: config.keyword === "" ? undefined : config.keyword,
     };
 
     router.push({

@@ -15,23 +15,20 @@ import {
 } from "../types";
 
 export type RouteParam = {
-  cloudProvider: string;
-  engineType: string;
-  chargeType: string;
-  region: string;
-  minCPU: number;
-  minRAM: number;
-  keyword: string;
+  cloudProvider?: string;
+  engineType?: string;
+  chargeType?: string;
+  region?: string;
+  minCPU?: number;
+  minRAM?: number;
+  keyword?: string;
 };
 
 export const RouteParamDefault: RouteParam = {
   cloudProvider: SearchConfigDefault.cloudProvider,
-  region: SearchConfigDefault.region.join(","),
-  engineType: SearchConfigDefault.engineType.join(","),
-  chargeType: SearchConfigDefault.chargeType.join(","),
-  minCPU: SearchConfigDefault.minCPU,
-  minRAM: SearchConfigDefault.minRAM,
-  keyword: SearchConfigDefault.keyword,
+  region: SearchConfigDefault.region?.join(","),
+  engineType: SearchConfigDefault.engineType?.join(","),
+  chargeType: SearchConfigDefault.chargeType?.join(","),
 };
 
 const routes: Array<RouteRecordRaw> = [
@@ -88,23 +85,22 @@ router.beforeEach((to, from, next) => {
     next({ name: "404" });
     return;
   }
-
   try {
-    const query = to.query;
+    const query = to.query as RouteParam;
     const config: SearchConfig = {
       cloudProvider: query.cloudProvider as CloudProvider,
-      region: (query.region as string).split(","),
-      chargeType: (query.chargeType as string).split(",") as ChargeType[],
-      engineType: (query.engineType as string).split(",") as EngineType[],
-      keyword: query.keyword as string,
-      minCPU: Number(query.minCPU as string),
-      minRAM: Number(query.minRAM as string),
+      region: query.region?.split(","),
+      chargeType: query.chargeType?.split(",") as ChargeType[],
+      engineType: query.engineType?.split(",") as EngineType[],
+      keyword: query.keyword ? (query.keyword as string) : "",
+      minCPU: query.minCPU ? Number(query.minCPU) : 0,
+      minRAM: query.minRAM ? Number(query.minRAM) : 0,
     };
     if (
-      isValidCloudProvider(config.cloudProvider) &&
-      isValidRegion(config.region) &&
-      isValidChargeType(config.chargeType) &&
-      isValidEngineType(config.engineType)
+      (!config.cloudProvider || isValidCloudProvider(config.cloudProvider)) &&
+      (!config.region || isValidRegion(config.region)) &&
+      (!config.chargeType || isValidChargeType(config.chargeType)) &&
+      (!config.engineType || isValidEngineType(config.engineType))
     ) {
       const searchConfigStore = useSearchConfigStore();
       searchConfigStore.searchConfig = config;
