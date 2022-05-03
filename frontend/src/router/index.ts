@@ -14,10 +14,16 @@ import {
   SearchConfigDefault,
 } from "../types";
 
+// RouteParam is the query param used in the URL
+// to make the URL as simple as possible,
+// we do the following mapping between the attribute in SearchConfig and the attribute in Query Param:
+//    cloudProvider -> provider
+//    engineType -> engine
+//    chargeType -> charge
 export type RouteParam = {
-  cloudProvider?: string;
-  engineType?: string;
-  chargeType?: string;
+  provider?: string;
+  engine?: string;
+  charge?: string;
   region?: string;
   minCPU?: number;
   minRAM?: number;
@@ -25,10 +31,10 @@ export type RouteParam = {
 };
 
 export const RouteParamDefault: RouteParam = {
-  cloudProvider: SearchConfigDefault.cloudProvider,
+  provider: SearchConfigDefault.cloudProvider,
   region: SearchConfigDefault.region?.join(","),
-  engineType: SearchConfigDefault.engineType?.join(","),
-  chargeType: SearchConfigDefault.chargeType?.join(","),
+  engine: SearchConfigDefault.engineType?.join(","),
+  charge: SearchConfigDefault.chargeType?.join(","),
 };
 
 const routes: Array<RouteRecordRaw> = [
@@ -88,10 +94,10 @@ router.beforeEach((to, from, next) => {
   try {
     const query = to.query as RouteParam;
     const config: SearchConfig = {
-      cloudProvider: query.cloudProvider as CloudProvider,
+      cloudProvider: query.provider as CloudProvider,
       region: query.region?.split(","),
-      chargeType: query.chargeType?.split(",") as ChargeType[],
-      engineType: query.engineType?.split(",") as EngineType[],
+      chargeType: query.charge?.split(",") as ChargeType[],
+      engineType: query.engine?.split(",") as EngineType[],
       keyword: query.keyword ? (query.keyword as string) : "",
       minCPU: query.minCPU ? Number(query.minCPU) : 0,
       minRAM: query.minRAM ? Number(query.minRAM) : 0,

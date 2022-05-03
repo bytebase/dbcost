@@ -94,14 +94,14 @@ watch(
   () => {
     const config = searchConfigStore.searchConfig;
     const queryParam: RouteParam = {
-      cloudProvider: config.cloudProvider,
+      provider: config.cloudProvider,
       region: isEmptyArray(config.region)
         ? undefined
         : config.region?.join(","),
-      engineType: isEmptyArray(config.engineType)
+      engine: isEmptyArray(config.engineType)
         ? undefined
         : config.engineType?.join(","),
-      chargeType: isEmptyArray(config.chargeType)
+      charge: isEmptyArray(config.chargeType)
         ? undefined
         : config.chargeType?.join(","),
       minCPU: config.minCPU === 0 ? undefined : config.minCPU,
