@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { NDataTable, NAvatar } from "naive-ui";
+import { NDataTable, NAvatar, NTag } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted, h, computed } from "vue";
 import { SearchConfig } from "../types";
@@ -112,51 +112,6 @@ const columns: any = computed(() => [
     },
   },
   {
-    title: "Processor",
-    key: "processor",
-    ellipsis: {
-      tooltip: true,
-    },
-    rowSpan: (rowData: RowData) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "CPU",
-    key: "cpu",
-    align: "center",
-    sorter: {
-      compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
-      multiple: 2,
-    },
-    rowSpan: (rowData: RowData) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "Memory",
-    key: "memory",
-    align: "center",
-    defaultSortOrder: false,
-    sorter: {
-      compare: (row1: DataRow, row2: DataRow) =>
-        Number(row1.memory) - Number(row2.memory),
-      multiple: 2,
-    },
-    rowSpan: (rowData: RowData) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "Pricing",
-    key: "pricing",
-    align: "center",
-    children: getPricingContent(),
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
     title: "Region",
     key: "region",
     ellipsis: {
@@ -187,6 +142,60 @@ const columns: any = computed(() => [
     },
     rowSpan: (rowData: RowData) => {
       return rowData.childCnt;
+    },
+  },
+  {
+    title: "CPU",
+    key: "cpu",
+    align: "center",
+    sorter: {
+      compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
+      multiple: 2,
+    },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
+    ellipsis: {
+      tooltip: true,
+    },
+    render(row: DataRow) {
+      return [
+        row.cpu,
+        h(
+          NTag,
+          {
+            round: true,
+            type: "info",
+            size: "small",
+            bordered: false,
+            class: "ml-1",
+          },
+          { default: () => row.processor, type: "info" }
+        ),
+      ];
+    },
+  },
+  {
+    title: "Memory",
+    key: "memory",
+    align: "center",
+    defaultSortOrder: false,
+    sorter: {
+      compare: (row1: DataRow, row2: DataRow) =>
+        Number(row1.memory) - Number(row2.memory),
+      multiple: 2,
+    },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
+  },
+  {
+    title: "Pricing",
+    key: "pricing",
+    align: "center",
+    children: getPricingContent(),
+    ellipsis: {
+      tooltip: true,
     },
   },
 ]);
