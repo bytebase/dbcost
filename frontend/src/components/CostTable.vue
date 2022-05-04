@@ -15,6 +15,7 @@ const EngineIconRender = {
     {
       src: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
       size: 16,
+      class: "mt-1",
       color: "none",
     },
     {}
@@ -24,6 +25,7 @@ const EngineIconRender = {
     {
       src: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
       size: 16,
+      class: "mt-1",
       color: "none",
     },
     {}
@@ -49,17 +51,23 @@ type DataRow = {
 // pricingContent is the col of the pricing, we need to dynamic render this section.
 // e.g. when user only select single engine, the engine icon is unnecessary
 const pricingContent = {
-  engine: {
-    title: "Engine",
-    align: "center",
+  commitmentWithEngine: {
+    title: "Commitment",
+    align: "right",
     render: (row: RowData) => {
-      if (row.engineType == "MYSQL") {
-        return EngineIconRender.MYSQL;
+      let engineIcon;
+      if (row.engineType === "MYSQL") {
+        engineIcon = EngineIconRender.MYSQL;
+      } else if (row.engineType === "POSTGRES") {
+        engineIcon = EngineIconRender.POSTGRES;
       }
-      return EngineIconRender.POSTGRES;
+      return h("div", { class: "justify-between flex" }, [
+        engineIcon,
+        h("div", {}, `$${row.commitment.usd}`),
+      ]);
     },
   },
-  commitment: {
+  commitmentWithoutEngine: {
     title: "Commitment",
     align: "right",
     render: (row: RowData) => {
@@ -87,9 +95,10 @@ const getPricingContent = () => {
   const col = [];
   // we show the engine icon when user select muti-engine
   if (config.engineType.length > 1) {
-    col.push(pricingContent.engine);
+    col.push(pricingContent.commitmentWithEngine);
+  } else {
+    col.push(pricingContent.commitmentWithoutEngine);
   }
-  col.push(pricingContent.commitment);
   col.push(pricingContent.hourlyPay);
   // we show the lease length only when user select 'Reserved' charge type or muti-chargeType
   const chargeTypeSet = new Set(config.chargeType);
