@@ -68,7 +68,7 @@ import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import aws from "../../../store/data/test/aws-sample.json";
+import aws from "../../../store/data/test/aws.json";
 import { RouteParam } from "../router";
 
 const dbInstanceStore = useDBInstanceStore();
