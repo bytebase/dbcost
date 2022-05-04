@@ -17,8 +17,10 @@
   </h1>
   <!-- menu -->
   <div class="mx-5 mt-4">
-    <n-button class="mb-4" @click="clearAll">Clear All</n-button>
-
+    <div class="mb-4 justify-between flex">
+      <n-button @click="clearAll">Clear All</n-button>
+      <n-button @click="copyURL">Copy URL</n-button>
+    </div>
     <cost-table-region-menu
       class="border-b pb-4"
       :region-list="searchConfigStore.searchConfig.region"
@@ -118,6 +120,10 @@ watch(
     deep: true,
   }
 );
+
+const copyURL = () => {
+  navigator.clipboard.writeText(document.location.href);
+};
 
 const clearAll = () => {
   searchConfigStore.clearAll();
