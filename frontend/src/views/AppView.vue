@@ -55,7 +55,7 @@ import { watch } from "vue";
 
 import CostTable from "../components/CostTable.vue";
 import CostTableMenu from "../components/CostTableMenu.vue";
-import { NButton } from "naive-ui";
+import { NButton, useNotification } from "naive-ui";
 
 import { ChargeType, DBInstance, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
@@ -121,8 +121,22 @@ watch(
   }
 );
 
+const notification = useNotification();
 const copyURL = () => {
-  navigator.clipboard.writeText(document.location.href);
+  navigator.clipboard
+    .writeText(document.location.href)
+    .then(() => {
+      notification.success({
+        content: "Successfully copied to clipboard",
+        duration: 2000,
+      });
+    })
+    .catch(() => {
+      notification.error({
+        content: "Fail to copy, please try again",
+        duration: 2000,
+      });
+    });
 };
 
 const clearAll = () => {
