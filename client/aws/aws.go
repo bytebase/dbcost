@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/bytebase/dbcost/client"
 )
@@ -207,7 +208,7 @@ func fillInstancePayload(instanceRecord instanceRecord, offerList []*client.Offe
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
 			CPU:                entry.Attributes.CPU,
-			Memory:             entry.Attributes.Memory,
+			Memory:             entry.Attributes.Memory[:strings.Index(entry.Attributes.Memory, "GiB")-1],
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
 			DatabaseEngine:     client.EngineType(engineType),
