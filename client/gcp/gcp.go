@@ -13,30 +13,29 @@ import (
 )
 
 // Client is the client struct
-type Client struct {
-	httpClient http.Client
-}
+type Client struct{}
 
 // NewClient return a client
 func NewClient() Client {
-	return Client{
-		httpClient: http.Client{},
-	}
+	return Client{}
 }
 
 const rdsServiceID = "9662-B51E-5089"
 
-// this apiKey should be blocked before merging
+// this apiKey is for demo purpose only
 const apiKey = "AIzaSyAj36rmGvQ_3kBqd6Lp3nSzPDo2_nD-sdM"
 
-// PriceInfoEndpoint is the endpoint for all Cloud SQL services on GCP
+// priceInfoEndpoint is the endpoint for all Cloud SQL services on GCP
 // For more information, please refer to https://cloud.google.com/billing/v1/how-tos/catalog-api
-var PriceInfoEndpoint = fmt.Sprintf("https://cloudbilling.googleapis.com/v1/services/%s/skus?key=%s", rdsServiceID, apiKey)
+var priceInfoEndpoint = fmt.Sprintf("https://cloudbilling.googleapis.com/v1/services/%s/skus?key=%s", rdsServiceID, apiKey)
 
 type unitPrice struct {
-	CurrencyCode string  `json:"currencyCode"`
-	Unit         string  `json:"units"`
-	Nano         float64 `json:"nanos"`
+	CurrencyCode string `json:"currencyCode"`
+	// The nanos is the number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive.
+	// The cost of the SKU is units + nanos.
+	// For example, a cost of $1.75 is represented as units=1 and nanos=750,000,000.
+	Unit string  `json:"units"`
+	Nano float64 `json:"nanos"`
 }
 
 type tieredRate struct {
@@ -72,59 +71,54 @@ type pricing struct {
 	NextPageToken string   `json:"nextPageToken"`
 }
 
-func httpHelper(nextpageToken string) ([]*offer, error) {
-	endpoint := PriceInfoEndpoint
-	if nextpageToken != "" {
-		endpoint = fmt.Sprintf("%v&pageToken=%v", PriceInfoEndpoint, nextpageToken)
+func getPricingWithPageToken(nextPageToken string) (*pricing, error) {
+	endpoint := priceInfoEndpoint
+	if nextPageToken != "" {
+		endpoint = fmt.Sprintf("%s&pageToken=%s", priceInfoEndpoint, nextPageToken)
 	}
 
 	req, err := http.NewRequest("GET", endpoint, nil)
-	req.Header.Add("User-Agaent", `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15`)
-	req.Header.Add("Connection", `keep-alive`)
-	req.Header.Add("Accept", `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`)
-
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Fail to fetch the info file, [internal]: %v", err)
+		return nil, fmt.Errorf("Fail to fetch the info file. Error: %v", err)
 	}
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("An http error occur , [internal]: %v", err)
+		return nil, fmt.Errorf("An http error occur. Error: %v", err)
 	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Fail when reading response data , [internal]: %v", err)
-	}
-	var offerList []*offer
-	rawData := &pricing{}
-	if err := json.Unmarshal(data, rawData); err != nil {
-		return nil, fmt.Errorf("Fail when unmarshaling response data , [internal]: %v", err)
-	}
-	offerList = rawData.OfferList
-
-	if rawData.NextPageToken != "" {
-		nextPage, err := httpHelper(rawData.NextPageToken)
-		if err != nil {
-			return nil, err
-		}
-		offerList = append(offerList, nextPage...)
-		return offerList, nil
+		return nil, fmt.Errorf("Fail when reading response data. Error: %v", err)
 	}
 
-	return offerList, nil
+	p := &pricing{}
+	if err := json.Unmarshal(data, p); err != nil {
+		return nil, fmt.Errorf("Fail when unmarshaling response data. Error: %v", err)
+	}
+	return p, nil
 }
 
 // GetOffer return the offers provide by GCP.
 func (c *Client) GetOffer() ([]*client.Offer, error) {
-	rawOffer, err := httpHelper("")
-	if err != nil {
-		return nil, err
+	var rawOffer []*offer
+	var token string
+	for {
+		p, err := getPricingWithPageToken(token)
+		if err != nil {
+			return nil, err
+		}
+		rawOffer = append(p.OfferList)
+		if p.NextPageToken == "" {
+			break
+		}
+		token = p.NextPageToken
 	}
 
 	var offerList []*client.Offer
 	incrID := 0
 	for _, rawOffer := range rawOffer {
-		// This condition will filter resource like Network.
+		// This condition will filter resource like Network。
+		// For now, we only focus on the RDS Instance information.
 		if rawOffer.Category.ResourceFamily != "ApplicationServices" ||
 			// the Gen1 offering is unavailabe
 			strings.Contains(rawOffer.Category.ResourceGroup, "Gen1") ||
@@ -133,7 +127,10 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		}
 
 		offerType := getOfferType(rawOffer.Category.ResourceGroup)
-		hourlyUSD := getUSD(rawOffer.PricingInfo[0].PricingExpression.TieredRateList[0].UnitPrice)
+		hourlyUSD, err := getUSD(rawOffer.PricingInfo)
+		if err != nil {
+			return nil, err
+		}
 
 		offer := &client.Offer{
 			ID:        incrID,
@@ -149,10 +146,13 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 			CommitmentUSD: 0,
 			HourlyUSD:     hourlyUSD,
 		}
-		incrID++
 
 		if offerType == client.OfferTypeInstance {
-			databaseEngine, CPU, memory := getCPUMemory(rawOffer.Description)
+			databaseEngine, CPU, memory, err := getCPUMemory(rawOffer.Description)
+			if err != nil {
+				continue
+			}
+
 			instanceType := getInstanceType(rawOffer.Category.ResourceGroup, CPU, memory)
 			payload := &client.OfferInstancePayload{
 				Type:           instanceType,
@@ -164,11 +164,13 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 			offer.InstancePayload = payload
 		}
 
+		// TODO(zilong): implement it later.
 		if offer.ChargeType == client.ChargeTypeReserved {
-			panic("Implement me")
+			continue
 		}
 
 		offerList = append(offerList, offer)
+		incrID++
 	}
 	return offerList, nil
 }
@@ -177,7 +179,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 // Possible resource group are:
 // SQLGen2Instance${INSTANE_CODE}, SQLGen2InstanceRAM, SQLGen2InstanceCPU.
 func getOfferType(resourceGroup string) client.OfferType {
-	offerType := client.OfferType(strings.Replace(resourceGroup, "SQLGen2Instances", "", -1))
+	offerType := client.OfferType(strings.ReplaceAll(resourceGroup, "SQLGen2Instances", ""))
 	if offerType != "RAM" && offerType != "CPU" {
 		offerType = client.OfferTypeInstance
 	}
@@ -189,24 +191,37 @@ var rSpecification = regexp.MustCompile(`Cloud SQL for ([\S|\s]+): Zonal - (\d+)
 
 // getCPUMemory will use a reg-expression to extract the specification expressed in the given description
 // the description should follow the form of "Cloud SQL for ${ENGINE_TYPE}: Zonal - ${NUM_VCPU} vCPU + ${NUM_MEM}GB RAM".
-func getCPUMemory(description string) (databaseEngine client.EngineType, CPU string, memory string) {
+func getCPUMemory(description string) (databaseEngine client.EngineType, CPU string, memory string, err error) {
 	match := rSpecification.FindStringSubmatch(description)
 	if match[1] == "MySQL" {
 		databaseEngine = client.EngineTypeMySQL
 	} else if match[1] == "PostgreSQL" {
 		databaseEngine = client.EngineTypePostgreSQL
+	} else {
+		return databaseEngine, match[2], match[3], nil
 	}
-	return databaseEngine, match[2], match[3]
+	return databaseEngine, match[2], match[3], nil
 }
 
 // getUSD will return a single value of the price in USD
-func getUSD(unitPrice unitPrice) float64 {
-	unitInt64, _ := strconv.Atoi(unitPrice.Unit)
-	return float64(unitInt64) + unitPrice.Nano/1e9
+// pricing in GCP is seperated into to part, the unit and the nanos.
+// The nanos is the number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive.
+// The cost of the SKU is units + nanos.
+// For example, a cost of $1.75 is represented as units=1 and nanos=750,000,000.
+func getUSD(pricingInfo []pricingInfo) (float64, error) {
+	if len(pricingInfo) == 0 || len(pricingInfo[0].PricingExpression.TieredRateList) == 0 {
+		return 0, fmt.Errorf("Incomplete type")
+	}
+	unitPrice := pricingInfo[0].PricingExpression.TieredRateList[0].UnitPrice
+	unitInt64, err := strconv.Atoi(unitPrice.Unit)
+	if err != nil {
+		return 0, err
+	}
+	return float64(unitInt64) + unitPrice.Nano/1e9, nil
 }
 
 // getInstanceType will return a the type of the given instance
 func getInstanceType(resourceGroup, CPU, memory string) string {
-	serviceCode := strings.Replace(resourceGroup, "SQLGen2Instances", "", -1)
+	serviceCode := strings.ReplaceAll(resourceGroup, "SQLGen2Instances", "")
 	return fmt.Sprintf("db-%v-%v-%v", serviceCode, CPU, memory)
 }
