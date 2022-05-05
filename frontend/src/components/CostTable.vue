@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { NDataTable, NAvatar } from "naive-ui";
+import { NDataTable, NAvatar, NTag } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted, h, computed } from "vue";
 import { SearchConfig } from "../types";
@@ -15,6 +15,7 @@ const EngineIconRender = {
     {
       src: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
       size: 16,
+      class: "mt-1",
       color: "none",
     },
     {}
@@ -24,6 +25,7 @@ const EngineIconRender = {
     {
       src: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
       size: 16,
+      class: "mt-1",
       color: "none",
     },
     {}
@@ -49,17 +51,23 @@ type DataRow = {
 // pricingContent is the col of the pricing, we need to dynamic render this section.
 // e.g. when user only select single engine, the engine icon is unnecessary
 const pricingContent = {
-  engine: {
-    title: "Engine",
-    align: "center",
+  commitmentWithEngine: {
+    title: "Commitment",
+    align: "right",
     render: (row: RowData) => {
-      if (row.engineType == "MYSQL") {
-        return EngineIconRender.MYSQL;
+      let engineIcon;
+      if (row.engineType === "MYSQL") {
+        engineIcon = EngineIconRender.MYSQL;
+      } else if (row.engineType === "POSTGRES") {
+        engineIcon = EngineIconRender.POSTGRES;
       }
-      return EngineIconRender.POSTGRES;
+      return h("div", { class: "justify-between flex" }, [
+        engineIcon,
+        h("div", {}, `$${row.commitment.usd}`),
+      ]);
     },
   },
-  commitment: {
+  commitmentWithoutEngine: {
     title: "Commitment",
     align: "right",
     render: (row: RowData) => {
@@ -87,9 +95,10 @@ const getPricingContent = () => {
   const col = [];
   // we show the engine icon when user select muti-engine
   if (config.engineType && config.engineType.length > 1) {
-    col.push(pricingContent.engine);
+    col.push(pricingContent.commitmentWithEngine);
+  } else {
+    col.push(pricingContent.commitmentWithoutEngine);
   }
-  col.push(pricingContent.commitment);
   col.push(pricingContent.hourlyPay);
   // we show the lease length only when user select 'Reserved' charge type or muti-chargeType
   const chargeTypeSet = new Set(config.chargeType);
@@ -109,51 +118,6 @@ const columns: any = computed(() => [
     },
     rowSpan: (rowData: RowData) => {
       return rowData.childCnt;
-    },
-  },
-  {
-    title: "Processor",
-    key: "processor",
-    ellipsis: {
-      tooltip: true,
-    },
-    rowSpan: (rowData: RowData) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "CPU",
-    key: "cpu",
-    align: "center",
-    sorter: {
-      compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
-      multiple: 2,
-    },
-    rowSpan: (rowData: RowData) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "Memory",
-    key: "memory",
-    align: "center",
-    defaultSortOrder: false,
-    sorter: {
-      compare: (row1: DataRow, row2: DataRow) =>
-        Number(row1.memory) - Number(row2.memory),
-      multiple: 2,
-    },
-    rowSpan: (rowData: RowData) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "Pricing",
-    key: "pricing",
-    align: "center",
-    children: getPricingContent(),
-    ellipsis: {
-      tooltip: true,
     },
   },
   {
@@ -187,6 +151,60 @@ const columns: any = computed(() => [
     },
     rowSpan: (rowData: RowData) => {
       return rowData.childCnt;
+    },
+  },
+  {
+    title: "CPU",
+    key: "cpu",
+    align: "center",
+    sorter: {
+      compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
+      multiple: 2,
+    },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
+    ellipsis: {
+      tooltip: true,
+    },
+    render(row: DataRow) {
+      return [
+        row.cpu,
+        h(
+          NTag,
+          {
+            round: true,
+            type: "info",
+            size: "small",
+            bordered: false,
+            class: "ml-1",
+          },
+          { default: () => row.processor }
+        ),
+      ];
+    },
+  },
+  {
+    title: "Memory",
+    key: "memory",
+    align: "center",
+    defaultSortOrder: false,
+    sorter: {
+      compare: (row1: DataRow, row2: DataRow) =>
+        Number(row1.memory) - Number(row2.memory),
+      multiple: 2,
+    },
+    rowSpan: (rowData: RowData) => {
+      return rowData.childCnt;
+    },
+  },
+  {
+    title: "Pricing",
+    key: "pricing",
+    align: "center",
+    children: getPricingContent(),
+    ellipsis: {
+      tooltip: true,
     },
   },
 ]);
