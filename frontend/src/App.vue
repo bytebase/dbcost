@@ -1,5 +1,5 @@
 <template>
-  <n-notification-provider :max="3">
+  <n-notification-provider :max="2">
     <router-view />
   </n-notification-provider>
 </template>

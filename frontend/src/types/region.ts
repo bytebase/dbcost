@@ -6,9 +6,17 @@ export type Region = {
   termList: Term[];
 };
 
+export type AvailableRegion = {
+  name: string;
+  provider: Set<string>;
+};
+
 export const isValidRegion = (regionList: string[]): boolean => {
   const availableRegion = useDBInstanceStore().getAvailableRegionList();
-  const regionSet: Set<String> = new Set<String>(availableRegion);
+  const regionSet: Set<String> = new Set<String>();
+  availableRegion.forEach((region) => {
+    regionSet.add(region.name);
+  });
   regionList.forEach((region) => {
     if (!regionSet.has(region)) {
       return false;
