@@ -94,7 +94,7 @@ const getPricingContent = () => {
   const config = props.config;
   const col = [];
   // we show the engine icon when user select muti-engine
-  if (config.engineType.length > 1) {
+  if (config.engineType && config.engineType.length > 1) {
     col.push(pricingContent.commitmentWithEngine);
   } else {
     col.push(pricingContent.commitmentWithoutEngine);
@@ -102,7 +102,7 @@ const getPricingContent = () => {
   col.push(pricingContent.hourlyPay);
   // we show the lease length only when user select 'Reserved' charge type or muti-chargeType
   const chargeTypeSet = new Set(config.chargeType);
-  if (config.chargeType.length > 1 || chargeTypeSet.has("Reserved")) {
+  if (chargeTypeSet.size > 1 || chargeTypeSet.has("Reserved")) {
     col.push(pricingContent.leaseLength);
   }
 
@@ -179,7 +179,7 @@ const columns: any = computed(() => [
             bordered: false,
             class: "ml-1",
           },
-          { default: () => row.processor, type: "info" }
+          { default: () => row.processor }
         ),
       ];
     },
@@ -239,19 +239,23 @@ watch(
 );
 
 const refreshDataTable = () => {
+  state.dataRow = [];
+  let rowCnt = 0;
   const config = props.config;
   const dbInstanceList = props.dbInstanceList;
 
-  state.dataRow = [];
-  let rowCnt = 0;
-  const selectedRegionSet = new Set<string>([...config.region]);
-  const engineSet = new Set<string>([...config.engineType]);
-  const chargeTypeSet = new Set<string>([...config.chargeType]);
+  if (!config.region && !config.engineType && !config.chargeType) {
+    return;
+  }
+
+  const selectedRegionSet = new Set(config.region);
+  const engineSet = new Set(config.engineType);
+  const chargeTypeSet = new Set(config.chargeType);
 
   dbInstanceList.forEach((dbInstance) => {
     if (
-      Number(dbInstance.memory) < config.minRAM ||
-      Number(dbInstance.cpu) < config.minCPU
+      (config.minRAM && Number(dbInstance.memory) < config.minRAM) ||
+      (config.minCPU && Number(dbInstance.cpu) < config.minCPU)
     ) {
       return;
     }
@@ -328,7 +332,7 @@ const refreshDataTable = () => {
 
     // filter by keyword, we only enable this when the keyword is set by user
     const keyword = config.keyword;
-    if (keyword.length > 0) {
+    if (keyword) {
       const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
         if (
           row.name.includes(keyword) ||
