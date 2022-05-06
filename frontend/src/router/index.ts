@@ -31,7 +31,7 @@ export type RouteParam = {
 };
 
 export const RouteParamDefault: RouteParam = {
-  provider: SearchConfigDefault.cloudProvider,
+  provider: SearchConfigDefault.cloudProvider?.join(","),
   region: SearchConfigDefault.region?.join(","),
   engine: SearchConfigDefault.engineType?.join(","),
   charge: SearchConfigDefault.chargeType?.join(","),
@@ -94,7 +94,7 @@ router.beforeEach((to, from, next) => {
   try {
     const query = to.query as RouteParam;
     const config: SearchConfig = {
-      cloudProvider: query.provider as CloudProvider,
+      cloudProvider: query.provider?.split(",") as CloudProvider[],
       region: query.region?.split(","),
       chargeType: query.charge?.split(",") as ChargeType[],
       engineType: query.engine?.split(",") as EngineType[],

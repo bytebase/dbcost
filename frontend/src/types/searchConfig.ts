@@ -2,7 +2,7 @@ import { CloudProvider, EngineType } from "./common";
 import { ChargeType } from "./term";
 
 export type SearchConfig = {
-  cloudProvider?: CloudProvider;
+  cloudProvider?: CloudProvider[];
   engineType?: EngineType[];
   chargeType?: ChargeType[];
   region?: string[];
@@ -14,7 +14,7 @@ export type SearchConfig = {
 export const SearchConfigEmpty: SearchConfig = {};
 
 export const SearchConfigDefault: SearchConfig = {
-  cloudProvider: "AWS",
+  cloudProvider: ["AWS", "GCP"],
   engineType: ["MYSQL"],
   chargeType: ["OnDemand"],
   region: ["US East (N. Virginia)"],
