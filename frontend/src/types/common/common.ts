@@ -8,16 +8,17 @@ export type EngineType = "MYSQL" | "POSTGRES" | "ORACLE" | "SQLSERVER";
 export type CloudProvider = "AWS" | "ALIYUN" | "GCP" | "";
 
 export const isValidCloudProvider = (providerList: string[]): boolean => {
-  providerList.forEach((provider) => {
-    if (provider !== "AWS" && provider !== "GCP" && val !== "") {
+  for (const provider in providerList) {
+    if (provider !== "AWS" && provider !== "GCP" && provider !== "") {
       return false;
     }
-  });
+  }
+
   return true;
 };
 
-export const isValidEngineType = (valList: string[]): boolean => {
-  valList.forEach((engineType) => {
+export const isValidEngineType = (engineTypeList: string[]): boolean => {
+  for (const engineType in engineTypeList) {
     if (
       engineType !== "MYSQL" &&
       engineType !== "POSTGRES" &&
@@ -26,7 +27,7 @@ export const isValidEngineType = (valList: string[]): boolean => {
     ) {
       return false;
     }
-  });
+  }
 
   return true;
 };

@@ -17,11 +17,12 @@ export const isValidRegion = (regionList: string[]): boolean => {
   availableRegion.forEach((region) => {
     regionSet.add(region.name);
   });
-  regionList.forEach((region) => {
+
+  for (const region in regionList) {
     if (!regionSet.has(region)) {
       return false;
     }
-  });
+  }
 
   return true;
 };
