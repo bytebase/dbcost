@@ -96,7 +96,9 @@ watch(
   () => {
     const config = searchConfigStore.searchConfig;
     const queryParam: RouteParam = {
-      provider: config.cloudProvider,
+      provider: isEmptyArray(config.cloudProvider)
+        ? undefined
+        : config.cloudProvider?.join(","),
       region: isEmptyArray(config.region)
         ? undefined
         : config.region?.join(","),
