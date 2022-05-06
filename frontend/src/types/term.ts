@@ -17,12 +17,12 @@ export type Term = {
   commitmentUSD: number;
 };
 
-export const isValidChargeType = (valList: string[]): boolean => {
-  valList.forEach((chargeType) => {
+export const isValidChargeType = (chargeTypeList: string[]): boolean => {
+  for (const chargeType of chargeTypeList) {
     if (chargeType !== "OnDemand" && chargeType !== "Reserved") {
       return false;
     }
-  });
+  }
 
   return true;
 };
