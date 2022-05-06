@@ -1,7 +1,7 @@
 <template>
   <div class="p-2 items-center bg-slate-800 text-white">
     <div class="inline-flex flex-row items-center">
-      <a href="https://bytebase.com?ref=dbcost" target="_blank">
+      <a href="https://dbcost.com" target="_blank">
         <img
           class="h-8"
           src="../assets/icon/dbcost-logo-full.png"
