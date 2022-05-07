@@ -31,7 +31,7 @@ type Term struct {
 
 // Region is region-price info of a given instance
 type Region struct {
-	Name     string  `json:"name"`
+	Code     string  `json:"code"`
 	TermList []*Term `json:"termList"`
 }
 
@@ -125,10 +125,10 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 
 		// fill in the term info of the instance
 		dbInstance := dbInstanceMap[instance.Type]
-		for _, regionName := range offer.RegionList {
+		for _, regionCode := range offer.RegionList {
 			isRegionExist := false
 			for _, region := range dbInstance.RegionList {
-				if region.Name == regionName {
+				if region.Code == regionCode {
 					isRegionExist = true
 					if _, ok := termMap[offer.ID]; ok {
 						region.TermList = append(region.TermList, termMap[offer.ID]...)
@@ -137,7 +137,7 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 			}
 			if !isRegionExist {
 				dbInstance.RegionList = append(dbInstance.RegionList, &Region{
-					Name:     regionName,
+					Code:     regionCode,
 					TermList: termMap[offer.ID],
 				})
 			}

@@ -56,7 +56,7 @@ func (e EngineType) String() string {
 type instance struct {
 	ID             string
 	ServiceCode    string `json:"servicecode"`
-	Location       string `json:"location"`
+	RegionCode     string `json:"regionCode"`
 	Type           string `json:"instanceType"`
 	InstanceFamily string `json:"instanceFamily"`
 	// Noted that this is a api mmessage from AWS, so we still use vcpu for unmarshaling the info,
@@ -214,8 +214,7 @@ func fillInstancePayload(instanceRecord instanceRecord, offerList []*client.Offe
 		}
 		if _, ok := offerMap[instanceSKU]; ok {
 			for _, offer := range offerMap[instanceSKU] {
-				// The region info of the offer is stored in the instance, we need set the region info here as well.
-				offer.RegionList = []string{entry.Attributes.Location}
+				offer.RegionList = []string{entry.Attributes.RegionCode}
 				offer.InstancePayload = instance
 			}
 		}

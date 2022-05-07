@@ -4,18 +4,18 @@
       :value="(props.regionList as any)"
       @update-value="handleUpdateRegion"
     >
-      <n-grid :y-gap="4" :cols="`2 600:3 800:4`">
+      <n-grid :y-gap="4" :cols="`2 760:3 980:4`">
         <n-gi v-for="(region, i) in availableRegionList" :key="i">
           <n-checkbox :value="region.name" :label="region.name" />
           <n-avatar
-            v-if="region.provider.has('AWS')"
+            v-if="region.providerCode.has('AWS')"
             :src="ProviderIcon.AWS"
             color="none"
             :size="20"
             class="align-bottom ml-1"
           />
           <n-avatar
-            v-if="region.provider.has('GCP')"
+            v-if="region.providerCode.has('GCP')"
             :src="ProviderIcon.GCP"
             color="none"
             :size="16"
