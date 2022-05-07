@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { AvailableRegion, DBInstance, DBInstanceId } from "../types";
+import { AvailableRegion, DBInstance, DBInstanceId, Region } from "../types";
 import { getRegionName } from "../util";
 interface State {
   dbInstanceList: DBInstance[];
@@ -32,7 +32,7 @@ export const useDBInstanceStore = defineStore("dbInstance", {
             regionMap.set(regionName, newMap);
           }
 
-          regionMap.get(regionName)?.set(db.cloudProvider, region.name);
+          regionMap.get(regionName)?.set(db.cloudProvider, region.code);
         });
       });
 
@@ -51,7 +51,7 @@ export const useDBInstanceStore = defineStore("dbInstance", {
       const regionSet = new Set<string>();
       state.dbInstanceList.forEach((db) => {
         db.regionList.forEach((region) => {
-          regionSet.add(getRegionName(region.name));
+          regionSet.add(getRegionName(region.code));
         });
       });
 
