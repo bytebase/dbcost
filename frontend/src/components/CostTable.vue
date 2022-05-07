@@ -137,7 +137,7 @@ const columns: any = computed(() => [
           return stringComp;
         }
 
-        // if tow region are identical, sort them with instance's id
+        // If tow region are identical, sort them with instance id.
         return row1.id - row2.id;
       },
       multiple: 1,

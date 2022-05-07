@@ -54,7 +54,8 @@ func (e EngineType) String() string {
 
 // instance is the api message of the Instance for AWS specifically
 type instance struct {
-	ID             string
+	ID string
+	// The tag here does not follow small-camel naming style, it is intended for the AWS name it this way.
 	ServiceCode    string `json:"servicecode"`
 	RegionCode     string `json:"regionCode"`
 	Type           string `json:"instanceType"`
