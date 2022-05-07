@@ -8,7 +8,7 @@
     "updatedTs": 1650810030,
     "regionList": [
       {
-        "name": "US West (Oregon)",
+        "code": "us-east-1",
         "termList": [
           {
             "databaseEngine": "POSTGRES",
@@ -127,7 +127,7 @@
         ]
       },
       {
-        "name": "Asia Pacific (Tokyo)",
+        "code": "ap-southeast-1",
         "termList": [
           {
             "databaseEngine": "MYSQL",
