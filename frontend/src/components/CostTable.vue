@@ -7,7 +7,6 @@ import { NDataTable, NAvatar, NTag } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted, h, computed } from "vue";
 import { SearchConfig } from "../types";
-import { RowData } from "naive-ui/lib/data-table/src/interface";
 import { getRegionCode, getRegionName } from "../util";
 
 const EngineIconRender = {
@@ -33,9 +32,33 @@ const EngineIconRender = {
   ),
 };
 
+const ProviderIconRender = {
+  GCP: h(
+    NAvatar,
+    {
+      src: new URL("../assets/icon/gcp.png", import.meta.url).href,
+      size: 12,
+      class: "align-middle mb-1 mr-1",
+      color: "none",
+    },
+    {}
+  ),
+  AWS: h(
+    NAvatar,
+    {
+      src: new URL("../assets/icon/aws.png", import.meta.url).href,
+      size: 16,
+      class: "align-middle mr-1",
+      color: "none",
+    },
+    {}
+  ),
+};
+
 type DataRow = {
   id: number;
 
+  cloudProvider: string;
   name: string;
   processor: string;
   cpu: number;
@@ -55,7 +78,7 @@ const pricingContent = {
   commitmentWithEngine: {
     title: "Commitment",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       let engineIcon;
       if (row.engineType === "MYSQL") {
         engineIcon = EngineIconRender.MYSQL;
@@ -71,14 +94,14 @@ const pricingContent = {
   commitmentWithoutEngine: {
     title: "Commitment",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       return `$${row.commitment.usd}`;
     },
   },
   hourlyPay: {
     title: "Hourly Pay",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       return `$${row.hourly.usd.toFixed(2)}`;
     },
   },
@@ -117,8 +140,17 @@ const columns: any = computed(() => [
     ellipsis: {
       tooltip: true,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
+    },
+    render(row: DataRow) {
+      if (row.cloudProvider === "AWS") {
+        return [ProviderIconRender.AWS, row.name];
+      } else if (row.cloudProvider === "GCP") {
+        return [ProviderIconRender.GCP, row.name];
+      }
+
+      return row.name;
     },
   },
   {
@@ -142,7 +174,7 @@ const columns: any = computed(() => [
       },
       multiple: 1,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
@@ -154,27 +186,31 @@ const columns: any = computed(() => [
       compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
       multiple: 2,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
     ellipsis: {
       tooltip: true,
     },
     render(row: DataRow) {
-      return [
-        row.cpu,
-        h(
-          NTag,
-          {
-            round: true,
-            type: "info",
-            size: "small",
-            bordered: false,
-            class: "ml-1",
-          },
-          { default: () => row.processor }
-        ),
-      ];
+      // if the instance does not specify the processor, we just render the number of the vCPU
+      const renderList: any[] = [row.cpu];
+      if (row.processor.length > 0) {
+        renderList.push(
+          h(
+            NTag,
+            {
+              round: true,
+              type: "info",
+              size: "small",
+              bordered: false,
+              class: "ml-1",
+            },
+            { default: () => row.processor }
+          )
+        );
+      }
+      return renderList;
     },
   },
   {
@@ -187,7 +223,7 @@ const columns: any = computed(() => [
         Number(row1.memory) - Number(row2.memory),
       multiple: 2,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
@@ -289,6 +325,7 @@ const refreshDataTable = () => {
         const newRow: DataRow = {
           id: -1,
           childCnt: 1,
+          cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
           processor: dbInstance.processor,
           cpu: dbInstance.cpu,
