@@ -16,7 +16,7 @@ func Test_AWSSaveToLocal(t *testing.T) {
 	offerList, err := c.GetOffer()
 	require.NoError(t, err, "Fail to get price instance info")
 
-	dbInstanceList, err := convert(offerList, CloudProviderAWS)
+	dbInstanceList, err := Convert(offerList, CloudProviderAWS)
 	require.NoError(t, err, "Fail to convert to dbInstance")
 
 	dirPath := fmt.Sprintf("./data/test")
@@ -35,11 +35,11 @@ func Test_AWSSaveToLocal(t *testing.T) {
 }
 
 func Test_GCPSaveToLocal(t *testing.T) {
-	c := gcp.NewClient()
+	c := gcp.NewClient("GCP API Key")
 	offerList, err := c.GetOffer()
 	require.NoError(t, err, "Fail to get price instance info")
 
-	dbInstanceList, err := convert(offerList, CloudProviderGCP)
+	dbInstanceList, err := Convert(offerList, CloudProviderGCP)
 	require.NoError(t, err, "Fail to convert to dbInstance")
 
 	dirPath := fmt.Sprintf("./data/test")

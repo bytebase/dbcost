@@ -55,8 +55,8 @@ type DBInstance struct {
 	Processor     string `json:"processor"`
 }
 
-// convert convert the offer provided by client to DBInstance
-func convert(offerList []*client.Offer, cloudProvider CloudProvider) ([]*DBInstance, error) {
+// Convert convert the offer provided by client to DBInstance
+func Convert(offerList []*client.Offer, cloudProvider CloudProvider) ([]*DBInstance, error) {
 	termMap := make(map[int][]*Term)
 	for _, offer := range offerList {
 		// filter the offer does not have a instancePayload (only got price but no goods).

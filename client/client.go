@@ -95,5 +95,5 @@ type Offer struct {
 
 // Client is the client for http request.
 type Client interface {
-	GetOffer()
+	GetOffer() ([]*Offer, error)
 }
