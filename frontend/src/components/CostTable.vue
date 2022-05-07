@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { NDataTable, NAvatar, NTag } from "naive-ui";
+import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted, h, computed } from "vue";
 import { SearchConfig } from "../types";
@@ -156,7 +156,7 @@ const columns: any = computed(() => [
   {
     title: "CPU",
     key: "cpu",
-    align: "center",
+    align: "right",
     sorter: {
       compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
       multiple: 2,
@@ -165,29 +165,54 @@ const columns: any = computed(() => [
       return rowData.childCnt;
     },
     ellipsis: {
-      tooltip: true,
+      tooltip: false,
     },
     render(row: DataRow) {
-      return [
-        row.cpu,
-        h(
-          NTag,
-          {
-            round: true,
-            type: "info",
-            size: "small",
-            bordered: false,
-            class: "ml-1",
-          },
-          { default: () => row.processor }
-        ),
-      ];
+      let shortenProcessor = "";
+      if (window.innerWidth > 1080) {
+        shortenProcessor = row.processor.split(" ").slice(0, 2).join(" ");
+      } else if (window.innerWidth > 800) {
+        shortenProcessor = row.processor.split(" ")[0];
+      }
+
+      // if the screen is too short, hide the processor
+      let render: any;
+      if (window.innerWidth > 800) {
+        render = h("div", {}, [
+          h(
+            NTag,
+            {
+              round: true,
+              class: "inline mr-2 ",
+              type: row.processor === "" ? "warning" : "info",
+              size: "small",
+              bordered: false,
+            },
+            {
+              default: () => (row.processor === "" ? "N/A" : shortenProcessor),
+            }
+          ),
+          h("div", { class: "inline-block text-right w-6" }, row.cpu),
+        ]);
+      } else {
+        // if the screen is too short, hide the processor
+        render = row.cpu;
+      }
+
+      return h(
+        NTooltip,
+        {},
+        {
+          default: () => (row.processor === "" ? "N/A" : row.processor),
+          trigger: () => render,
+        }
+      );
     },
   },
   {
     title: "Memory",
     key: "memory",
-    align: "center",
+    align: "right",
     defaultSortOrder: false,
     sorter: {
       compare: (row1: DataRow, row2: DataRow) =>
