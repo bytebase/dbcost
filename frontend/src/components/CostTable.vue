@@ -1,12 +1,10 @@
 <template>
-  <n-data-table :columns="columns" :data="state.dataRow" />
+  <n-data-table :columns="columns" :data="dataRow" :loading="isLoading" />
 </template>
-
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
-import { DBInstance } from "../types/dbInstance";
-import { PropType, watch, reactive, onMounted, h, computed } from "vue";
-import { SearchConfig } from "../types";
+import { PropType, h, computed } from "vue";
+
 import { RowData } from "naive-ui/lib/data-table/src/interface";
 
 const EngineIconRender = {
@@ -91,18 +89,14 @@ const pricingContent = {
 // the order of the array will affect the order of the column of the table
 // the desired order is: [engine, hourly pay, commitment, lease length]
 const getPricingContent = () => {
-  const config = props.config;
   const col = [];
-  // we show the engine icon when user select muti-engine
-  if (config.engineType && config.engineType.length > 1) {
+  if (props.showEngineType) {
     col.push(pricingContent.commitmentWithEngine);
   } else {
     col.push(pricingContent.commitmentWithoutEngine);
   }
   col.push(pricingContent.hourlyPay);
-  // we show the lease length only when user select 'Reserved' charge type or muti-chargeType
-  const chargeTypeSet = new Set(config.chargeType);
-  if (chargeTypeSet.size > 1 || chargeTypeSet.has("Reserved")) {
+  if (props.showLeaseLength) {
     col.push(pricingContent.leaseLength);
   }
 
@@ -235,151 +229,12 @@ const columns: any = computed(() => [
 ]);
 
 const props = defineProps({
-  dbInstanceList: {
-    type: Array as PropType<DBInstance[]>,
+  dataRow: {
+    type: Array as PropType<DataRow[]>,
     default: () => [],
   },
-  config: {
-    type: Object as PropType<SearchConfig>,
-    default: () => {},
-  },
-});
-
-interface LocalState {
-  dataRow: DataRow[];
-}
-
-const state = reactive<LocalState>({
-  dataRow: [],
-});
-
-watch(
-  () => props.config,
-  () => {
-    refreshDataTable();
-  },
-  {
-    deep: true,
-  }
-);
-
-const refreshDataTable = () => {
-  state.dataRow = [];
-  let rowCnt = 0;
-  const config = props.config;
-  const dbInstanceList = props.dbInstanceList;
-
-  if (!config.region && !config.engineType && !config.chargeType) {
-    return;
-  }
-
-  const selectedRegionSet = new Set(config.region);
-  const engineSet = new Set(config.engineType);
-  const chargeTypeSet = new Set(config.chargeType);
-
-  dbInstanceList.forEach((dbInstance) => {
-    if (
-      (config.minRAM && Number(dbInstance.memory) < config.minRAM) ||
-      (config.minCPU && Number(dbInstance.cpu) < config.minCPU)
-    ) {
-      return;
-    }
-
-    const selectedRegionList = dbInstance.regionList.filter((region) => {
-      if (selectedRegionSet.has(region.name)) {
-        return true;
-      }
-      return false;
-    });
-    // no region found
-    if (selectedRegionList.length === 0) {
-      return;
-    }
-
-    const dataRowList: DataRow[] = [];
-    const dataRowMap: Map<string, DataRow[]> = new Map();
-
-    // filter terms provided in each region
-    selectedRegionList.forEach((region) => {
-      const selectedTermList = region.termList.filter((term) => {
-        if (
-          chargeTypeSet.has(term.type) &&
-          engineSet.has(term.databaseEngine)
-        ) {
-          return true;
-        }
-        return false;
-      });
-
-      selectedTermList.forEach((term) => {
-        const key = `${dbInstance.name}-${region.name}`;
-        const newRow: DataRow = {
-          id: -1,
-          childCnt: 1,
-          name: dbInstance.name,
-          processor: dbInstance.processor,
-          cpu: dbInstance.cpu,
-          memory: dbInstance.memory,
-          engineType: term.databaseEngine,
-          commitment: { usd: term.commitmentUSD },
-          hourly: { usd: term.hourlyUSD },
-          leaseLength: term.payload?.leaseContractLength ?? "N/A",
-          region: region.name,
-        };
-
-        if (dataRowMap.has(key)) {
-          const existedDataRowList = dataRowMap.get(key) as DataRow[];
-          newRow.id = existedDataRowList[0].id;
-          existedDataRowList.push(newRow);
-        } else {
-          rowCnt++;
-          newRow.id = rowCnt;
-          dataRowMap.set(key, [newRow]);
-        }
-      });
-    });
-
-    dataRowMap.forEach((val) => {
-      val.sort((a, b) => {
-        // sort the row according to the following criteria
-        // 1. charge type
-        // 2. ascend by lease length
-        if (a.leaseLength == "N/A") {
-          return -1;
-        } else if (b.leaseLength == "N/A") {
-          return 1;
-        }
-        return Number(a.leaseLength[0]) - Number(b.leaseLength[0]);
-      });
-      val[0].childCnt = val.length;
-      dataRowList.push(...val);
-    });
-
-    // filter by keyword, we only enable this when the keyword is set by user
-    const keyword = config.keyword;
-    if (keyword) {
-      const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
-        if (
-          row.name.includes(keyword) ||
-          row.memory.includes(keyword) ||
-          row.processor.includes(keyword) ||
-          row.region.includes(keyword)
-        ) {
-          return true;
-        }
-        return false;
-      });
-      state.dataRow.push(...filteredDataRowList);
-      return;
-    }
-
-    state.dataRow.push(...dataRowList);
-  });
-};
-
-onMounted(() => {
-  refreshDataTable();
+  isLoading: { type: Boolean, default: () => false },
+  showEngineType: { type: Boolean, default: () => false },
+  showLeaseLength: { type: Boolean, default: () => false },
 });
 </script>
-
-<style scoped></style>
