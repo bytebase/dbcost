@@ -23,23 +23,28 @@ const filePath = "./store/data/rds.json"
 
 func main() {
 	if isFileExist(filePath) {
-		panic("File exist")
+		fmt.Printf("Fail already exist, pass seeding phase.\n")
+		return
 	}
 
 	incrID := 0
 	var dbInstanceList []*store.DBInstance
 	for provider, client := range cloudProvider {
-		fmt.Println("Fetching ", provider)
+		fmt.Printf("--------Fetching %s--------\n", provider)
+
 		offerList, err := client.GetOffer()
 		if err != nil {
-			println("2")
+			fmt.Printf("Error occurred when fetching %s's entry.\n", provider)
+			continue
 		}
+		fmt.Printf("Fetched %d offer entry.\n", len(offerList))
 
 		providerDBInstanceList, err := store.Convert(offerList, provider)
-		fmt.Println("Fetched ", len(providerDBInstanceList))
 		if err != nil {
-			println("3")
+			fmt.Printf("Fail to covert to dbInstance.\n")
+			os.Exit(1)
 		}
+		fmt.Printf("Converted to %d dbInstance entry.\n", len(providerDBInstanceList))
 
 		for _, instance := range providerDBInstanceList {
 			instance.ID = incrID
@@ -49,11 +54,14 @@ func main() {
 	}
 
 	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
-		println("41")
+		fmt.Printf("Fail to make dir, err: %s.\n", err)
+		os.Exit(1)
 	}
-	fmt.Println("Saving data, total entry: ", len(dbInstanceList))
+	fmt.Printf("Saving data, total entry: %d.\n", len(dbInstanceList))
+
 	if err := store.Save(dbInstanceList, filePath); err != nil {
-		println("4")
+		fmt.Printf("Fail to save data, err: %s.\n", err)
+		os.Exit(1)
 	}
 }
 
