@@ -56,11 +56,10 @@
 <script setup lang="ts">
 import { watch, reactive, ref, computed } from "vue";
 
-import CostTable from "../components/CostTable.vue";
-import CostTableMenu from "../components/CostTableMenu.vue";
+import { DataRow } from "../components/CostTable";
 import { NButton, useNotification } from "naive-ui";
 
-import { ChargeType, DBInstance, EngineType, DataRow } from "../types";
+import { ChargeType, DBInstance, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";

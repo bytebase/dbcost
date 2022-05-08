@@ -1,11 +1,16 @@
 <template>
-  <n-data-table :columns="columns" :data="dataRow" :loading="isLoading" />
+  <n-data-table
+    :row-key="(row) => row.id"
+    :columns="columns"
+    :data="dataRow"
+    :loading="isLoading"
+  />
 </template>
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
 
-import { RowData } from "naive-ui/lib/data-table/src/interface";
+import { DataRow } from "./";
 
 const EngineIconRender = {
   MYSQL: h(
@@ -30,29 +35,13 @@ const EngineIconRender = {
   ),
 };
 
-type DataRow = {
-  id: number;
-
-  name: string;
-  processor: string;
-  cpu: number;
-  memory: string;
-  leaseLength: string;
-  region: string;
-  engineType: string;
-  commitment: { usd: number };
-  hourly: { usd: number };
-
-  childCnt: number;
-};
-
 // pricingContent is the col of the pricing, we need to dynamic render this section.
 // e.g. when user only select single engine, the engine icon is unnecessary
 const pricingContent = {
   commitmentWithEngine: {
     title: "Commitment",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       let engineIcon;
       if (row.engineType === "MYSQL") {
         engineIcon = EngineIconRender.MYSQL;
@@ -68,14 +57,14 @@ const pricingContent = {
   commitmentWithoutEngine: {
     title: "Commitment",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       return `$${row.commitment.usd}`;
     },
   },
   hourlyPay: {
     title: "Hourly Pay",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       return `$${row.hourly.usd.toFixed(2)}`;
     },
   },
@@ -110,7 +99,7 @@ const columns: any = computed(() => [
     ellipsis: {
       tooltip: true,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
@@ -143,7 +132,7 @@ const columns: any = computed(() => [
       },
       multiple: 1,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
@@ -155,7 +144,7 @@ const columns: any = computed(() => [
       compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
       multiple: 2,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
     ellipsis: {
@@ -213,7 +202,7 @@ const columns: any = computed(() => [
         Number(row1.memory) - Number(row2.memory),
       multiple: 2,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
