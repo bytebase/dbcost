@@ -1,6 +1,9 @@
 import CostTable from "./CostTable.vue";
+export default CostTable;
+
 export type DataRow = {
   id: number;
+  key: string;
 
   name: string;
   processor: string;
@@ -14,5 +17,3 @@ export type DataRow = {
 
   childCnt: number;
 };
-
-export default CostTable;

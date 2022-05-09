@@ -42,6 +42,19 @@
     />
   </div>
 
+  <!-- selected dashboard -->
+  <div class="mx-5 mt-4" v-if="state.checkedDataRow.length">
+    <cost-table
+      :data-row="state.checkedDataRow"
+      :isLoading="state.isLoading"
+      :show-engine-type="true"
+      :show-lease-length="true"
+      :checked-row-keys="state.checkRowKeys"
+      @update-checked-row-keys="handleCheckRowKeys"
+      virtual-scroll
+    />
+  </div>
+
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
@@ -49,6 +62,8 @@
       :isLoading="state.isLoading"
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
+      :checked-row-keys="state.checkRowKeys"
+      @update-checked-row-keys="handleCheckRowKeys"
     />
   </div>
 </template>
@@ -67,6 +82,7 @@ import { useRouter } from "vue-router";
 import aws from "../../../store/data/test/aws.json";
 import { RouteParam } from "../router";
 import { isEmptyArray } from "../util";
+import CostTable from "../components/costTable/CostTable.vue";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
@@ -75,11 +91,15 @@ const searchConfigStore = useSearchConfigStore();
 
 interface LocalState {
   dataRow: DataRow[];
+  checkRowKeys: string[];
+  checkedDataRow: DataRow[];
   isLoading: boolean;
 }
 
 const state = reactive<LocalState>({
   dataRow: [],
+  checkRowKeys: [],
+  checkedDataRow: [],
   isLoading: false,
 });
 
@@ -100,6 +120,16 @@ const handleUpdateMinRAM = (val: any) => {
 };
 const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
+};
+const handleCheckRowKeys = (rowKeys: string[]) => {
+  const rowKeySet = new Set<string>(rowKeys);
+  state.checkedDataRow = state.dataRow.filter((row: DataRow) =>
+    rowKeySet.has(row.key)
+  );
+  state.checkedDataRow.forEach((row) => {
+    row.childCnt = 1;
+  });
+  state.checkRowKeys = rowKeys;
 };
 
 const router = useRouter();
@@ -225,6 +255,7 @@ const refreshDataTable = () => {
         const key = `${dbInstance.name}-${region.name}`;
         const newRow: DataRow = {
           id: -1,
+          key: "",
           childCnt: 1,
           name: dbInstance.name,
           processor: dbInstance.processor,
@@ -236,6 +267,7 @@ const refreshDataTable = () => {
           leaseLength: term.payload?.leaseContractLength ?? "N/A",
           region: region.name,
         };
+        newRow.key = `${newRow.name}-${newRow.region}-${newRow.engineType}--${newRow.leaseLength}`;
 
         if (dataRowMap.has(key)) {
           const existedDataRowList = dataRowMap.get(key) as DataRow[];
