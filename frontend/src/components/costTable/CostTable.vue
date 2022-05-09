@@ -9,7 +9,7 @@
 </template>
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
-import { PropType, h, computed, reactive } from "vue";
+import { PropType, h, computed } from "vue";
 
 import { DataRow } from "./";
 
@@ -31,7 +31,7 @@ const EngineIconRender = {
   MYSQL: h(
     NAvatar,
     {
-      src: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
+      src: new URL("../../assets/icon/db-mysql.png", import.meta.url).href,
       size: 16,
       class: "mt-1",
       color: "none",
@@ -41,7 +41,7 @@ const EngineIconRender = {
   POSTGRES: h(
     NAvatar,
     {
-      src: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+      src: new URL("../../assets/icon/db-postgres.png", import.meta.url).href,
       size: 16,
       class: "mt-1",
       color: "none",

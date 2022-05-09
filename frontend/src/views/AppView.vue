@@ -17,7 +17,7 @@
   </h1>
 
   <!-- menu -->
-  <div class="mx-5 mt-4">
+  <div class="mx-5 mt-4 border-b pb-4">
     <div class="mb-4 justify-between flex">
       <n-button @click="clearAll">Clear All</n-button>
       <n-button @click="copyURL">Copy URL</n-button>
@@ -43,15 +43,12 @@
   </div>
 
   <!-- selected dashboard -->
-  <div class="mx-5 mt-4" v-if="state.checkedDataRow.length">
-    <cost-table
+  <div class="mx-5 mt-4 border-b pb-4">
+    <cost-table-checked
       :data-row="state.checkedDataRow"
       :isLoading="state.isLoading"
-      :show-engine-type="true"
-      :show-lease-length="true"
       :checked-row-keys="state.checkRowKeys"
       @update-checked-row-keys="handleCheckRowKeys"
-      virtual-scroll
     />
   </div>
 
@@ -130,6 +127,7 @@ const handleCheckRowKeys = (rowKeys: string[]) => {
     row.childCnt = 1;
   });
   state.checkRowKeys = rowKeys;
+  console.log(state.checkedDataRow);
 };
 
 const router = useRouter();

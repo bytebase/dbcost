@@ -83,7 +83,7 @@ import {
   NInput,
   NInputNumber,
 } from "naive-ui";
-import { PropType, reactive } from "vue";
+import { PropType } from "vue";
 
 const props = defineProps({
   chargeType: {
