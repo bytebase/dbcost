@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/bytebase/dbcost/client"
@@ -56,8 +55,8 @@ type DBInstance struct {
 	Processor     string `json:"processor"`
 }
 
-// convertAWS convert the offer provided by AWS to DBInstance
-func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
+// convert convert the offer provided by client to DBInstance
+func convert(offerList []*client.Offer, cloudProvider CloudProvider) ([]*DBInstance, error) {
 	termMap := make(map[int][]*Term)
 	for _, offer := range offerList {
 		// filter the offer does not have a instancePayload (only got price but no goods).
@@ -100,7 +99,7 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 		if err != nil {
 			return nil, fmt.Errorf("Fail to parse the CPU value from string to int, [val]: %v", instance.CPU)
 		}
-		memoryDigit := instance.Memory[:strings.Index(instance.Memory, "GiB")-1]
+		memoryDigit := instance.Memory
 
 		// we use the instance type (e.g. db.m3.xlarge) differentiate the specification of each instances,
 		// and consider they as the same instance.
@@ -112,7 +111,7 @@ func convertAWS(offerList []*client.Offer) ([]*DBInstance, error) {
 				CreatedTs:     now.Unix(),
 				UpdaterID:     SYSTEM_BOT,
 				UpdatedTs:     now.Unix(),
-				CloudProvider: CloudProviderAWS,
+				CloudProvider: cloudProvider.String(),
 				Name:          instance.Type, // e.g. db.t4g.xlarge
 				CPU:           cpuInt,
 				Memory:        memoryDigit,

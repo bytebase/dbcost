@@ -7,20 +7,18 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/bytebase/dbcost/client"
 )
 
 // Client is the client struct
 type Client struct {
-	httpClient http.Client
 }
 
 // NewClient return a client
 func NewClient() Client {
-	return Client{
-		httpClient: http.Client{},
-	}
+	return Client{}
 }
 
 //  pricing is the api message for AWS pricing .json file
@@ -54,7 +52,8 @@ func (e EngineType) String() string {
 
 // instance is the api message of the Instance for AWS specifically
 type instance struct {
-	ID             string
+	ID string
+	// The tag here does not follow small-camel naming style, it is intended for the AWS name it this way.
 	ServiceCode    string `json:"servicecode"`
 	RegionCode     string `json:"regionCode"`
 	Type           string `json:"instanceType"`
@@ -207,7 +206,7 @@ func fillInstancePayload(instanceRecord instanceRecord, offerList []*client.Offe
 			Type:               entry.Attributes.Type,
 			InstanceFamily:     entry.Attributes.InstanceFamily,
 			CPU:                entry.Attributes.CPU,
-			Memory:             entry.Attributes.Memory,
+			Memory:             strings.ReplaceAll(entry.Attributes.Memory, "GiB", ""),
 			PhysicalProcessor:  entry.Attributes.PhysicalProcessor,
 			NetworkPerformance: entry.Attributes.NetworkPerformance,
 			DatabaseEngine:     client.EngineType(engineType),
