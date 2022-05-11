@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
-import { getRegionCode, getRegionName } from "../../util";
 
 import { DataRow } from "./";
 
@@ -147,7 +146,6 @@ const columns: any = computed(() => [
       compare: (row1: DataRow, row2: DataRow) => {
         const a = row1.region.toLocaleLowerCase();
         const b = row2.region.toLocaleLowerCase();
-        const len = a.length > b.length ? b.length : a.length;
         const stringComp = a.localeCompare(b);
         if (stringComp !== 0) {
           return stringComp;
@@ -248,8 +246,8 @@ const props = defineProps({
     type: Array as PropType<DataRow[]>,
     default: () => [],
   },
-  isLoading: { type: Boolean, default: () => false },
-  showEngineType: { type: Boolean, default: () => false },
-  showLeaseLength: { type: Boolean, default: () => false },
+  isLoading: { type: Boolean, default: false },
+  showEngineType: { type: Boolean, default: false },
+  showLeaseLength: { type: Boolean, default: false },
 });
 </script>

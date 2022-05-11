@@ -46,7 +46,7 @@
   <div class="mx-5 mt-5">
     <cost-table
       :data-row="state.dataRow"
-      :isLoading="state.isLoading"
+      :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
     />
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, reactive, ref, computed } from "vue";
+import { watch, reactive, ref, computed, onMounted } from "vue";
 
 import { DataRow } from "../components/CostTable";
 import { NButton, useNotification } from "naive-ui";
@@ -155,7 +155,7 @@ const copyURL = () => {
 
 const config = ref(searchConfigStore.searchConfig);
 watch(
-  () => config, // ref to searchConfigStore.searchConfig
+  config, // ref to searchConfigStore.searchConfig
   () => {
     state.isLoading = true;
     refreshDataTable();
@@ -298,6 +298,10 @@ const refreshDataTable = () => {
 const clearAll = () => {
   searchConfigStore.clearAll();
 };
+
+onMounted(() => {
+  refreshDataTable();
+});
 </script>
 
 <style></style>
