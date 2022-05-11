@@ -2,27 +2,25 @@ import { Term } from "./term";
 import { useDBInstanceStore } from "../stores/dbInstance";
 
 export type Region = {
-  name: string;
+  code: string;
   termList: Term[];
 };
 
 export type AvailableRegion = {
   name: string;
-  provider: Set<string>;
+  // providerCode is the mapping between between provider and the region code
+  // e.g. N. Virginia is coded 'us-east-1' in AWS,  us-east4 in GCP
+  providerCode: Map<string, string>;
 };
 
 export const isValidRegion = (regionList: string[]): boolean => {
-  const availableRegion = useDBInstanceStore().getAvailableRegionList();
-  const regionSet: Set<String> = new Set<String>();
-  availableRegion.forEach((region) => {
-    regionSet.add(region.name);
-  });
-
-  for (const region of regionList) {
-    if (!regionSet.has(region)) {
-      return false;
+  const availableRegionSet = useDBInstanceStore().getAvailableRegionSet();
+  for (const idx in regionList) {
+    const region = regionList[idx];
+    if (!availableRegionSet.has(region)) {
+      return true;
     }
   }
 
-  return true;
+  return false;
 };

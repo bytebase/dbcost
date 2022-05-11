@@ -7,7 +7,7 @@ import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { DBInstance } from "../types/dbInstance";
 import { PropType, watch, reactive, onMounted, h, computed } from "vue";
 import { SearchConfig } from "../types";
-import { RowData } from "naive-ui/lib/data-table/src/interface";
+import { getRegionCode, getRegionName } from "../util";
 
 const EngineIconRender = {
   MYSQL: h(
@@ -32,9 +32,33 @@ const EngineIconRender = {
   ),
 };
 
+const ProviderIconRender = {
+  GCP: h(
+    NAvatar,
+    {
+      src: new URL("../assets/icon/gcp.png", import.meta.url).href,
+      size: 12,
+      class: "align-middle mb-1 mr-1",
+      color: "none",
+    },
+    {}
+  ),
+  AWS: h(
+    NAvatar,
+    {
+      src: new URL("../assets/icon/aws.png", import.meta.url).href,
+      size: 16,
+      class: "align-middle mr-1",
+      color: "none",
+    },
+    {}
+  ),
+};
+
 type DataRow = {
   id: number;
 
+  cloudProvider: string;
   name: string;
   processor: string;
   cpu: number;
@@ -54,7 +78,7 @@ const pricingContent = {
   commitmentWithEngine: {
     title: "Commitment",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       let engineIcon;
       if (row.engineType === "MYSQL") {
         engineIcon = EngineIconRender.MYSQL;
@@ -70,14 +94,14 @@ const pricingContent = {
   commitmentWithoutEngine: {
     title: "Commitment",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       return `$${row.commitment.usd}`;
     },
   },
   hourlyPay: {
     title: "Hourly Pay",
     align: "right",
-    render: (row: RowData) => {
+    render: (row: DataRow) => {
       return `$${row.hourly.usd.toFixed(2)}`;
     },
   },
@@ -116,8 +140,17 @@ const columns: any = computed(() => [
     ellipsis: {
       tooltip: true,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
+    },
+    render(row: DataRow) {
+      if (row.cloudProvider === "AWS") {
+        return [ProviderIconRender.AWS, row.name];
+      } else if (row.cloudProvider === "GCP") {
+        return [ProviderIconRender.GCP, row.name];
+      }
+
+      return row.name;
     },
   },
   {
@@ -131,25 +164,17 @@ const columns: any = computed(() => [
       compare: (row1: DataRow, row2: DataRow) => {
         const a = row1.region.toLocaleLowerCase();
         const b = row2.region.toLocaleLowerCase();
-        const len = a.length > b.length ? b.length : a.length;
-        for (let i = 0; i < len; i++) {
-          if (a[i] < b[i]) {
-            return false;
-          } else if (a[i] > b[i]) {
-            return true;
-          }
+        const stringComp = a.localeCompare(b);
+        if (stringComp !== 0) {
+          return stringComp;
         }
 
-        // if tow region are identical, sort them with id
-        if (a.length == b.length) {
-          return row1.id - row2.id;
-        }
-
-        return a.length - b.length;
+        // If tow region are identical, sort them with instance id.
+        return row1.id - row2.id;
       },
       multiple: 1,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
@@ -161,7 +186,7 @@ const columns: any = computed(() => [
       compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
       multiple: 2,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
     ellipsis: {
@@ -219,7 +244,7 @@ const columns: any = computed(() => [
         Number(row1.memory) - Number(row2.memory),
       multiple: 2,
     },
-    rowSpan: (rowData: RowData) => {
+    rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
   },
@@ -273,7 +298,11 @@ const refreshDataTable = () => {
     return;
   }
 
-  const selectedRegionSet = new Set(config.region);
+  const regionCodeList: string[] = [];
+  config.region?.forEach((regionName) => {
+    regionCodeList.push(...getRegionCode(regionName));
+  });
+  const selectedRegionCodeSet = new Set(regionCodeList);
   const engineSet = new Set(config.engineType);
   const chargeTypeSet = new Set(config.chargeType);
 
@@ -286,7 +315,7 @@ const refreshDataTable = () => {
     }
 
     const selectedRegionList = dbInstance.regionList.filter((region) => {
-      if (selectedRegionSet.has(region.name)) {
+      if (selectedRegionCodeSet.has(region.code)) {
         return true;
       }
       return false;
@@ -311,11 +340,13 @@ const refreshDataTable = () => {
         return false;
       });
 
+      const regionName = getRegionName(region.code);
       selectedTermList.forEach((term) => {
-        const key = `${dbInstance.name}-${region.name}`;
+        const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
           childCnt: 1,
+          cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
           processor: dbInstance.processor,
           cpu: dbInstance.cpu,
@@ -324,7 +355,9 @@ const refreshDataTable = () => {
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
           leaseLength: term.payload?.leaseContractLength ?? "N/A",
-          region: region.name,
+          // we store the region code for each provider, and show the user the actual region information
+          // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
+          region: regionName,
         };
 
         if (dataRowMap.has(key)) {
