@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/bytebase/dbcost/client"
 	"github.com/bytebase/dbcost/client/aws"
@@ -18,12 +19,17 @@ func init() {
 	cloudProvider[store.CloudProviderAWS] = aws.NewClient()
 }
 
-const dirPath = "./store/data"
-const filePath = "./store/data/rds.json"
+const (
+	dirPath  = "./store/data"
+	fileName = "rds.json"
+)
 
 func main() {
+	filePath := strings.Join([]string{dirPath, fileName}, "/")
+
 	if isFileExist(filePath) {
 		fmt.Printf("Fail already exist, pass seeding phase.\n")
+		os.Exit(1)
 		return
 	}
 
