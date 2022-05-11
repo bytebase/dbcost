@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { AvailableRegion, DBInstance, DBInstanceId } from "../types";
-
+import { AvailableRegion, DBInstance, DBInstanceId, Region } from "../types";
+import { getRegionName } from "../util";
 interface State {
   dbInstanceList: DBInstance[];
 }
@@ -23,24 +23,39 @@ export const useDBInstanceStore = defineStore("dbInstance", {
         return dbInstance[0];
       },
     getAvailableRegionList: (state) => (): AvailableRegion[] => {
-      const regionMap = new Map<string, Set<string>>();
-
+      const regionMap = new Map<string, Map<string, string>>();
       state.dbInstanceList.forEach((db) => {
-        db.regionList.forEach((r) => {
-          if (regionMap.has(r.name)) {
-            regionMap.get(r.name)?.add(db.cloudProvider);
-          } else {
-            regionMap.set(r.name, new Set<string>(db.cloudProvider));
+        db.regionList.forEach((region: Region) => {
+          const regionName = getRegionName(region.code);
+          if (!regionMap.has(regionName)) {
+            const newMap = new Map<string, string>();
+            regionMap.set(regionName, newMap);
           }
+
+          regionMap.get(regionName)?.set(db.cloudProvider, region.code);
         });
       });
 
-      const regionList: AvailableRegion[] = [];
-      regionMap.forEach((providerSet, regionName) => {
-        regionList.push({ name: regionName, provider: providerSet });
+      const availableRegion: AvailableRegion[] = [];
+      regionMap.forEach((providerCode, regionName) => {
+        availableRegion.push({
+          name: regionName,
+          providerCode: providerCode,
+        });
       });
 
-      return regionList;
+      return availableRegion;
+    },
+
+    getAvailableRegionSet: (state) => (): Set<string> => {
+      const regionSet = new Set<string>();
+      state.dbInstanceList.forEach((db) => {
+        db.regionList.forEach((region) => {
+          regionSet.add(getRegionName(region.code));
+        });
+      });
+
+      return regionSet;
     },
   },
 

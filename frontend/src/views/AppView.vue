@@ -66,7 +66,7 @@ import { useRouter } from "vue-router";
 
 import aws from "../../../store/data/test/aws.json";
 import { RouteParam } from "../router";
-import { isEmptyArray } from "../util";
+import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
@@ -183,7 +183,11 @@ const refreshDataTable = () => {
     return;
   }
 
-  const selectedRegionSet = new Set(config.region);
+  const regionCodeList: string[] = [];
+  config.region?.forEach((regionName) => {
+    regionCodeList.push(...getRegionCode(regionName));
+  });
+  const selectedRegionCodeSet = new Set(regionCodeList);
   const engineSet = new Set(config.engineType);
   const chargeTypeSet = new Set(config.chargeType);
 
@@ -196,7 +200,7 @@ const refreshDataTable = () => {
     }
 
     const selectedRegionList = dbInstance.regionList.filter((region) => {
-      if (selectedRegionSet.has(region.name)) {
+      if (selectedRegionCodeSet.has(region.code)) {
         return true;
       }
       return false;
@@ -221,11 +225,13 @@ const refreshDataTable = () => {
         return false;
       });
 
+      const regionName = getRegionName(region.code);
       selectedTermList.forEach((term) => {
-        const key = `${dbInstance.name}-${region.name}`;
+        const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
           childCnt: 1,
+          cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
           processor: dbInstance.processor,
           cpu: dbInstance.cpu,
@@ -234,7 +240,9 @@ const refreshDataTable = () => {
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
           leaseLength: term.payload?.leaseContractLength ?? "N/A",
-          region: region.name,
+          // we store the region code for each provider, and show the user the actual region information
+          // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
+          region: regionName,
         };
 
         if (dataRowMap.has(key)) {
@@ -270,10 +278,10 @@ const refreshDataTable = () => {
     if (keyword) {
       const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
         if (
-          row.name.includes(keyword) ||
-          row.memory.includes(keyword) ||
-          row.processor.includes(keyword) ||
-          row.region.includes(keyword)
+          row.name.toLowerCase().includes(keyword) ||
+          row.memory.toLowerCase().includes(keyword) ||
+          row.processor.toLowerCase().includes(keyword) ||
+          row.region.toLowerCase().includes(keyword)
         ) {
           return true;
         }

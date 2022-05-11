@@ -1,7 +1,9 @@
+import { CloudProvider } from "../../types";
 import CostTable from "./CostTable.vue";
 export type DataRow = {
   id: number;
 
+  cloudProvider: CloudProvider;
   name: string;
   processor: string;
   cpu: number;
