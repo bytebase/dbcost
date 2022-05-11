@@ -46,9 +46,9 @@ cd ./frontend && pnpm i
 
 Sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/sample.json).
 
-If you would like to fetch the newest data online, a starting script is provided. You may type in the following script to your terminal. **The GCP API KEY should have Cloud Billing API authority.** 
+If you would like to fetch the newest data online, a starting script is provided. You may type in the following script to your terminal.
 ```
-sh ./start.sh **YOUR GCP API KEY**
+sh ./start.sh
 ```
 
 ### Starting the Frontend

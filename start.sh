@@ -8,11 +8,7 @@
 
 echo "Seeding data"
 
-if [ $1 ]; then
-    go run ./main/main.go $1
-else
-    go run ./main/main.go $API_KEY_GCP
-fi
+go run ./main/main.go
 
 if [$? -eq 1]; then
     echo "Seeding data failed"

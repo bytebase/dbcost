@@ -11,19 +11,26 @@ import (
 	"github.com/bytebase/dbcost/store"
 )
 
-var cloudProvider = make(map[store.CloudProvider]client.Client)
+var (
+	cloudProvider = make(map[store.CloudProvider]client.Client)
+	// renderEnvKey is set on render
+	renderEnvKey = "API_KEY_GCP"
+	apiKeyGCP    = ""
+	dirPath      = "./store/data"
+	fileName     = "rds.json"
+	filePath     = path.Join(dirPath, fileName)
+)
 
 func init() {
-	APIKeyGCP := os.Args[1]
-	cloudProvider[store.CloudProviderGCP] = gcp.NewClient(APIKeyGCP)
+	apiKeyGCP = os.Getenv(renderEnvKey)
+	if apiKeyGCP == "" {
+		fmt.Printf("Env variable API_KEY_GCP not found, please set your API key in your environment first.\n")
+		os.Exit(1)
+	}
+
+	cloudProvider[store.CloudProviderGCP] = gcp.NewClient(apiKeyGCP)
 	cloudProvider[store.CloudProviderAWS] = aws.NewClient()
 }
-
-var (
-	dirPath  = "./store/data"
-	fileName = "rds.json"
-	filePath = path.Join(dirPath, fileName)
-)
 
 func main() {
 	if isFileExist(filePath) {
