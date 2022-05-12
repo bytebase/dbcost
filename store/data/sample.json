@@ -253,7 +253,7 @@
     "processor": "AWS Graviton2"
   },
   {
-    "id": 0,
+    "id": 1,
     "externalId": "000E-8560-3D8D",
     "rowStatus": "NORMAL",
     "creatorId": 0,
@@ -262,7 +262,7 @@
     "updatedTs": 1650357753,
     "regionList": [
       {
-        "name": "us-east-1",
+        "code": "us-east4",
         "termList": [
           {
             "databaseEngine": "",

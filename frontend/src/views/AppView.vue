@@ -86,12 +86,12 @@ import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import aws from "../../../store/data/rds.json";
+import rds from "../../../store/data/rds.json";
 import { RouteParam } from "../router";
 import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
-dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
+dbInstanceStore.dbInstanceList = rds as unknown as DBInstance[];
 
 const searchConfigStore = useSearchConfigStore();
 
