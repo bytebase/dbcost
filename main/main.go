@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path"
 
@@ -24,8 +25,7 @@ var (
 func init() {
 	apiKeyGCP = os.Getenv(renderEnvKey)
 	if apiKeyGCP == "" {
-		fmt.Printf("Env variable API_KEY_GCP not found, please set your API key in your environment first.\n")
-		os.Exit(1)
+		log.Fatalf("Env variable API_KEY_GCP not found, please set your API key in your environment first.\n")
 	}
 
 	cloudProvider[store.CloudProviderGCP] = gcp.NewClient(apiKeyGCP)
@@ -34,9 +34,7 @@ func init() {
 
 func main() {
 	if isFileExist(filePath) {
-		fmt.Printf("Fail already exist, pass seeding phase.\n")
-		os.Exit(1)
-		return
+		log.Fatalf("Fail already exist, pass seeding phase.\n")
 	}
 
 	incrID := 0
@@ -53,8 +51,7 @@ func main() {
 
 		providerDBInstanceList, err := store.Convert(offerList, provider)
 		if err != nil {
-			fmt.Printf("Fail to covert to dbInstance.\n")
-			os.Exit(1)
+			log.Fatalf("Fail to covert to dbInstance.\n")
 		}
 		fmt.Printf("Converted to %d dbInstance entry.\n", len(providerDBInstanceList))
 
@@ -66,14 +63,13 @@ func main() {
 	}
 
 	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
-		fmt.Printf("Fail to make dir, err: %s.\n", err)
-		os.Exit(1)
+		log.Fatalf("Fail to make dir, err: %s.\n", err)
 	}
+
 	fmt.Printf("Saving data, total entry: %d.\n", len(dbInstanceList))
 
 	if err := store.Save(dbInstanceList, filePath); err != nil {
-		fmt.Printf("Fail to save data, err: %s.\n", err)
-		os.Exit(1)
+		log.Fatalf("Fail to save data, err: %s.\n", err)
 	}
 }
 
