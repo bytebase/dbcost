@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path"
@@ -12,46 +11,40 @@ import (
 	"github.com/bytebase/dbcost/store"
 )
 
-var (
-	cloudProvider = make(map[store.CloudProvider]client.Client)
-	// renderEnvKey is set on render
+const (
+	// renderEnvKey is set on render.
 	renderEnvKey = "API_KEY_GCP"
-	apiKeyGCP    = ""
 	dirPath      = "./store/data"
 	fileName     = "rds.json"
-	filePath     = path.Join(dirPath, fileName)
 )
 
 func main() {
-	apiKeyGCP = os.Getenv(renderEnvKey)
+	apiKeyGCP := os.Getenv(renderEnvKey)
 	if apiKeyGCP == "" {
 		log.Fatalf("Env variable API_KEY_GCP not found, please set your API key in your environment first.\n")
 	}
 
-	cloudProvider[store.CloudProviderGCP] = gcp.NewClient(apiKeyGCP)
-	cloudProvider[store.CloudProviderAWS] = aws.NewClient()
-
-	if isFileExist(filePath) {
-		log.Fatalf("Fail already exist, pass seeding phase.\n")
+	cloudProvider := map[store.CloudProvider]client.Client{
+		store.CloudProviderGCP: gcp.NewClient(apiKeyGCP),
+		store.CloudProviderAWS: aws.NewClient(),
 	}
 
 	incrID := 0
 	var dbInstanceList []*store.DBInstance
 	for provider, client := range cloudProvider {
-		fmt.Printf("--------Fetching %s--------\n", provider)
-
+		log.Printf("--------Fetching %s--------\n", provider)
 		offerList, err := client.GetOffer()
 		if err != nil {
-			fmt.Printf("Error occurred when fetching %s's entry.\n", provider)
+			log.Printf("Error occurred when fetching %s's entry.\n", provider)
 			continue
 		}
-		fmt.Printf("Fetched %d offer entry.\n", len(offerList))
+		log.Printf("Fetched %d offer entry.\n", len(offerList))
 
 		providerDBInstanceList, err := store.Convert(offerList, provider)
 		if err != nil {
 			log.Fatalf("Fail to covert to dbInstance.\n")
 		}
-		fmt.Printf("Converted to %d dbInstance entry.\n", len(providerDBInstanceList))
+		log.Printf("Converted to %d dbInstance entry.\n", len(providerDBInstanceList))
 
 		for _, instance := range providerDBInstanceList {
 			instance.ID = incrID
@@ -64,14 +57,10 @@ func main() {
 		log.Fatalf("Fail to make dir, err: %s.\n", err)
 	}
 
-	fmt.Printf("Saving data, total entry: %d.\n", len(dbInstanceList))
+	log.Printf("Saving data, total entry: %d.\n", len(dbInstanceList))
 
-	if err := store.Save(dbInstanceList, filePath); err != nil {
+	targetFilePath := path.Join(dirPath, fileName)
+	if err := store.Save(dbInstanceList, targetFilePath); err != nil {
 		log.Fatalf("Fail to save data, err: %s.\n", err)
 	}
-}
-
-func isFileExist(fileName string) bool {
-	_, err := os.Stat(fileName)
-	return err == nil || os.IsExist(err)
 }
