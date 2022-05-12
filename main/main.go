@@ -22,7 +22,7 @@ var (
 	filePath     = path.Join(dirPath, fileName)
 )
 
-func init() {
+func main() {
 	apiKeyGCP = os.Getenv(renderEnvKey)
 	if apiKeyGCP == "" {
 		log.Fatalf("Env variable API_KEY_GCP not found, please set your API key in your environment first.\n")
@@ -30,9 +30,7 @@ func init() {
 
 	cloudProvider[store.CloudProviderGCP] = gcp.NewClient(apiKeyGCP)
 	cloudProvider[store.CloudProviderAWS] = aws.NewClient()
-}
 
-func main() {
 	if isFileExist(filePath) {
 		log.Fatalf("Fail already exist, pass seeding phase.\n")
 	}
