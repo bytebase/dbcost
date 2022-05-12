@@ -29,13 +29,15 @@
     />
 
     <cost-table-menu
-      :charge-type="searchConfigStore.searchConfig.chargeType"
+      :cloud-provider="searchConfigStore.searchConfig.cloudProvider"
       :engine-type="searchConfigStore.searchConfig.engineType"
+      :charge-type="searchConfigStore.searchConfig.chargeType"
       :keyword="searchConfigStore.searchConfig.keyword"
       :min-r-a-m="searchConfigStore.searchConfig.minRAM"
       :min-c-p-u="searchConfigStore.searchConfig.minCPU"
-      @update-charge-type="handleUpdateChargeType"
+      @update-cloud-provider="handleUpdateCloudProvider"
       @update-engine-type="handleUpdateEngineType"
+      @update-charge-type="handleUpdateChargeType"
       @update-keyword="handleUpdateKeyword"
       @update-min-vcpu="handleUpdateMinCPU"
       @update-min-ram="handleUpdateMinRAM"
@@ -59,7 +61,7 @@ import { watch, reactive, ref, computed, onMounted } from "vue";
 import { DataRow } from "../components/CostTable";
 import { NButton, useNotification } from "naive-ui";
 
-import { ChargeType, DBInstance, EngineType } from "../types";
+import { ChargeType, CloudProvider, DBInstance, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
@@ -86,11 +88,14 @@ const state = reactive<LocalState>({
 const handleUpdateRegion = (val: string[]) => {
   searchConfigStore.searchConfig.region = val;
 };
-const handleUpdateChargeType = (val: ChargeType[]) => {
-  searchConfigStore.searchConfig.chargeType = val;
+const handleUpdateCloudProvider = (val: CloudProvider[]) => {
+  searchConfigStore.searchConfig.cloudProvider = val;
 };
 const handleUpdateEngineType = (val: EngineType[]) => {
   searchConfigStore.searchConfig.engineType = val;
+};
+const handleUpdateChargeType = (val: ChargeType[]) => {
+  searchConfigStore.searchConfig.chargeType = val;
 };
 const handleUpdateKeyword = (val: string) => {
   searchConfigStore.searchConfig.keyword = val;
@@ -187,6 +192,7 @@ const refreshDataTable = () => {
   config.region?.forEach((regionName) => {
     regionCodeList.push(...getRegionCode(regionName));
   });
+  const cloudProviderSet = new Set(config.cloudProvider);
   const selectedRegionCodeSet = new Set(regionCodeList);
   const engineSet = new Set(config.engineType);
   const chargeTypeSet = new Set(config.chargeType);
@@ -196,6 +202,10 @@ const refreshDataTable = () => {
       (config.minRAM && Number(dbInstance.memory) < config.minRAM) ||
       (config.minCPU && Number(dbInstance.cpu) < config.minCPU)
     ) {
+      return;
+    }
+
+    if (!cloudProviderSet.has(dbInstance.cloudProvider)) {
       return;
     }
 
