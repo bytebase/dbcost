@@ -31,7 +31,7 @@ const ProviderIconRender = {
   GCP: h(
     NAvatar,
     {
-      src: new URL("../../assets/icon/gcp.png", import.meta.url).href,
+      src: new URL("../../assets/icon/gcp.png").href,
       size: 12,
       class: "align-middle mb-1 mr-1",
       color: "none",
@@ -41,7 +41,7 @@ const ProviderIconRender = {
   AWS: h(
     NAvatar,
     {
-      src: new URL("../../assets/icon/aws.png", import.meta.url).href,
+      src: new URL("../../assets/icon/aws.png").href,
       size: 16,
       class: "align-middle mr-1",
       color: "none",
@@ -54,7 +54,7 @@ const EngineIconRender = {
   MYSQL: h(
     NAvatar,
     {
-      src: new URL("../../assets/icon/db-mysql.png", import.meta.url).href,
+      src: new URL("../../assets/icon/db-mysql.png").href,
       size: 16,
       class: "mt-1",
       color: "none",
@@ -64,7 +64,7 @@ const EngineIconRender = {
   POSTGRES: h(
     NAvatar,
     {
-      src: new URL("../../assets/icon/db-postgres.png", import.meta.url).href,
+      src: new URL("../../assets/icon/db-postgres.png").href,
       size: 16,
       class: "mt-1",
       color: "none",

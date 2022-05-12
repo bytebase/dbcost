@@ -46,9 +46,15 @@
   <div class="mx-5 mt-4 border-b pb-4">
     <cost-table-checked
       :data-row="state.checkedDataRow"
-      :isLoading="state.isLoading"
+      :is-loading="state.isLoading"
+      :is-expended="state.isCheckedTableExpended"
       :checked-row-keys="state.checkRowKeys"
-      @update-checked-row-keys="handleCheckRowKeys"
+      @update-checked-row-keys="
+        (val:string[]) => {
+          handleCheckRowKeys(val, false);
+        }
+      "
+      @toggle-is-expanded="handleToggleIsExpanded"
     />
   </div>
 
@@ -60,7 +66,11 @@
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
       :checked-row-keys="state.checkRowKeys"
-      @update-checked-row-keys="handleCheckRowKeys"
+      @update-checked-row-keys="
+        (val:string[]) => {
+          handleCheckRowKeys(val, true);
+        }
+      "
     />
   </div>
 </template>
@@ -90,6 +100,7 @@ interface LocalState {
   checkRowKeys: string[];
   checkedDataRow: DataRow[];
   isLoading: boolean;
+  isCheckedTableExpended: boolean;
 }
 
 const state = reactive<LocalState>({
@@ -97,6 +108,7 @@ const state = reactive<LocalState>({
   checkRowKeys: [],
   checkedDataRow: [],
   isLoading: false,
+  isCheckedTableExpended: false,
 });
 
 const handleUpdateRegion = (val: string[]) => {
@@ -117,7 +129,7 @@ const handleUpdateMinRAM = (val: any) => {
 const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
 };
-const handleCheckRowKeys = (rowKeys: string[]) => {
+const handleCheckRowKeys = (rowKeys: string[], needScroll: boolean) => {
   const rowKeySet = new Set<string>(rowKeys);
   state.checkedDataRow = state.dataRow.filter((row: DataRow) =>
     rowKeySet.has(row.key)
@@ -125,8 +137,20 @@ const handleCheckRowKeys = (rowKeys: string[]) => {
   state.checkedDataRow.forEach((row) => {
     row.childCnt = 1;
   });
+
+  if (state.isCheckedTableExpended && needScroll) {
+    if (state.checkRowKeys.length > rowKeys.length) {
+      window.scrollBy(0, -47);
+    } else {
+      window.scrollBy(0, 47);
+    }
+  }
+
   state.checkRowKeys = rowKeys;
-  console.log(state.checkedDataRow);
+};
+
+const handleToggleIsExpanded = () => {
+  state.isCheckedTableExpended = !state.isCheckedTableExpended;
 };
 
 const router = useRouter();

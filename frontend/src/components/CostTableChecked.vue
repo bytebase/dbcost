@@ -1,26 +1,15 @@
 <template>
   <div>
-    <n-button
-      :disabled="checkedRowKeys.length === 0"
-      quaternary
-      @click="
-        () => {
-          state.isExpended = !state.isExpended;
-        }
-      "
-    >
+    <n-button quaternary @click="handleToggleIsExpanded">
       <div class="flex">
         <div class="font-medium text-lg pb-1">Selected Instance</div>
-        <heroicons-outline:chevron-down
-          class="ml-1 h-6"
-          v-if="state.isExpended"
-        />
-        <heroicons-outline:chevron-up class="ml-1 h-6" v-else />
+        <heroicons-outline:chevron-down class="ml-1 h-6" v-show="isExpended" />
+        <heroicons-outline:chevron-up class="ml-1 h-6" v-show="!isExpended" />
       </div>
     </n-button>
 
     <cost-table
-      v-if="state.isExpended"
+      v-show="isExpended"
       class="my-2"
       virtual-scroll
       :data-row="dataRow"
@@ -35,7 +24,7 @@
 
 <script lang="ts" setup>
 import { PropType, reactive, defineProps } from "vue";
-import { DataRow } from "./costTable";
+import { DataRow } from "./CostTable";
 
 import { NButton } from "naive-ui";
 
@@ -52,6 +41,10 @@ const props = defineProps({
     type: Object as PropType<DataRow[]>,
     default: [],
   },
+  isExpended: {
+    type: Boolean,
+    default: false,
+  },
   isLoading: {
     type: Boolean,
     default: false,
@@ -64,9 +57,14 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: "update-checked-row-keys", checkedRowKeys: string[]): void;
+  (e: "toggle-is-expanded"): void;
 }>();
 
 const handleCheckRowKeys = (rowKeys: string[]) => {
   emit("update-checked-row-keys", rowKeys);
+};
+
+const handleToggleIsExpanded = () => {
+  emit("toggle-is-expanded");
 };
 </script>
