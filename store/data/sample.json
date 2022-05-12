@@ -3,25 +3,25 @@
     "id": 0,
     "rowStatus": "NORMAL",
     "creatorId": 0,
-    "createdTs": 1650810030,
+    "createdTs": 1651806256,
     "updaterId": 0,
-    "updatedTs": 1650810030,
+    "updatedTs": 1651806256,
     "regionList": [
       {
-        "name": "US West (Oregon)",
+        "code": "us-east-1",
         "termList": [
           {
             "databaseEngine": "POSTGRES",
             "type": "OnDemand",
             "payload": null,
-            "hourlyUSD": 3.654,
+            "hourlyUSD": 2.158,
             "commitmentUSD": 0
           },
           {
             "databaseEngine": "MYSQL",
             "type": "OnDemand",
             "payload": null,
-            "hourlyUSD": 3.502,
+            "hourlyUSD": 2.041,
             "commitmentUSD": 0
           },
           {
@@ -31,8 +31,8 @@
               "leaseContractLength": "3yr",
               "purchaseOption": "Partial Upfront"
             },
-            "hourlyUSD": 0.95,
-            "commitmentUSD": 13140
+            "hourlyUSD": 0.4856,
+            "commitmentUSD": 12761
           },
           {
             "databaseEngine": "POSTGRES",
@@ -41,7 +41,7 @@
               "leaseContractLength": "1yr",
               "purchaseOption": "No Upfront"
             },
-            "hourlyUSD": 2.511,
+            "hourlyUSD": 1.4732,
             "commitmentUSD": 0
           },
           {
@@ -52,7 +52,7 @@
               "purchaseOption": "All Upfront"
             },
             "hourlyUSD": 0,
-            "commitmentUSD": 18422
+            "commitmentUSD": 12048
           },
           {
             "databaseEngine": "POSTGRES",
@@ -61,8 +61,8 @@
               "leaseContractLength": "1yr",
               "purchaseOption": "Partial Upfront"
             },
-            "hourlyUSD": 1.406,
-            "commitmentUSD": 6482
+            "hourlyUSD": 0.7013,
+            "commitmentUSD": 6144
           },
           {
             "databaseEngine": "POSTGRES",
@@ -72,17 +72,7 @@
               "purchaseOption": "All Upfront"
             },
             "hourlyUSD": 0,
-            "commitmentUSD": 35820
-          },
-          {
-            "databaseEngine": "MYSQL",
-            "type": "Reserved",
-            "payload": {
-              "leaseContractLength": "3yr",
-              "purchaseOption": "All Upfront"
-            },
-            "hourlyUSD": 0,
-            "commitmentUSD": 34337
+            "commitmentUSD": 25012
           },
           {
             "databaseEngine": "MYSQL",
@@ -91,8 +81,8 @@
               "leaseContractLength": "3yr",
               "purchaseOption": "Partial Upfront"
             },
-            "hourlyUSD": 0.89,
-            "commitmentUSD": 13140
+            "hourlyUSD": 0.459,
+            "commitmentUSD": 12063
           },
           {
             "databaseEngine": "MYSQL",
@@ -101,7 +91,7 @@
               "leaseContractLength": "1yr",
               "purchaseOption": "No Upfront"
             },
-            "hourlyUSD": 2.182,
+            "hourlyUSD": 1.3926,
             "commitmentUSD": 0
           },
           {
@@ -112,7 +102,7 @@
               "purchaseOption": "All Upfront"
             },
             "hourlyUSD": 0,
-            "commitmentUSD": 16008
+            "commitmentUSD": 11384
           },
           {
             "databaseEngine": "MYSQL",
@@ -121,77 +111,67 @@
               "leaseContractLength": "1yr",
               "purchaseOption": "Partial Upfront"
             },
-            "hourlyUSD": 1.125,
-            "commitmentUSD": 6482
+            "hourlyUSD": 0.6629,
+            "commitmentUSD": 5807
+          },
+          {
+            "databaseEngine": "MYSQL",
+            "type": "Reserved",
+            "payload": {
+              "leaseContractLength": "3yr",
+              "purchaseOption": "All Upfront"
+            },
+            "hourlyUSD": 0,
+            "commitmentUSD": 23649
           }
         ]
       },
       {
-        "name": "Asia Pacific (Tokyo)",
+        "code": "ap-south-1",
         "termList": [
           {
             "databaseEngine": "MYSQL",
             "type": "OnDemand",
             "payload": null,
-            "hourlyUSD": 5.087,
+            "hourlyUSD": 1.933,
             "commitmentUSD": 0
           },
           {
             "databaseEngine": "POSTGRES",
             "type": "OnDemand",
             "payload": null,
-            "hourlyUSD": 5.307,
+            "hourlyUSD": 2.05,
             "commitmentUSD": 0
           },
           {
-            "databaseEngine": "POSTGRES",
-            "type": "Reserved",
-            "payload": {
-              "leaseContractLength": "1yr",
-              "purchaseOption": "Partial Upfront"
-            },
-            "hourlyUSD": 1.862,
-            "commitmentUSD": 8585
-          },
-          {
-            "databaseEngine": "POSTGRES",
-            "type": "Reserved",
-            "payload": {
-              "leaseContractLength": "3yr",
-              "purchaseOption": "All Upfront"
-            },
-            "hourlyUSD": 0,
-            "commitmentUSD": 50864
-          },
-          {
-            "databaseEngine": "POSTGRES",
-            "type": "Reserved",
-            "payload": {
-              "leaseContractLength": "3yr",
-              "purchaseOption": "Partial Upfront"
-            },
-            "hourlyUSD": 1.349,
-            "commitmentUSD": 18659
-          },
-          {
-            "databaseEngine": "POSTGRES",
-            "type": "Reserved",
-            "payload": {
-              "leaseContractLength": "1yr",
-              "purchaseOption": "No Upfront"
-            },
-            "hourlyUSD": 3.325,
-            "commitmentUSD": 0
-          },
-          {
-            "databaseEngine": "POSTGRES",
+            "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
               "leaseContractLength": "1yr",
               "purchaseOption": "All Upfront"
             },
             "hourlyUSD": 0,
-            "commitmentUSD": 24398
+            "commitmentUSD": 10790
+          },
+          {
+            "databaseEngine": "MYSQL",
+            "type": "Reserved",
+            "payload": {
+              "leaseContractLength": "1yr",
+              "purchaseOption": "Partial Upfront"
+            },
+            "hourlyUSD": 0.6293,
+            "commitmentUSD": 5513
+          },
+          {
+            "databaseEngine": "MYSQL",
+            "type": "Reserved",
+            "payload": {
+              "leaseContractLength": "3yr",
+              "purchaseOption": "All Upfront"
+            },
+            "hourlyUSD": 0,
+            "commitmentUSD": 21910
           },
           {
             "databaseEngine": "MYSQL",
@@ -200,8 +180,8 @@
               "leaseContractLength": "3yr",
               "purchaseOption": "Partial Upfront"
             },
-            "hourlyUSD": 1.264,
-            "commitmentUSD": 18659
+            "hourlyUSD": 0.4239,
+            "commitmentUSD": 11139
           },
           {
             "databaseEngine": "MYSQL",
@@ -210,46 +190,95 @@
               "leaseContractLength": "1yr",
               "purchaseOption": "No Upfront"
             },
-            "hourlyUSD": 3.188,
+            "hourlyUSD": 1.3174,
             "commitmentUSD": 0
           },
           {
-            "databaseEngine": "MYSQL",
+            "databaseEngine": "POSTGRES",
+            "type": "Reserved",
+            "payload": {
+              "leaseContractLength": "3yr",
+              "purchaseOption": "Partial Upfront"
+            },
+            "hourlyUSD": 0.4511,
+            "commitmentUSD": 11854
+          },
+          {
+            "databaseEngine": "POSTGRES",
+            "type": "Reserved",
+            "payload": {
+              "leaseContractLength": "1yr",
+              "purchaseOption": "No Upfront"
+            },
+            "hourlyUSD": 1.3992,
+            "commitmentUSD": 0
+          },
+          {
+            "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
               "leaseContractLength": "1yr",
               "purchaseOption": "All Upfront"
             },
             "hourlyUSD": 0,
-            "commitmentUSD": 23389
+            "commitmentUSD": 11442
           },
           {
-            "databaseEngine": "MYSQL",
+            "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
               "leaseContractLength": "1yr",
               "purchaseOption": "Partial Upfront"
             },
-            "hourlyUSD": 1.744,
-            "commitmentUSD": 8585
+            "hourlyUSD": 0.6661,
+            "commitmentUSD": 5835
           },
           {
-            "databaseEngine": "MYSQL",
+            "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
               "leaseContractLength": "3yr",
               "purchaseOption": "All Upfront"
             },
             "hourlyUSD": 0,
-            "commitmentUSD": 48759
+            "commitmentUSD": 23235
           }
         ]
       }
     ],
     "cloudProvider": "AWS",
-    "name": "db.m4.10xlarge",
-    "cpu": 40,
-    "memory": "160",
-    "processor": "Intel Xeon E5-2676 v3 (Haswell)"
+    "name": "db.r6g.4xlarge",
+    "cpu": 16,
+    "memory": "128",
+    "processor": "AWS Graviton2"
+  },
+  {
+    "id": 0,
+    "externalId": "000E-8560-3D8D",
+    "rowStatus": "NORMAL",
+    "creatorId": 0,
+    "createdTs": 1650357753,
+    "updaterId": 0,
+    "updatedTs": 1650357753,
+    "regionList": [
+      {
+        "name": "us-east-1",
+        "termList": [
+          {
+            "databaseEngine": "",
+            "type": "OnDemand",
+            "payload": null,
+            "unit": "h",
+            "usd": 7.783,
+            "description": "Cloud SQL for MySQL: Zonal - 96 vCPU + 360GB RAM in Delhi"
+          }
+        ]
+      }
+    ],
+    "cloudProvider": "GCP",
+    "name": "db-N1Standard-96-360",
+    "vCPU": 96,
+    "memory": "360",
+    "processor": ""
   }
 ]

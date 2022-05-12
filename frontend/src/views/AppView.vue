@@ -56,7 +56,7 @@
   <div class="mx-5 mt-5">
     <cost-table
       :data-row="state.dataRow"
-      :isLoading="state.isLoading"
+      :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
       :checked-row-keys="state.checkRowKeys"
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, reactive, ref, computed } from "vue";
+import { watch, reactive, ref, computed, onMounted } from "vue";
 
 import { DataRow } from "../components/CostTable";
 import { NButton, useNotification } from "naive-ui";
@@ -76,10 +76,9 @@ import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import aws from "../../../store/data/test/aws.json";
+import aws from "../../../store/data/rds.json";
 import { RouteParam } from "../router";
-import { isEmptyArray } from "../util";
-import CostTable from "../components/costTable/CostTable.vue";
+import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
@@ -183,7 +182,7 @@ const copyURL = () => {
 
 const config = ref(searchConfigStore.searchConfig);
 watch(
-  () => config, // ref to searchConfigStore.searchConfig
+  config, // ref to searchConfigStore.searchConfig
   () => {
     state.isLoading = true;
     refreshDataTable();
@@ -211,7 +210,11 @@ const refreshDataTable = () => {
     return;
   }
 
-  const selectedRegionSet = new Set(config.region);
+  const regionCodeList: string[] = [];
+  config.region?.forEach((regionName) => {
+    regionCodeList.push(...getRegionCode(regionName));
+  });
+  const selectedRegionCodeSet = new Set(regionCodeList);
   const engineSet = new Set(config.engineType);
   const chargeTypeSet = new Set(config.chargeType);
 
@@ -224,7 +227,7 @@ const refreshDataTable = () => {
     }
 
     const selectedRegionList = dbInstance.regionList.filter((region) => {
-      if (selectedRegionSet.has(region.name)) {
+      if (selectedRegionCodeSet.has(region.code)) {
         return true;
       }
       return false;
@@ -249,12 +252,14 @@ const refreshDataTable = () => {
         return false;
       });
 
+      const regionName = getRegionName(region.code);
       selectedTermList.forEach((term) => {
-        const key = `${dbInstance.name}-${region.name}`;
+        const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
           key: "",
           childCnt: 1,
+          cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
           processor: dbInstance.processor,
           cpu: dbInstance.cpu,
@@ -263,7 +268,9 @@ const refreshDataTable = () => {
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
           leaseLength: term.payload?.leaseContractLength ?? "N/A",
-          region: region.name,
+          // we store the region code for each provider, and show the user the actual region information
+          // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
+          region: regionName,
         };
         newRow.key = `${newRow.name}-${newRow.region}-${newRow.engineType}--${newRow.leaseLength}`;
 
@@ -300,10 +307,10 @@ const refreshDataTable = () => {
     if (keyword) {
       const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
         if (
-          row.name.includes(keyword) ||
-          row.memory.includes(keyword) ||
-          row.processor.includes(keyword) ||
-          row.region.includes(keyword)
+          row.name.toLowerCase().includes(keyword) ||
+          row.memory.toLowerCase().includes(keyword) ||
+          row.processor.toLowerCase().includes(keyword) ||
+          row.region.toLowerCase().includes(keyword)
         ) {
           return true;
         }
@@ -320,6 +327,10 @@ const refreshDataTable = () => {
 const clearAll = () => {
   searchConfigStore.clearAll();
 };
+
+onMounted(() => {
+  refreshDataTable();
+});
 </script>
 
 <style></style>

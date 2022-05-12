@@ -20,11 +20,13 @@ The market lacks a tool for developers to compare different database products be
 ## Road Map
 * [ ] Data collector
   * [x] AWS
-  * [ ] GCP (**On Going**)
-  * [ ] ALIYUN
+  * [x] GCP 
+  * [ ] ALIYUN ( Low priority )
 * [ ] Cost Table
   * [x] Basic Table
-  * [ ] Data Refinement Menu (**On Going**)
+  * [x] Data Refinement Menu
+  * [ ] Table for checked Instance (**on going**)
+  * [ ] RAM / CPU wise calculator special for GCP (**on going**)
 * [ ] Maintaining Relevant Services
   * [ ] Incorporate Terraform
   * [ ] Database Service Life Cycle Management
@@ -42,11 +44,11 @@ cd ./frontend && pnpm i
 
 ### Fetching Data
 
-A sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/test/aws-sample.json), you may not need to download and scrub the data by yourself.
+Sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/sample.json).
 
-**(NOT REQUIRED)** If you would like to fetch the newest data online, a unit test is provided to do this thing for now. You may type in the following script to your terminal.
+If you would like to fetch the newest data online, a starting script is provided. You may type in the following script to your terminal.
 ```
-go test -timeout 60s -run ^Test_AWSSaveToLocal$ github.com/bytebase/dbcost/store -v
+sh ./start.sh
 ```
 
 ### Starting the Frontend

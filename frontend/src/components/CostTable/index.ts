@@ -1,10 +1,10 @@
 import CostTable from "./CostTable.vue";
-export default CostTable;
-
-export type DataRow = {
+import { CloudProvider } from "../../types";
+type DataRow = {
   id: number;
   key: string;
 
+  cloudProvider: CloudProvider;
   name: string;
   processor: string;
   cpu: number;
@@ -17,3 +17,5 @@ export type DataRow = {
 
   childCnt: number;
 };
+
+export { CostTable, DataRow };

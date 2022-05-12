@@ -27,6 +27,29 @@ const props = defineProps({
   showLeaseLength: { type: Boolean, default: () => false },
 });
 
+const ProviderIconRender = {
+  GCP: h(
+    NAvatar,
+    {
+      src: new URL("../../assets/icon/gcp.png", import.meta.url).href,
+      size: 12,
+      class: "align-middle mb-1 mr-1",
+      color: "none",
+    },
+    {}
+  ),
+  AWS: h(
+    NAvatar,
+    {
+      src: new URL("../../assets/icon/aws.png", import.meta.url).href,
+      size: 16,
+      class: "align-middle mr-1",
+      color: "none",
+    },
+    {}
+  ),
+};
+
 const EngineIconRender = {
   MYSQL: h(
     NAvatar,
@@ -120,6 +143,15 @@ const columns: any = computed(() => [
     rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
+    render(row: DataRow) {
+      if (row.cloudProvider === "AWS") {
+        return [ProviderIconRender.AWS, row.name];
+      } else if (row.cloudProvider === "GCP") {
+        return [ProviderIconRender.GCP, row.name];
+      }
+
+      return row.name;
+    },
   },
   {
     title: "Region",
@@ -132,21 +164,13 @@ const columns: any = computed(() => [
       compare: (row1: DataRow, row2: DataRow) => {
         const a = row1.region.toLocaleLowerCase();
         const b = row2.region.toLocaleLowerCase();
-        const len = a.length > b.length ? b.length : a.length;
-        for (let i = 0; i < len; i++) {
-          if (a[i] < b[i]) {
-            return false;
-          } else if (a[i] > b[i]) {
-            return true;
-          }
+        const stringComp = a.localeCompare(b);
+        if (stringComp !== 0) {
+          return stringComp;
         }
 
         // if tow region are identical, sort them with id
-        if (a.length == b.length) {
-          return row1.id - row2.id;
-        }
-
-        return a.length - b.length;
+        return row1.id - row2.id;
       },
       multiple: 1,
     },
