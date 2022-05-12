@@ -13,12 +13,13 @@ import (
 )
 
 // Client is the client struct
-type Client struct {
-}
+type Client struct{}
+
+var _ client.Client = (*Client)(nil)
 
 // NewClient return a client
-func NewClient() Client {
-	return Client{}
+func NewClient() *Client {
+	return &Client{}
 }
 
 //  pricing is the api message for AWS pricing .json file

@@ -64,7 +64,7 @@ import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import aws from "../../../store/data/test/aws.json";
+import aws from "../../../store/data/rds.json";
 import { RouteParam } from "../router";
 import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 

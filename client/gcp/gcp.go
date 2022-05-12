@@ -13,21 +13,22 @@ import (
 )
 
 // Client is the client struct
-type Client struct{}
+type Client struct {
+	apiKey string
+}
+
+var _ client.Client = (*Client)(nil)
 
 // NewClient return a client
-func NewClient() Client {
-	return Client{}
+func NewClient(apiKey string) *Client {
+	return &Client{apiKey}
 }
 
 const rdsServiceID = "9662-B51E-5089"
 
-// this apiKey is for demo purpose only
-const apiKey = "AIzaSyAj36rmGvQ_3kBqd6Lp3nSzPDo2_nD-sdM"
-
 // priceInfoEndpoint is the endpoint for all Cloud SQL services on GCP
 // For more information, please refer to https://cloud.google.com/billing/v1/how-tos/catalog-api
-var priceInfoEndpoint = fmt.Sprintf("https://cloudbilling.googleapis.com/v1/services/%s/skus?key=%s", rdsServiceID, apiKey)
+var priceInfoEndpoint = fmt.Sprintf("https://cloudbilling.googleapis.com/v1/services/%s/skus", rdsServiceID)
 
 type unitPrice struct {
 	CurrencyCode string `json:"currencyCode"`
@@ -71,10 +72,10 @@ type pricing struct {
 	NextPageToken string   `json:"nextPageToken"`
 }
 
-func getPricingWithPageToken(nextPageToken string) (*pricing, error) {
-	endpoint := priceInfoEndpoint
+func (c *Client) getPricingWithPageToken(nextPageToken string) (*pricing, error) {
+	endpoint := fmt.Sprintf("%s?key=%s", priceInfoEndpoint, c.apiKey)
 	if nextPageToken != "" {
-		endpoint = fmt.Sprintf("%s&pageToken=%s", priceInfoEndpoint, nextPageToken)
+		endpoint = fmt.Sprintf("%s&pageToken=%s", endpoint, nextPageToken)
 	}
 
 	req, err := http.NewRequest("GET", endpoint, nil)
@@ -103,7 +104,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 	var rawOffer []*offer
 	var token string
 	for {
-		p, err := getPricingWithPageToken(token)
+		p, err := c.getPricingWithPageToken(token)
 		if err != nil {
 			return nil, err
 		}
