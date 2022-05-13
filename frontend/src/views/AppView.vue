@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, reactive, ref, computed, onMounted } from "vue";
+import { watch, reactive, ref, computed, onMounted, nextTick } from "vue";
 
 import { DataRow } from "../components/CostTable";
 import { NButton, useNotification } from "naive-ui";
@@ -88,7 +88,7 @@ import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import rds from "../../../store/data/rds.json";
+import rds from "../../../store/data/sample.json";
 import { RouteParam } from "../router";
 import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 
@@ -213,9 +213,14 @@ const config = ref(searchConfigStore.searchConfig);
 watch(
   config, // ref to searchConfigStore.searchConfig
   () => {
+    // We set the dataRow to empty here for a better animation.
+    // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
+    state.dataRow = [];
     state.isLoading = true;
-    refreshDataTable();
-    state.isLoading = false;
+    setTimeout(() => {
+      refreshDataTable();
+      state.isLoading = false;
+    }, 100);
   },
   {
     deep: true,
@@ -230,7 +235,6 @@ const showLeaseLength = computed(() => {
   return chargeTypeSet.size > 1 || chargeTypeSet.has("Reserved");
 });
 const refreshDataTable = () => {
-  state.dataRow = [];
   let rowCnt = 0;
   const config = searchConfigStore.searchConfig;
   const dbInstanceList = dbInstanceStore.dbInstanceList;
