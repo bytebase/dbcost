@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# For now, we use this script to fetch the data
+# For now, we use this script to start our service on render
 
 # example usages:
-# ./start.sh, this is how we seed our data, the api key is stored as a env variable
-# ./start.sh ${GCP_API_KEY}
+# ./render.sh     this is how we seed our data, the api key is stored as a env variable on render
 
 echo "Seeding data"
 
