@@ -81,7 +81,7 @@
 import { watch, reactive, ref, computed, onMounted } from "vue";
 
 import { DataRow } from "../components/CostTable";
-import { NButton, useNotification } from "naive-ui";
+import { NButton, useLoadingBar, useNotification, NSkeleton } from "naive-ui";
 
 import { ChargeType, CloudProvider, DBInstance, EngineType } from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
@@ -210,12 +210,20 @@ const copyURL = () => {
 };
 
 const config = ref(searchConfigStore.searchConfig);
+const loadingBar = useLoadingBar();
 watch(
   config, // ref to searchConfigStore.searchConfig
   () => {
+    state.dataRow = [];
     state.isLoading = true;
-    refreshDataTable();
-    state.isLoading = false;
+    loadingBar.start();
+    setTimeout(() => {
+      refreshDataTable();
+    }, 500);
+    setTimeout(() => {
+      state.isLoading = false;
+      loadingBar.finish();
+    }, 500);
   },
   {
     deep: true,
