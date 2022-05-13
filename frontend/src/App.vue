@@ -1,9 +1,11 @@
 <template>
   <n-notification-provider :max="2">
-    <router-view />
+    <n-loading-bar-provider>
+      <router-view />
+    </n-loading-bar-provider>
   </n-notification-provider>
 </template>
 
 <script lang="ts" setup>
-import { NNotificationProvider } from "naive-ui";
+import { NNotificationProvider, NLoadingBarProvider } from "naive-ui";
 </script>
