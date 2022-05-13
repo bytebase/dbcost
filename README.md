@@ -27,7 +27,7 @@ The market lacks a tool for developers to compare different database products be
   * [x] Data Refinement Menu
   * [x] Table for checked Instance
   * [ ] RAM / CPU wise calculator special for GCP
-* [ ] SEO (**On Going**) 
+* [ ] SEO with Nuxt (**On Going**) 
 * [ ] Maintaining Relevant Services
   * [ ] Incorporate Terraform
   * [ ] Database Service Life Cycle Management
@@ -41,7 +41,7 @@ This project is under development and is very unstable. The way to start this pr
 ### Fetching Data
 Sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/sample.json). You may start dbcost in sample mode without fetching the cloud provider's latest pricing data. If you decide to start with sample data, just skip this step.
 
-Or, if you would like to fetch the newest data online, please apply for a [GCP API KEY](https://cloud.google.com/apigee/docs/api-platform/security/api-keys) with access to the [Cloud Billing API](https://cloud.google.com/billing/docs/reference/rest) yourself first. 
+Or, if you would like to fetch the newest data online, please apply for a [GCP API KEY](https://cloud.google.com/apigee/docs/api-platform/security/api-keys) with access to the [Cloud Billing API](https://cloud.google.com/billing/docs/reference/rest) yourself first. For AWS, the API is open to everyone, you do not need a API KEY to access relevant resource.
 
 #### Set environment variable
 
