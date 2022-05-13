@@ -14,7 +14,7 @@ import (
 const (
 	// renderEnvKey is set on render.
 	renderEnvKey = "API_KEY_GCP"
-	dirPath      = "./store/data"
+	dirPath      = "./data"
 	fileName     = "rds.json"
 )
 

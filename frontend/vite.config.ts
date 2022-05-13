@@ -22,4 +22,10 @@ export default defineConfig({
     }),
     Icons(),
   ],
+  server: {
+    fs: {
+      // Set this to false to access the .json file outside the frontend folder
+      strict: false,
+    },
+  },
 });

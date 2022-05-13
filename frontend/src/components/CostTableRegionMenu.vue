@@ -29,13 +29,14 @@
 
 <script lang="ts" setup>
 import { PropType, defineProps, defineEmits } from "vue";
-import { useDBInstanceStore } from "../stores/dbInstance";
 import { NGrid, NGi, NCheckboxGroup, NCheckbox, NAvatar } from "naive-ui";
-
-const dbInstanceStore = useDBInstanceStore();
-const availableRegionList = dbInstanceStore.getAvailableRegionList();
+import { AvailableRegion } from "../types";
 
 const props = defineProps({
+  availableRegionList: {
+    type: Object as PropType<AvailableRegion[]>,
+    default: [],
+  },
   regionList: {
     type: Object as PropType<String[]>,
     default: [],
@@ -53,8 +54,5 @@ const emit = defineEmits<{
 
 const handleUpdateRegion = (val: any[]) => {
   emit("update-region", val);
-};
-const click = () => {
-  console.log("click");
 };
 </script>

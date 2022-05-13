@@ -65,7 +65,19 @@ export const useDBInstanceStore = defineStore("dbInstance", {
 
   actions: {
     loadDBInstanceList() {
-      const receiver = [];
+      let sourceFileName = "rds.json";
+      if (import.meta.env.MODE === "sample") {
+        sourceFileName = "sample.json";
+      }
+
+      const data = import.meta.glob(`../../../data/*.json`);
+      for (const path in data) {
+        if (path.includes(sourceFileName)) {
+          data[path]().then((mod) => {
+            this.dbInstanceList = mod.default;
+          });
+        }
+      }
     },
   },
 });
