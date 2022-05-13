@@ -14,13 +14,15 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: ---AWS--- Fetch latest instance & price info
-        run: |
-          SAVE_PATH=./store/data/`date +%Y-%m-%dF`
-          mkdir -p $SAVE_PATH
-          cat ./.github/www/aws | xargs curl > ${SAVE_PATH}/aws.json
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Fetch newest data
+        run: go run main ./seed/main.go
 
       - name: Push to the remote repo
         run: |
