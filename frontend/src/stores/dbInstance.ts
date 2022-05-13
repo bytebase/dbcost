@@ -65,7 +65,7 @@ export const useDBInstanceStore = defineStore("dbInstance", {
 
   actions: {
     loadDBInstanceList() {
-      let sourceFileName = "rds.json";
+      let sourceFileName = "dbInstance.json";
       if (import.meta.env.MODE === "sample") {
         sourceFileName = "sample.json";
       }

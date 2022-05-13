@@ -15,7 +15,7 @@ const (
 	// renderEnvKey is set on render.
 	renderEnvKey = "API_KEY_GCP"
 	dirPath      = "./data"
-	fileName     = "rds.json"
+	fileName     = "dbInstance.json"
 )
 
 func main() {
