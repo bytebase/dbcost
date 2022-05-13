@@ -24,6 +24,7 @@
     </div>
     <cost-table-region-menu
       class="border-b pb-4"
+      :available-region-list="state.availableRegions"
       :region-list="searchConfigStore.searchConfig.region"
       @update-region="handleUpdateRegion"
     />
@@ -81,23 +82,35 @@
 import { watch, reactive, ref, computed, onMounted } from "vue";
 
 import { DataRow } from "../components/CostTable";
-import { NButton, useLoadingBar, useNotification, NSkeleton } from "naive-ui";
+import { NButton, useLoadingBar, useNotification } from "naive-ui";
 
-import { ChargeType, CloudProvider, DBInstance, EngineType } from "../types";
+import {
+  AvailableRegion,
+  ChargeType,
+  CloudProvider,
+  EngineType,
+} from "../types";
 import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import rds from "../../../store/data/rds.json";
 import { RouteParam } from "../router";
 import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
-dbInstanceStore.dbInstanceList = rds as unknown as DBInstance[];
+dbInstanceStore.loadDBInstanceList();
+
+watch(
+  () => dbInstanceStore.dbInstanceList.length,
+  () => {
+    state.availableRegions = dbInstanceStore.getAvailableRegionList();
+  }
+);
 
 const searchConfigStore = useSearchConfigStore();
 
 interface LocalState {
+  availableRegions: AvailableRegion[];
   dataRow: DataRow[];
   checkRowKeys: string[];
   checkedDataRow: DataRow[];
@@ -106,6 +119,7 @@ interface LocalState {
 }
 
 const state = reactive<LocalState>({
+  availableRegions: [],
   dataRow: [],
   checkRowKeys: [],
   checkedDataRow: [],
