@@ -1,9 +1,10 @@
 <template>
   <n-data-table
-    :row-key="(row) => row.id"
     :columns="columns"
     :data="dataRow"
     :loading="isLoading"
+    :checked-row-keys="checkedRowKeys"
+    @update-checked-row-keys="handleCheckRowKeys"
   />
 </template>
 <script setup lang="ts">
@@ -11,6 +12,20 @@ import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
 
 import { DataRow } from "./";
+
+const props = defineProps({
+  dataRow: {
+    type: Array as PropType<DataRow[]>,
+    default: () => [],
+  },
+  checkedRowKeys: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
+  isLoading: { type: Boolean, default: () => false },
+  showEngineType: { type: Boolean, default: () => false },
+  showLeaseLength: { type: Boolean, default: () => false },
+});
 
 const ProviderIconRender = {
   GCP: h(
@@ -116,6 +131,9 @@ const getPricingContent = () => {
 };
 
 const columns: any = computed(() => [
+  {
+    type: "selection",
+  },
   {
     title: "Name",
     key: "name",
@@ -241,13 +259,11 @@ const columns: any = computed(() => [
   },
 ]);
 
-const props = defineProps({
-  dataRow: {
-    type: Array as PropType<DataRow[]>,
-    default: () => [],
-  },
-  isLoading: { type: Boolean, default: false },
-  showEngineType: { type: Boolean, default: false },
-  showLeaseLength: { type: Boolean, default: false },
-});
+const emit = defineEmits<{
+  (e: "update-checked-row-keys", checkedRowKeys: string[]): void;
+}>();
+
+const handleCheckRowKeys = (rowKeys: any[]) => {
+  emit("update-checked-row-keys", rowKeys);
+};
 </script>

@@ -2,6 +2,7 @@ import CostTable from "./CostTable.vue";
 import { CloudProvider } from "../../types";
 type DataRow = {
   id: number;
+  key: string;
 
   cloudProvider: CloudProvider;
   name: string;

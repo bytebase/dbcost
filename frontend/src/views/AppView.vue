@@ -17,7 +17,7 @@
   </h1>
 
   <!-- menu -->
-  <div class="mx-5 mt-4">
+  <div class="mx-5 mt-4 border-b pb-4">
     <div class="mb-4 justify-between flex">
       <n-button @click="clearAll">Clear All</n-button>
       <n-button @click="copyURL">Copy URL</n-button>
@@ -44,6 +44,22 @@
     />
   </div>
 
+  <!-- selected dashboard -->
+  <div class="mx-5 mt-4 border-b pb-4">
+    <cost-table-checked
+      :data-row="state.checkedDataRow"
+      :is-loading="state.isLoading"
+      :is-expended="state.isCheckedTableExpended"
+      :checked-row-keys="state.checkRowKeys"
+      @update-checked-row-keys="
+        (val:string[]) => {
+          handleCheckRowKeys(val, false);
+        }
+      "
+      @toggle-is-expanded="handleToggleIsExpanded"
+    />
+  </div>
+
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
@@ -51,6 +67,12 @@
       :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
+      :checked-row-keys="state.checkRowKeys"
+      @update-checked-row-keys="
+        (val:string[]) => {
+          handleCheckRowKeys(val, true);
+        }
+      "
     />
   </div>
 </template>
@@ -66,23 +88,29 @@ import { useDBInstanceStore } from "../stores/dbInstance";
 import { useSearchConfigStore } from "../stores/searchConfig";
 import { useRouter } from "vue-router";
 
-import aws from "../../../store/data/rds.json";
+import rds from "../../../store/data/rds.json";
 import { RouteParam } from "../router";
 import { isEmptyArray, getRegionCode, getRegionName } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
-dbInstanceStore.dbInstanceList = aws as unknown as DBInstance[];
+dbInstanceStore.dbInstanceList = rds as unknown as DBInstance[];
 
 const searchConfigStore = useSearchConfigStore();
 
 interface LocalState {
   dataRow: DataRow[];
+  checkRowKeys: string[];
+  checkedDataRow: DataRow[];
   isLoading: boolean;
+  isCheckedTableExpended: boolean;
 }
 
 const state = reactive<LocalState>({
   dataRow: [],
+  checkRowKeys: [],
+  checkedDataRow: [],
   isLoading: false,
+  isCheckedTableExpended: false,
 });
 
 const handleUpdateRegion = (val: string[]) => {
@@ -105,6 +133,29 @@ const handleUpdateMinRAM = (val: any) => {
 };
 const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
+};
+const handleCheckRowKeys = (rowKeys: string[], needScroll: boolean) => {
+  const rowKeySet = new Set<string>(rowKeys);
+  state.checkedDataRow = state.dataRow.filter((row: DataRow) =>
+    rowKeySet.has(row.key)
+  );
+  state.checkedDataRow.forEach((row) => {
+    row.childCnt = 1;
+  });
+
+  if (state.isCheckedTableExpended && needScroll) {
+    if (state.checkRowKeys.length > rowKeys.length) {
+      window.scrollBy(0, -47);
+    } else {
+      window.scrollBy(0, 47);
+    }
+  }
+
+  state.checkRowKeys = rowKeys;
+};
+
+const handleToggleIsExpanded = () => {
+  state.isCheckedTableExpended = !state.isCheckedTableExpended;
 };
 
 const router = useRouter();
@@ -240,6 +291,7 @@ const refreshDataTable = () => {
         const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
+          key: "",
           childCnt: 1,
           cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
@@ -254,6 +306,7 @@ const refreshDataTable = () => {
           // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
           region: regionName,
         };
+        newRow.key = `${newRow.name}-${newRow.region}-${newRow.engineType}--${newRow.leaseLength}`;
 
         if (dataRowMap.has(key)) {
           const existedDataRowList = dataRowMap.get(key) as DataRow[];

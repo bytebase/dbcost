@@ -36,15 +36,19 @@ export const useDBInstanceStore = defineStore("dbInstance", {
         });
       });
 
-      const availableRegion: AvailableRegion[] = [];
+      const availableRegionList: AvailableRegion[] = [];
       regionMap.forEach((providerCode, regionName) => {
-        availableRegion.push({
+        availableRegionList.push({
           name: regionName,
           providerCode: providerCode,
         });
       });
 
-      return availableRegion;
+      return availableRegionList.sort(
+        (a: AvailableRegion, b: AvailableRegion) => {
+          return a.name.localeCompare(b.name);
+        }
+      );
     },
 
     getAvailableRegionSet: (state) => (): Set<string> => {
