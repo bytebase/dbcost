@@ -2,7 +2,7 @@
   <div>
     <n-button quaternary @click="handleToggleIsExpanded">
       <div class="flex">
-        <div class="font-medium text-lg pb-1">Selected Instance</div>
+        <div class="font-medium text-lg pb-1">Compare Selection</div>
         <heroicons-outline:chevron-down class="ml-1 h-6" v-show="isExpended" />
         <heroicons-outline:chevron-up class="ml-1 h-6" v-show="!isExpended" />
       </div>
@@ -11,7 +11,6 @@
     <cost-table
       v-show="isExpended"
       class="my-2"
-      virtual-scroll
       :data-row="dataRow"
       :isLoading="isLoading"
       :checked-row-keys="checkedRowKeys"
