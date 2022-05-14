@@ -58,11 +58,12 @@ go run ./seed/main/go
 cd ./frontend && pnpm i
 ```
 ### Starting the Frontend
-#### With sample data
+#### With sample data `./data/sample.json`
 ```
 pnpm sample
 ```
-#### With your own data
+#### With latest data fetched `./data/dbInstance.json`
+Noted: If you skip the **Feching Data** step, `./data/dbInstance.json` shuold not exist.
 ```
 pnpm dev
 ```
