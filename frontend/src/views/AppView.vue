@@ -104,6 +104,7 @@ watch(
   () => dbInstanceStore.dbInstanceList.length,
   () => {
     state.availableRegions = dbInstanceStore.getAvailableRegionList();
+    refreshDataTable();
   }
 );
 
