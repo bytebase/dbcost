@@ -21,7 +21,7 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Fetch newest data
+      - name: Fetch latest pricing data
         run: go run main ./seed/main.go
 
       - name: Push to the remote repo
