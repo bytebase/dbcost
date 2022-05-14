@@ -2,7 +2,7 @@
   <h1
     class="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800 space-x-2"
   >
-    The Ultimate AWS RDS and Google Cloud SQL Database Pricing Sheet
+    The Ultimate AWS RDS and Google Cloud SQL Instance Pricing Sheet
   </h1>
 
   <!-- menu -->
