@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 flex justify-between items-center bg-slate-800 text-white">
+  <header class="p-2 flex justify-between items-center bg-slate-800 text-white">
     <div class="inline-flex flex-row items-center">
       <a href="https://dbcost.com" target="_blank">
         <img
@@ -50,7 +50,7 @@
         </n-tooltip>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script setup lang="ts">

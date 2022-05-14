@@ -1,5 +1,5 @@
 <template>
-  <div
+  <footer
     class="pt-4 mx-2 space-y-2 border-t border-gray-200 md:flex md:items-center md:justify-between md:space-y-0"
   >
     <div>
@@ -32,7 +32,7 @@
         >
       </span>
     </div>
-  </div>
+  </footer>
 </template>
 
 <script lang="ts" setup>
