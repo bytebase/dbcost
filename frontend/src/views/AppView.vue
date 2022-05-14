@@ -11,6 +11,13 @@
         target="_blank"
         >AWS RDS</a
       >
+      &
+      <a
+        class="text-blue-600 underline"
+        href="https://cloud.google.com/cloudsql"
+        target="_blank"
+        >GCP CloudSQL</a
+      >
       Instance Pricing Sheet</span
     >
     <span>💸</span>
