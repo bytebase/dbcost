@@ -7,9 +7,9 @@
 
 echo "Seeding data"
 
-go run ./main/main.go
+go run ./seed/main.go
 
-if [$? -eq 1]; then
+if [ $? -eq 1 ]; then
     echo "Seeding data failed"
     exit 1
 fi

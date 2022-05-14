@@ -227,9 +227,14 @@ const config = ref(searchConfigStore.searchConfig);
 watch(
   config, // ref to searchConfigStore.searchConfig
   () => {
+    // We set the dataRow to empty here for a better animation.
+    // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
+    state.dataRow = [];
     state.isLoading = true;
-    refreshDataTable();
-    state.isLoading = false;
+    setTimeout(() => {
+      refreshDataTable();
+      state.isLoading = false;
+    }, 100);
   },
   {
     deep: true,
@@ -244,7 +249,6 @@ const showLeaseLength = computed(() => {
   return chargeTypeSet.size > 1 || chargeTypeSet.has("Reserved");
 });
 const refreshDataTable = () => {
-  state.dataRow = [];
   let rowCnt = 0;
   const config = searchConfigStore.searchConfig;
   const dbInstanceList = dbInstanceStore.dbInstanceList;
