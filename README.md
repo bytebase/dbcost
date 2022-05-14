@@ -25,8 +25,9 @@ The market lacks a tool for developers to compare different database products be
 * [ ] Cost Table
   * [x] Basic Table
   * [x] Data Refinement Menu
-  * [ ] Table for checked Instance (**on going**)
-  * [ ] RAM / CPU wise calculator special for GCP (**on going**)
+  * [x] Table for checked Instance
+  * [ ] RAM / CPU wise calculator special for GCP
+* [ ] SEO with Nuxt (**On Going**) 
 * [ ] Maintaining Relevant Services
   * [ ] Incorporate Terraform
   * [ ] Database Service Life Cycle Management
@@ -37,23 +38,33 @@ The market lacks a tool for developers to compare different database products be
 
 This project is under development and is very unstable. The way to start this project may improve as process goes on.
 
+### Fetching Data
+Sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/sample.json). You may start dbcost in sample mode without fetching the cloud provider's latest pricing data. If you decide to start with sample data, just skip this step.
+
+Or, if you would like to fetch the newest data online, please apply for a [GCP API KEY](https://cloud.google.com/apigee/docs/api-platform/security/api-keys) with access to the [Cloud Billing API](https://cloud.google.com/billing/docs/reference/rest) yourself first. For AWS, the API is open to everyone, you do not need a API KEY to access relevant resource.
+
+#### Set environment variable
+
+```
+export API_KEY_GCP={YOUR_API_KEY}
+```
+#### Seeding data
+```
+go run ./seed/main/go
+```
+
 ### Installing Frontend Dependencies
 ```
 cd ./frontend && pnpm i
 ```
-
-### Fetching Data
-
-Sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/sample.json).
-
-If you would like to fetch the newest data online, a starting script is provided. You may type in the following script to your terminal.
-```
-sh ./start.sh
-```
-
 ### Starting the Frontend
+#### With sample data
+```
+pnpm sample
+```
+#### With your own data
 ```
 pnpm dev
 ```
 
-Now the project would be available at [localhost:3000](localhost:3000)
+Now dbcost is available at [localhost:3000](localhost:3000)

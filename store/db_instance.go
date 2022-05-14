@@ -162,5 +162,5 @@ func Save(dbInstanceList []*DBInstance, filePath string) error {
 		return err
 	}
 
-	return nil
+	return fd.Close()
 }

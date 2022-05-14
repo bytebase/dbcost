@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite --mode dev",
+    "sample": "vite --mode sample",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 8080"
   },

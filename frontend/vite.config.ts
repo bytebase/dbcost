@@ -22,4 +22,11 @@ export default defineConfig({
     }),
     Icons(),
   ],
+  assetsInclude: [r("../data")],
+  server: {
+    fs: {
+      // Set this to false to access the .json file outside the frontend folder
+      strict: false,
+    },
+  },
 });

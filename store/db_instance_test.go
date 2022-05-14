@@ -19,7 +19,7 @@ func Test_AWSSaveToLocal(t *testing.T) {
 	dbInstanceList, err := Convert(offerList, CloudProviderAWS)
 	require.NoError(t, err, "Fail to convert to dbInstance")
 
-	dirPath := fmt.Sprintf("./data/test")
+	dirPath := fmt.Sprintf("../data/test")
 	err = os.MkdirAll(dirPath, os.ModePerm)
 	require.NoError(t, err, "Fail to make dir")
 
@@ -42,7 +42,7 @@ func Test_GCPSaveToLocal(t *testing.T) {
 	dbInstanceList, err := Convert(offerList, CloudProviderGCP)
 	require.NoError(t, err, "Fail to convert to dbInstance")
 
-	dirPath := fmt.Sprintf("./data/test")
+	dirPath := fmt.Sprintf("../data/test")
 	err = os.MkdirAll(dirPath, os.ModePerm)
 	require.NoError(t, err, "Fail to make dir")
 

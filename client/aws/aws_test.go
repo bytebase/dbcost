@@ -10,7 +10,7 @@ import (
 )
 
 func Test_Extraction(t *testing.T) {
-	file, err := os.ReadFile("../../store/example/aws.json")
+	file, err := os.ReadFile("./apiExample/aws.json")
 	require.NoError(t, err)
 
 	rawData := &pricing{}

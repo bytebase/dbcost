@@ -14,8 +14,8 @@ import (
 const (
 	// renderEnvKey is set on render.
 	renderEnvKey = "API_KEY_GCP"
-	dirPath      = "./store/data"
-	fileName     = "rds.json"
+	dirPath      = "data"
+	fileName     = "dbInstance.json"
 )
 
 func main() {
@@ -59,8 +59,14 @@ func main() {
 
 	log.Printf("Saving data, total entry: %d.\n", len(dbInstanceList))
 
+	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+		log.Fatalf("Fail to make dir, err: err.\n")
+	}
+
 	targetFilePath := path.Join(dirPath, fileName)
 	if err := store.Save(dbInstanceList, targetFilePath); err != nil {
 		log.Fatalf("Fail to save data, err: %s.\n", err)
 	}
+	log.Printf("File saved to: %s.\n", targetFilePath)
+
 }
