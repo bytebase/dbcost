@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 items-center bg-slate-800 text-white">
+  <header class="p-2 flex justify-between items-center bg-slate-800 text-white">
     <div class="inline-flex flex-row items-center">
       <a href="https://dbcost.com" target="_blank">
         <img
@@ -10,7 +10,11 @@
       </a>
     </div>
 
-    <div class="mt-1.5 inline-flex float-right items-center space-x-2">
+    <div class="inline-flex flex-row items-center text-3xl">
+      ☁️&nbsp;&nbsp💸&nbsp;&nbsp;☁️&nbsp;&nbsp;💸&nbsp;&nbsp☁️
+    </div>
+
+    <div class="inline-flex float-right items-center space-x-2">
       <div v-is="'script'" async src="https://buttons.github.io/buttons.js" />
       <div class="mt-1">
         <a
@@ -46,7 +50,7 @@
         </n-tooltip>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script setup lang="ts">
