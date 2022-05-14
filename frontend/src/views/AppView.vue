@@ -7,7 +7,7 @@
 
   <!-- menu -->
   <div class="mx-5 mt-4 border-b pb-4">
-    <div class="mb-4 justify-between flex">
+    <div class="mb-4 justify-center space-x-2 flex">
       <n-button @click="clearAll">Clear All</n-button>
       <n-button @click="copyURL">Copy URL</n-button>
     </div>
