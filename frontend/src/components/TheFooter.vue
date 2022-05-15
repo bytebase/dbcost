@@ -6,7 +6,7 @@
       <div class="flex items-center justify-center space-x-1">
         <h2>
           The ultimate cloud database pricing sheet for AWS RDS and Google Cloud
-          SQL
+          SQL instance
         </h2>
       </div>
     </div>
