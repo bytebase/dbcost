@@ -4,6 +4,7 @@ specifiers:
   '@iconify/json': ^1.1.432
   '@vitejs/plugin-vue': ^2.2.0
   autoprefixer: ^10.4.4
+  chart.xkcd: ^1.1.13
   naive-ui: ^2.26.4
   pinia: ^2.0.11
   postcss: ^8.4.12
@@ -19,6 +20,7 @@ specifiers:
 
 dependencies:
   autoprefixer: 10.4.4_postcss@8.4.12
+  chart.xkcd: 1.1.13
   naive-ui: 2.28.0_vue@3.2.31
   pinia: 2.0.13_typescript@4.6.3+vue@3.2.31
   postcss: 8.4.12
@@ -645,6 +647,16 @@ packages:
       is-regex: 1.1.4
     dev: true
 
+  /chart.xkcd/1.1.13:
+    resolution: {integrity: sha512-++JC2J1D13MdB4XZHYfa/gekbJ9DtYMwSFohbtTsryrf1C3ylMy3jcNKgSSo6CA38lS3HDR1Xol+BGWtwZFJTg==}
+    dependencies:
+      d3-axis: 1.0.12
+      d3-scale: 3.3.0
+      d3-selection: 1.4.2
+      d3-shape: 1.3.7
+      dayjs: 1.11.2
+    dev: false
+
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
     engines: {node: '>= 8.10.0'}
@@ -807,6 +819,66 @@ packages:
     resolution: {integrity: sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==}
     dev: false
 
+  /d3-array/2.12.1:
+    resolution: {integrity: sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==}
+    dependencies:
+      internmap: 1.0.1
+    dev: false
+
+  /d3-axis/1.0.12:
+    resolution: {integrity: sha512-ejINPfPSNdGFKEOAtnBtdkpr24c4d4jsei6Lg98mxf424ivoDP2956/5HDpIAtmHo85lqT4pruy+zEgvRUBqaQ==}
+    dev: false
+
+  /d3-color/2.0.0:
+    resolution: {integrity: sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==}
+    dev: false
+
+  /d3-format/2.0.0:
+    resolution: {integrity: sha512-Ab3S6XuE/Q+flY96HXT0jOXcM4EAClYFnRGY5zsjRGNy6qCYrQsMffs7cV5Q9xejb35zxW5hf/guKw34kvIKsA==}
+    dev: false
+
+  /d3-interpolate/2.0.1:
+    resolution: {integrity: sha512-c5UhwwTs/yybcmTpAVqwSFl6vrQ8JZJoT5F7xNFK9pymv5C0Ymcc9/LIJHtYIggg/yS9YHw8i8O8tgb9pupjeQ==}
+    dependencies:
+      d3-color: 2.0.0
+    dev: false
+
+  /d3-path/1.0.9:
+    resolution: {integrity: sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==}
+    dev: false
+
+  /d3-scale/3.3.0:
+    resolution: {integrity: sha512-1JGp44NQCt5d1g+Yy+GeOnZP7xHo0ii8zsQp6PGzd+C1/dl0KGsp9A7Mxwp+1D1o4unbTTxVdU/ZOIEBoeZPbQ==}
+    dependencies:
+      d3-array: 2.12.1
+      d3-format: 2.0.0
+      d3-interpolate: 2.0.1
+      d3-time: 2.1.1
+      d3-time-format: 3.0.0
+    dev: false
+
+  /d3-selection/1.4.2:
+    resolution: {integrity: sha512-SJ0BqYihzOjDnnlfyeHT0e30k0K1+5sR3d5fNueCNeuhZTnGw4M4o8mqJchSwgKMXCNFo+e2VTChiSJ0vYtXkg==}
+    dev: false
+
+  /d3-shape/1.3.7:
+    resolution: {integrity: sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==}
+    dependencies:
+      d3-path: 1.0.9
+    dev: false
+
+  /d3-time-format/3.0.0:
+    resolution: {integrity: sha512-UXJh6EKsHBTjopVqZBhFysQcoXSv/5yLONZvkQ5Kk3qbwiUYkdX17Xa1PT6U1ZWXGGfB1ey5L8dKMlFq2DO0Ag==}
+    dependencies:
+      d3-time: 2.1.1
+    dev: false
+
+  /d3-time/2.1.1:
+    resolution: {integrity: sha512-/eIQe/eR4kCQwq7yxi7z4c6qEXf2IYGcjoWB5OOQy4Tq9Uv39/947qlDcN2TLkiTzQWzvnsuYPB9TrWaNfipKQ==}
+    dependencies:
+      d3-array: 2.12.1
+    dev: false
+
   /datasette/1.0.1:
     resolution: {integrity: sha512-aJdlCBToEJUP4M57r67r4V6tltwGKa3qetnjpBtXYIlqbX9tM9jsoDMxb4xd9AGjpp3282oHRmqI5Z8TVAU0Mg==}
     dependencies:
@@ -826,6 +898,10 @@ packages:
   /date-fns/2.28.0:
     resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
     engines: {node: '>=0.11'}
+    dev: false
+
+  /dayjs/1.11.2:
+    resolution: {integrity: sha512-F4LXf1OeU9hrSYRPTTj/6FbO4HTjPKXvEIC1P2kcnFurViINCVk3ZV0xAS3XVx9MkMsXbbqlK6hjseaYbgKEHw==}
     dev: false
 
   /debug/2.6.9:
@@ -1530,6 +1606,10 @@ packages:
       get-intrinsic: 1.1.1
       has: 1.0.3
       side-channel: 1.0.4
+    dev: false
+
+  /internmap/1.0.1:
+    resolution: {integrity: sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw==}
     dev: false
 
   /ipaddr.js/1.9.1:
