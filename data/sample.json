@@ -1,6 +1,7 @@
 [
   {
     "id": 0,
+    "externalId": "AAA",
     "rowStatus": "NORMAL",
     "creatorId": 0,
     "createdTs": 1651806256,
@@ -11,6 +12,7 @@
         "code": "us-east-1",
         "termList": [
           {
+            "code": "AAA.a",
             "databaseEngine": "POSTGRES",
             "type": "OnDemand",
             "payload": null,
@@ -18,6 +20,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "AAA.b",
             "databaseEngine": "MYSQL",
             "type": "OnDemand",
             "payload": null,
@@ -25,6 +28,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "AAA.c",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -35,6 +39,7 @@
             "commitmentUSD": 12761
           },
           {
+            "code": "AAA.d",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -45,6 +50,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "AAA.e",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -55,6 +61,7 @@
             "commitmentUSD": 12048
           },
           {
+            "code": "AAA.f",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -65,6 +72,7 @@
             "commitmentUSD": 6144
           },
           {
+            "code": "AAA.g",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -75,6 +83,7 @@
             "commitmentUSD": 25012
           },
           {
+            "code": "AAA.h",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -85,6 +94,7 @@
             "commitmentUSD": 12063
           },
           {
+            "code": "AAA.k",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -95,6 +105,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "AAA.l",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -105,6 +116,8 @@
             "commitmentUSD": 11384
           },
           {
+            "code": "AAA.m",
+
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -115,6 +128,7 @@
             "commitmentUSD": 5807
           },
           {
+            "code": "AAA.n",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -130,6 +144,7 @@
         "code": "ap-south-1",
         "termList": [
           {
+            "code": "BBB.a",
             "databaseEngine": "MYSQL",
             "type": "OnDemand",
             "payload": null,
@@ -137,6 +152,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "BBB.b",
             "databaseEngine": "POSTGRES",
             "type": "OnDemand",
             "payload": null,
@@ -144,6 +160,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "BBB.c",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -154,6 +171,7 @@
             "commitmentUSD": 10790
           },
           {
+            "code": "BBB.d",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -164,6 +182,7 @@
             "commitmentUSD": 5513
           },
           {
+            "code": "BBB.e",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -174,6 +193,7 @@
             "commitmentUSD": 21910
           },
           {
+            "code": "BBB.f",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -184,6 +204,7 @@
             "commitmentUSD": 11139
           },
           {
+            "code": "BBB.g",
             "databaseEngine": "MYSQL",
             "type": "Reserved",
             "payload": {
@@ -194,6 +215,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "BBB.h",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -204,6 +226,7 @@
             "commitmentUSD": 11854
           },
           {
+            "code": "BBB.j",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -214,6 +237,7 @@
             "commitmentUSD": 0
           },
           {
+            "code": "BBB.l",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -224,6 +248,7 @@
             "commitmentUSD": 11442
           },
           {
+            "code": "BBB.m",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -234,6 +259,7 @@
             "commitmentUSD": 5835
           },
           {
+            "code": "BBB.n",
             "databaseEngine": "POSTGRES",
             "type": "Reserved",
             "payload": {
@@ -265,7 +291,7 @@
         "code": "us-east4",
         "termList": [
           {
-            "databaseEngine": "",
+            "code": "000E-8560-3D8D",
             "type": "OnDemand",
             "payload": null,
             "unit": "h",
