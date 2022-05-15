@@ -299,7 +299,7 @@ const refreshDataTable = () => {
         const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
-          key: term.sku,
+          key: term.code,
           childCnt: 1,
           cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
@@ -344,7 +344,7 @@ const refreshDataTable = () => {
     });
 
     // filter by keyword, we only enable this when the keyword is set by user
-    const keyword = config.keyword;
+    const keyword = config.keyword.toLowerCase();
     if (keyword) {
       const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
         if (

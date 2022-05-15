@@ -20,7 +20,7 @@ type TermPayload struct {
 
 // Term is the pricing term of a given instance
 type Term struct {
-	SKU string `json:"sku"`
+	Code string `json:"code"`
 
 	DatabaseEngine client.EngineType `json:"databaseEngine"`
 	Type           client.ChargeType `json:"type"`
@@ -75,7 +75,7 @@ func Convert(offerList []*client.Offer, cloudProvider CloudProvider) ([]*DBInsta
 		}
 
 		term := &Term{
-			SKU:            offer.SKU,
+			Code:           offer.TermCode,
 			DatabaseEngine: offer.InstancePayload.DatabaseEngine,
 			Type:           offer.ChargeType,
 			Payload:        termPayload,

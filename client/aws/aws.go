@@ -93,6 +93,7 @@ type priceRaw struct {
 }
 
 // InfoEndPoint is the instance info endpoint
+// More infomation, see: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/reading-an-offer.html
 const InfoEndPoint = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/index.json"
 
 // GetOffer returns the offers provided by AWS.
@@ -154,10 +155,13 @@ func extractOffer(rawData *pricing) ([]*client.Offer, error) {
 	for chargeType, instanceOfferList := range rawEntry {
 		// we use skuID here to track the instance relevant to this offer
 		for instanceSKU, _offerList := range instanceOfferList {
-			for _, rawOffer := range _offerList {
+			for instanceTermCode, rawOffer := range _offerList {
 				offer := &client.Offer{
-					ID:  incrID,
+					ID: incrID,
+					// e.g. 9QH3PUGXCYKNCYPB
 					SKU: instanceSKU,
+					// e.g. 9QH3PUGXCYKNCYPB.HU7G6KETJZ
+					TermCode: instanceTermCode,
 					// AWS only offer instance-wise product
 					OfferType:     client.OfferTypeInstance,
 					ChargeType:    client.ChargeType(chargeType),
@@ -174,6 +178,7 @@ func extractOffer(rawData *pricing) ([]*client.Offer, error) {
 					} else {
 						offer.HourlyUSD = USDFloat
 					}
+
 				}
 
 				incrID++

@@ -134,8 +134,10 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		}
 
 		offer := &client.Offer{
-			ID:        incrID,
-			SKU:       rawOffer.ID,
+			ID:  incrID,
+			SKU: rawOffer.ID,
+			// TermCode in GCP is the same as its SKU as different term is identified as different SKU.
+			TermCode:  rawOffer.ID,
 			OfferType: offerType,
 
 			// All GCP services are charged on demand literal, but we consider commitment for a length as reserved type
