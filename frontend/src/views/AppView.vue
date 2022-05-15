@@ -299,7 +299,7 @@ const refreshDataTable = () => {
         const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
-          key: "",
+          key: term.sku,
           childCnt: 1,
           cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
@@ -314,7 +314,6 @@ const refreshDataTable = () => {
           // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
           region: regionName,
         };
-        newRow.key = `${newRow.name}-${newRow.region}-${newRow.engineType}--${newRow.leaseLength}`;
 
         if (dataRowMap.has(key)) {
           const existedDataRowList = dataRowMap.get(key) as DataRow[];
