@@ -88,8 +88,9 @@ type priceDimensionRaw struct {
 
 // priceRaw is the raw price struct marshaled from the aws json file
 type priceRaw struct {
-	Dimension map[string]priceDimensionRaw `json:"priceDimensions"`
-	Term      *client.ChargePayload        `json:"termAttributes"`
+	OfferTermCode string                       `json:"offerTermCode"`
+	Dimension     map[string]priceDimensionRaw `json:"priceDimensions"`
+	Term          *client.ChargePayload        `json:"termAttributes"`
 }
 
 // InfoEndPoint is the instance info endpoint
@@ -156,8 +157,9 @@ func extractOffer(rawData *pricing) ([]*client.Offer, error) {
 		for instanceSKU, _offerList := range instanceOfferList {
 			for _, rawOffer := range _offerList {
 				offer := &client.Offer{
-					ID:  incrID,
-					SKU: instanceSKU,
+					ID:       incrID,
+					SKU:      instanceSKU,
+					TermCode: rawOffer.OfferTermCode,
 					// AWS only offer instance-wise product
 					OfferType:     client.OfferTypeInstance,
 					ChargeType:    client.ChargeType(chargeType),
@@ -174,6 +176,7 @@ func extractOffer(rawData *pricing) ([]*client.Offer, error) {
 					} else {
 						offer.HourlyUSD = USDFloat
 					}
+
 				}
 
 				incrID++

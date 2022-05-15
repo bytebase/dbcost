@@ -74,6 +74,10 @@ type Offer struct {
 
 	// e.g. AWS: 9QH3PUGXCYKNCYPB, GCP: 0009-6F35-3126
 	SKU string
+	// The same SKU may have different charge type, the term code is used to differentiate this.
+	// e.g. Instance A may be charged monthly(with term code 'a', SKU 'A') of daily((with term code 'b', SKU 'A')).\
+	// 		AWS: 9QH3PUGXCYKNCYPB.HU7G6KETJZ
+	TermCode string
 	// Allowed OfferType are Instance, RAM, CPU
 	OfferType OfferType
 	// If the offer type is Instance, the payload would be the information of that instance, otherwise this field will be nil
