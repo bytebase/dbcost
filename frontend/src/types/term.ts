@@ -10,7 +10,7 @@ export type TermPayload = {
 } | null;
 
 export type Term = {
-  sku: string;
+  code: string;
   databaseEngine: EngineType;
   type: ChargeType;
   payload: TermPayload;
