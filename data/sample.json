@@ -292,18 +292,18 @@
         "termList": [
           {
             "code": "000E-8560-3D8D",
+            "databaseEngine": "MYSQL",
             "type": "OnDemand",
             "payload": null,
-            "unit": "h",
-            "usd": 7.783,
-            "description": "Cloud SQL for MySQL: Zonal - 96 vCPU + 360GB RAM in Delhi"
+            "hourlyUSD": 10.158,
+            "commitmentUSD": 0
           }
         ]
       }
     ],
     "cloudProvider": "GCP",
     "name": "db-N1Standard-96-360",
-    "vCPU": 96,
+    "cpu": 96,
     "memory": "360",
     "processor": ""
   }
