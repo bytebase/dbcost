@@ -4,9 +4,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, onUpdated, ref, PropType, computed } from "vue";
-import { select } from "d3-selection";
-import { addFilter } from "./utils";
+import { ref, PropType, computed } from "vue";
+import { xkcdify } from "./utils";
 import { DataRow } from "../CostTable";
 
 const props = defineProps({
@@ -45,6 +44,9 @@ const options = computed(() => {
     chart: {
       toolbar: { show: false },
       fontFamily: "xkcd",
+      events: {
+        animationEnd: xkcdify.bind(this, chartDom.value as HTMLElement),
+      },
     },
     xaxis: {
       categories: xGrid,
@@ -101,24 +103,5 @@ const series = computed(() => {
   }
 
   return res;
-});
-
-const installFilter = () => {
-  const filter = "url(#xkcdify)";
-  const d3Selection = select(chartDom.value as any).select("svg") as any;
-
-  addFilter(d3Selection);
-  d3Selection.selectAll("line").attr("filter", filter);
-  d3Selection.selectAll("path").attr("filter", filter);
-  d3Selection.selectAll("#apexcharts-grid").attr("filter", filter);
-  d3Selection.selectAll("#apexcharts-series").attr("filter", filter);
-};
-
-onMounted(() => {
-  installFilter();
-});
-
-onUpdated(() => {
-  installFilter();
 });
 </script>

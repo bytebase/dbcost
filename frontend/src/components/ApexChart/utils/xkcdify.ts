@@ -1,6 +1,7 @@
 import { D3Selection } from "../types";
+import { select } from "d3-selection";
 
-export default (selection: D3Selection) => {
+const addFilter = (selection: D3Selection) => {
   selection
     .append("defs")
     .append("filter")
@@ -20,6 +21,13 @@ export default (selection: D3Selection) => {
     });
 };
 
-export const a = (selection: D3Selection) => {
-  selection.select("filter").remove();
+export const xkcdify = (chartDom: HTMLElement) => {
+  const d3Selection = select(chartDom as any).select("svg") as any;
+
+  addFilter(d3Selection);
+  const filter = "url(#xkcdify)";
+  d3Selection.selectAll("line").attr("filter", filter);
+  d3Selection.selectAll("path").attr("filter", filter);
+  d3Selection.selectAll("#apexcharts-grid").attr("filter", filter);
+  d3Selection.selectAll("#apexcharts-series").attr("filter", filter);
 };
