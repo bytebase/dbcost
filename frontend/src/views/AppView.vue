@@ -34,8 +34,9 @@
     />
   </div>
 
-  <!-- selected dashboard -->
+  <!-- compare selection -->
   <div class="mx-5 mt-4 border-b pb-4">
+    <!-- selected dashboard -->
     <cost-table-checked
       :data-row="state.checkedDataRow"
       :is-loading="state.isLoading"
@@ -47,6 +48,12 @@
         }
       "
       @toggle-is-expanded="handleToggleIsExpanded"
+    />
+
+    <!-- chart -->
+    <cost-line-chart
+      v-if="state.isCheckedTableExpended"
+      :data="state.checkedDataRow"
     />
   </div>
 
@@ -367,6 +374,7 @@ const refreshDataTable = () => {
 
 const clearAll = () => {
   searchConfigStore.clearAll();
+  state.dataRow = [];
 };
 
 onMounted(() => {

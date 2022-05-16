@@ -19,6 +19,7 @@ specifiers:
   vue: ^3.2.25
   vue-router: '4'
   vue-tsc: ^0.29.8
+  vue3-apexcharts: ^1.4.1
 
 dependencies:
   '@types/d3-selection': 3.0.2
@@ -34,6 +35,7 @@ dependencies:
   unplugin-vue-components: 0.19.3_vite@2.9.1+vue@3.2.31
   vue: 3.2.31
   vue-router: 4.0.14_vue@3.2.31
+  vue3-apexcharts: 1.4.1_apexcharts@3.35.2+vue@3.2.31
 
 devDependencies:
   '@iconify/json': 1.1.461
@@ -3241,6 +3243,16 @@ packages:
       '@vue/runtime-dom': 3.2.31
       '@vue/server-renderer': 3.2.31_vue@3.2.31
       '@vue/shared': 3.2.31
+    dev: false
+
+  /vue3-apexcharts/1.4.1_apexcharts@3.35.2+vue@3.2.31:
+    resolution: {integrity: sha512-96qP8JDqB9vwU7bkG5nVU+E0UGQn7yYQVqUUCLQMYWDuQyu2vE77H/UFZ1yI+hwzlSTBKT9BqnNG8JsFegB3eg==}
+    peerDependencies:
+      apexcharts: '> 3.0.0'
+      vue: '> 3.0.0'
+    dependencies:
+      apexcharts: 3.35.2
+      vue: 3.2.31
     dev: false
 
   /vueuc/0.4.28_vue@3.2.31:
