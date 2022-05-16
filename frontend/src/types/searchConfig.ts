@@ -11,8 +11,6 @@ export type SearchConfig = {
   keyword?: string;
 };
 
-export const SearchConfigEmpty: SearchConfig = {};
-
 export const SearchConfigDefault: SearchConfig = {
   cloudProvider: ["AWS", "GCP"],
   engineType: ["MYSQL"],

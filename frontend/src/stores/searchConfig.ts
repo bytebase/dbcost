@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { SearchConfig, SearchConfigDefault, SearchConfigEmpty } from "../types";
+import { SearchConfig, SearchConfigDefault } from "../types";
 
 interface State {
   searchConfig: SearchConfig;
@@ -11,7 +11,13 @@ export const useSearchConfigStore = defineStore("searchConfig", {
   }),
   actions: {
     clearAll() {
-      this.searchConfig = SearchConfigEmpty;
+      this.searchConfig.chargeType = [];
+      this.searchConfig.cloudProvider = [];
+      this.searchConfig.engineType = [];
+      this.searchConfig.keyword = "";
+      this.searchConfig.minCPU = undefined;
+      this.searchConfig.minRAM = undefined;
+      this.searchConfig.region = [];
     },
   },
 });
