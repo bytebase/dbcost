@@ -31,7 +31,7 @@ The market lacks a tool for developers to compare different database products be
   * [ ] Compare the difference in monthly price between different offers ( Line Chart )
   * [ ] Compare the difference in total price between different offers ( Accumulate Bar Chart )
   * [ ] Compare the spec of different instance ( Scatter Chart )
-* [ ] SEO (**On Going**) 
+* [ ] SEO (**Ongoing**) 
 * [ ] Maintaining Relevant Services
   * [ ] Incorporate Terraform
   * [ ] Database Service Life Cycle Management
