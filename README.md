@@ -27,7 +27,7 @@ The market lacks a tool for developers to compare different database products be
   * [x] Data Refinement Menu
   * [x] Table for checked Instance
   * [ ] RAM / CPU wise calculator special for GCP
-* [ ] Cost Charts (**On Going**) 
+* [ ] Cost Charts (**Ongoing**) 
   * [ ] Compare the difference in monthly price between different offers ( Line Chart )
   * [ ] Compare the difference in total price between different offers ( Accumulate Bar Chart )
   * [ ] Compare the spec of different instance ( Scatter Chart )
