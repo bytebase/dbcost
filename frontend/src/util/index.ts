@@ -72,7 +72,10 @@ const regionCodeMap: Map<string, string> = new Map<string, string>([
 
 export const getRegionName = (regionCode: string): string => {
   if (!regionCodeMap.has(regionCode)) {
-    return "";
+    // If the code is not included in the map, we just show user the code.
+    // Also, we need to update the map manually.
+    regionCodeMap.set(regionCode, regionCode);
+    return regionCode;
   }
   return regionCodeMap.get(regionCode) as string;
 };
