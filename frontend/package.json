@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@types/d3-selection": "^3.0.2",
-    "d3-selection": "^3.0.0",
     "apexcharts": "^3.35.2",
     "autoprefixer": "^10.4.4",
+    "d3-selection": "^3.0.0",
     "naive-ui": "^2.26.4",
     "pinia": "^2.0.11",
     "postcss": "^8.4.12",
@@ -21,7 +21,8 @@
     "unplugin-icons": "^0.14.1",
     "unplugin-vue-components": "^0.19.3",
     "vue": "^3.2.25",
-    "vue-router": "4"
+    "vue-router": "4",
+    "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
     "@iconify/json": "^1.1.432",
