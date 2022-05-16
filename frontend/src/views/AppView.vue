@@ -344,7 +344,7 @@ const refreshDataTable = () => {
     });
 
     // filter by keyword, we only enable this when the keyword is set by user
-    const keyword = config.keyword.toLowerCase();
+    const keyword = config.keyword?.toLowerCase();
     if (keyword) {
       const filteredDataRowList: DataRow[] = dataRowList.filter((row) => {
         if (
