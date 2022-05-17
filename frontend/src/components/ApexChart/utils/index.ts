@@ -1,3 +1,3 @@
-import addFilter from "./addFilter";
+import { xkcdify } from "./xkcdify";
 
-export { addFilter };
+export { xkcdify };

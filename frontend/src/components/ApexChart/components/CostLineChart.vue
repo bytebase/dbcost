@@ -1,21 +1,36 @@
 <template>
-  <div ref="chartDom">
-    <apexchart width="100%" type="line" :options="options" :series="series" />
+  <div>
+    <vue-apex-charts
+      type="line"
+      ref="chart"
+      :options="options"
+      :series="series"
+    />
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, onUpdated, ref, PropType, computed } from "vue";
-import { select } from "d3-selection";
-import { addFilter } from "./utils";
-import { DataRow } from "../CostTable";
+import { ref, PropType, computed, onMounted } from "vue";
+import { xkcdify } from "../utils";
+import { DataRow } from "../../CostTable";
+import VueApexCharts from "vue3-apexcharts";
 
+const chart = ref();
 const props = defineProps({
   data: {
     type: Array as PropType<DataRow[]>,
     default: [],
   },
 });
-const chartDom = ref<HTMLElement>();
+
+const toggleSeries = (seriesName: string) => {
+  chart.value.toggleSeries(seriesName);
+};
+
+// Setup syntactic sugar will not expose any method within <script> block.
+// We need to expose explicitly.
+defineExpose({
+  toggleSeries,
+});
 
 const getXGrid = () => {
   for (const row of props.data) {
@@ -35,7 +50,6 @@ const monthInHour = 30 * 24;
 const availableRate = 1;
 const options = computed(() => {
   let xGrid = getXGrid();
-
   return {
     title: {
       text: "Total Cost",
@@ -45,6 +59,13 @@ const options = computed(() => {
     chart: {
       toolbar: { show: false },
       fontFamily: "xkcd",
+      events: {
+        // The dom element is not available until the dom is mounted.
+        // So we update this when everything is ready.
+        animationEnd: chart.value
+          ? xkcdify.bind(this, chart.value.$el as HTMLElement, [])
+          : undefined,
+      },
     },
     xaxis: {
       categories: xGrid,
@@ -64,9 +85,20 @@ const options = computed(() => {
       dashArray: 0,
     },
     legend: {
-      showForSingleSeries: true,
-      position: "bottom",
-      show: props.data.length > 0,
+      show: false,
+    },
+    tooltip: {
+      x: {
+        show: true,
+        formatter: (i: number) => {
+          return `Total cost of the first ${i} month`;
+        },
+      },
+      y: {
+        formatter: (i: number) => {
+          return `${i} USD`;
+        },
+      },
     },
   };
 });
@@ -101,24 +133,5 @@ const series = computed(() => {
   }
 
   return res;
-});
-
-const installFilter = () => {
-  const filter = "url(#xkcdify)";
-  const d3Selection = select(chartDom.value as any).select("svg") as any;
-
-  addFilter(d3Selection);
-  d3Selection.selectAll("line").attr("filter", filter);
-  d3Selection.selectAll("path").attr("filter", filter);
-  d3Selection.selectAll("#apexcharts-grid").attr("filter", filter);
-  d3Selection.selectAll("#apexcharts-series").attr("filter", filter);
-};
-
-onMounted(() => {
-  installFilter();
-});
-
-onUpdated(() => {
-  installFilter();
 });
 </script>

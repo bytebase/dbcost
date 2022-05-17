@@ -51,10 +51,12 @@
     />
 
     <!-- chart -->
-    <cost-line-chart
-      v-if="state.isCheckedTableExpended"
-      :data="state.checkedDataRow"
-    />
+    <div class="mt-2">
+      <chart-tab
+        v-show="state.isCheckedTableExpended"
+        :data="state.checkedDataRow"
+      />
+    </div>
   </div>
 
   <!-- dashboard -->
