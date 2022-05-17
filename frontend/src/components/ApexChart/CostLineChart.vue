@@ -45,7 +45,7 @@ const options = computed(() => {
       toolbar: { show: false },
       fontFamily: "xkcd",
       events: {
-        animationEnd: xkcdify.bind(this, chartDom.value as HTMLElement),
+        animationEnd: xkcdify.bind(this, chartDom.value as HTMLElement, []),
       },
     },
     xaxis: {
@@ -69,6 +69,19 @@ const options = computed(() => {
       showForSingleSeries: true,
       position: "bottom",
       show: props.data.length > 0,
+    },
+    tooltip: {
+      x: {
+        show: true,
+        formatter: (i: number) => {
+          return `Total cost of the first ${i} month`;
+        },
+      },
+      y: {
+        formatter: (i: number) => {
+          return `${i} USD`;
+        },
+      },
     },
   };
 });

@@ -21,11 +21,13 @@ const addFilter = (selection: D3Selection) => {
     });
 };
 
-export const xkcdify = (chartDom: HTMLElement) => {
+export const xkcdify = (chartDom: HTMLElement, tagToBeAdded: string[]) => {
   const d3Selection = select(chartDom as any).select("svg") as any;
-
   addFilter(d3Selection);
   const filter = "url(#xkcdify)";
+  for (const tag of tagToBeAdded) {
+    d3Selection.selectAll(tag).attr("filter", filter);
+  }
   d3Selection.selectAll("line").attr("filter", filter);
   d3Selection.selectAll("path").attr("filter", filter);
   d3Selection.selectAll("#apexcharts-grid").attr("filter", filter);
