@@ -5,12 +5,14 @@ The market lacks a tool for developers to compare different database products be
 
 ## Tech Stack (at least this is expected)
 
-+ **Golang** in Backend
-+ **Vue** in Frontend.
+### Used
++ **Golang**.
++ **Vue** with **Vite**.
++ **ApexCharts** for visualization.
 + **Terraform** for infra management.
 + **Profilers** such as tpcc.
 + **Docker** for image packaging (Backend, Terraform, profilers).
-+ **Cron** task  by **Render**.
++ **Cron** task by **Render**.
 + **JSON-Schema** for schema （ideally, the whole project's data would be stored as json files）
 
 ### Requirement  
@@ -28,9 +30,10 @@ The market lacks a tool for developers to compare different database products be
   * [x] Table for checked Instance
   * [ ] RAM / CPU wise calculator special for GCP
 * [ ] Cost Charts (**Ongoing**) 
-  * [ ] Compare the difference in monthly price between different offers ( Line Chart )
-  * [ ] Compare the difference in total price between different offers ( Stacked Columns Chart )
-  * [ ] Compare the spec(cpu, ram) and cost of different instances ( Bubble Chart )
+  * [x] Compare the difference in monthly price between different offers ( Line Chart )
+  * [x] Compare the difference in total price between different offers ( Stacked Columns Chart )
+  * [x] Compare the spec(cpu, ram) and cost of different instances ( Bubble Chart )
+  * [ ] Comparison page 
 * [ ] SEO (**Ongoing**) 
 * [ ] Maintaining Relevant Services
   * [ ] Incorporate Terraform
