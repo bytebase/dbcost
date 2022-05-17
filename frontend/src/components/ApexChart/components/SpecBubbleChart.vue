@@ -67,7 +67,7 @@ const options = computed(() => {
     xaxis: {
       forceNiceScale: true,
       tickAmount: 10,
-      max: 420,
+      max: 140,
       min: 1,
       title: {
         text: "CPU / Core",
@@ -76,7 +76,7 @@ const options = computed(() => {
     yaxis: {
       forceNiceScale: true,
       tickAmount: 10,
-      max: 420,
+      max: 1100,
       min: 1,
       title: {
         text: "RAM / GiB",
