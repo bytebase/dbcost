@@ -51,8 +51,9 @@
     />
 
     <!-- chart -->
-    <cost-line-chart
-      v-if="state.isCheckedTableExpended"
+    <composite-chart
+      class="mx-4 mt-2"
+      v-show="state.isCheckedTableExpended"
       :data="state.checkedDataRow"
     />
   </div>

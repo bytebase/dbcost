@@ -1,20 +1,36 @@
 <template>
-  <div ref="chartDom">
-    <apexchart width="100%" type="line" :options="options" :series="series" />
+  <div>
+    <vue-apex-charts
+      type="line"
+      ref="chart"
+      :options="options"
+      :series="series"
+    />
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, PropType, computed } from "vue";
-import { xkcdify } from "./utils";
-import { DataRow } from "../CostTable";
+import { ref, PropType, computed, onMounted } from "vue";
+import { xkcdify } from "../utils";
+import { DataRow } from "../../CostTable";
+import VueApexCharts from "vue3-apexcharts";
 
+const chart = ref();
 const props = defineProps({
   data: {
     type: Array as PropType<DataRow[]>,
     default: [],
   },
 });
-const chartDom = ref<HTMLElement>();
+
+const toggleSeries = (seriesName: string) => {
+  chart.value.toggleSeries(seriesName);
+};
+
+// Setup syntactic sugar will not expose any method within <script> block.
+// We need to expose explicitly.
+defineExpose({
+  toggleSeries,
+});
 
 const getXGrid = () => {
   for (const row of props.data) {
@@ -34,7 +50,6 @@ const monthInHour = 30 * 24;
 const availableRate = 1;
 const options = computed(() => {
   let xGrid = getXGrid();
-
   return {
     title: {
       text: "Total Cost",
@@ -45,7 +60,11 @@ const options = computed(() => {
       toolbar: { show: false },
       fontFamily: "xkcd",
       events: {
-        animationEnd: xkcdify.bind(this, chartDom.value as HTMLElement, []),
+        // The dom element is not available until the dom is mounted.
+        // So we update this when everything is ready.
+        animationEnd: chart.value
+          ? xkcdify.bind(this, chart.value.$el as HTMLElement, [])
+          : undefined,
       },
     },
     xaxis: {
@@ -66,9 +85,7 @@ const options = computed(() => {
       dashArray: 0,
     },
     legend: {
-      showForSingleSeries: true,
-      position: "bottom",
-      show: props.data.length > 0,
+      show: false,
     },
     tooltip: {
       x: {
