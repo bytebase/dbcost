@@ -51,11 +51,12 @@
     />
 
     <!-- chart -->
-    <composite-chart
-      class="mx-4 mt-2"
-      v-show="state.isCheckedTableExpended"
-      :data="state.checkedDataRow"
-    />
+    <div class="mt-2">
+      <chart-tab
+        v-show="state.isCheckedTableExpended"
+        :data="state.checkedDataRow"
+      />
+    </div>
   </div>
 
   <!-- dashboard -->

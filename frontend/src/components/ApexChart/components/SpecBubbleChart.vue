@@ -33,7 +33,6 @@ const handleLegendClick = (
   seriesIndex: number,
   globalContext: { config: ApexOptions }
 ) => {
-  console.log(123);
   const clickedSeries = globalContext.config.series?.at(seriesIndex) as {
     name: string;
   };
@@ -66,7 +65,7 @@ const options = computed(() => {
     },
     xaxis: {
       forceNiceScale: true,
-      tickAmount: 10,
+      tickAmount: 5,
       max: 140,
       min: 1,
       title: {
@@ -75,7 +74,7 @@ const options = computed(() => {
     },
     yaxis: {
       forceNiceScale: true,
-      tickAmount: 10,
+      tickAmount: 5,
       max: 1100,
       min: 1,
       title: {
@@ -88,8 +87,10 @@ const options = computed(() => {
       dashArray: 0,
     },
     legend: {
+      position: "left",
+      horizontalAlign: "left",
+
       showForSingleSeries: true,
-      position: "right",
       show: props.data.length > 0,
     },
     tooltip: {

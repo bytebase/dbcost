@@ -1,17 +1,18 @@
 <template>
-  <div>
+  <div class="justify-center flex items-center">
     <spec-bubble-chart
+      class="max-w-xl w-1/2"
       ref="bubbleChart"
-      style="width: 100%"
       :data="data"
       @legend-click="handleLegendClick"
     />
-    <cost-line-chart ref="lineChart" style="width: 100%" :data="data" />
+
+    <cost-line-chart class="max-w-lg w-1/2" ref="lineChart" :data="data" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType, ref } from "vue";
+import { PropType, ref } from "vue";
 import { DataRow } from "../CostTable";
 
 const lineChart = ref();
@@ -24,10 +25,6 @@ defineProps({
 });
 
 const handleLegendClick = (legendName: string) => {
-  // lineChart.value.toggleSeries(legendName);
   lineChart.value.toggleSeries(legendName);
 };
-onMounted(() => {
-  console.log(lineChart.value);
-});
 </script>
