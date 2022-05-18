@@ -39,7 +39,7 @@
           <div class="px-2 py-1">
             <!-- title -->
             <div class="flex mb-1">
-              <div class="text-base font-semibold font-mono">
+              <div class="text-base font-mono">
                 {{ dataRow.name }}
               </div>
               <div></div>
