@@ -34,31 +34,6 @@
     />
   </div>
 
-  <!-- compare selection -->
-  <div class="mx-5 mt-4 border-b pb-4">
-    <!-- selected dashboard -->
-    <cost-table-checked
-      :data-row="dataTableStore.checkedDataRow"
-      :is-loading="state.isLoading"
-      :is-expended="state.isCheckedTableExpended"
-      :checked-row-keys="dataTableStore.checkedRowKey"
-      @update-checked-row-keys="
-        (val:string[]) => {
-          handleCheckRowKeys(val, false);
-        }
-      "
-      @toggle-is-expanded="handleToggleIsExpanded"
-    />
-
-    <!-- chart -->
-    <div class="mt-2">
-      <chart-tab
-        v-show="state.isCheckedTableExpended"
-        :data="dataTableStore.checkedDataRow"
-      />
-    </div>
-  </div>
-
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
@@ -97,7 +72,6 @@ import { RouteParam } from "../router";
 import { isEmptyArray } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
-dbInstanceStore.loadDBInstanceList();
 
 const dataTableStore = useDataTableStore();
 

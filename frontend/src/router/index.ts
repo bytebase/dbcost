@@ -51,6 +51,13 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "compare",
+        name: "compare",
+        components: {
+          body: () => import("../views/CompareView.vue"),
+        },
+      },
+      {
         path: "404",
         name: "404",
         components: {

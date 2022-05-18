@@ -1,22 +1,35 @@
 <template>
   <div>
-    <div class="justify-center flex items-center">
-      <spec-bubble-chart
-        class="max-w-xl w-1/2"
-        ref="bubbleChart"
-        :data="data"
-        @legend-click="handleLegendClick"
-      />
-      <cost-line-chart class="max-w-lg w-1/2" ref="lineChart" :data="data" />
-    </div>
-    <div class="justify-center flex items-center">
-      <cost-stacked-chart class="w-2/3" :data="data" />
-    </div>
+    <n-tabs
+      default-value="total-cost"
+      justify-content="space-evenly"
+      type="segment"
+    >
+      <n-tab-pane name="specification">
+        <template #tab>
+          <span class="font-semibold text-base">Specification</span>
+        </template>
+        <spec-bubble-chart class="mx-4" ref="bubbleChart" :data="data" />
+      </n-tab-pane>
+      <n-tab-pane name="total-cost" tab="Total Cost">
+        <template #tab>
+          <span class="font-semibold text-base">Total Cost</span>
+        </template>
+        <cost-line-chart class="mx-4" ref="lineChart" :data="data" />
+      </n-tab-pane>
+      <n-tab-pane name="yearly-cost" tab="Yearly Cost">
+        <template #tab>
+          <span class="font-semibold text-base">Yearly Cost</span>
+        </template>
+        <cost-stacked-chart class="mx-4" :data="data" />
+      </n-tab-pane>
+    </n-tabs>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { PropType, ref } from "vue";
+import { NTabs, NTabPane } from "naive-ui";
 import { DataRow } from "../CostTable";
 
 const lineChart = ref();
@@ -28,7 +41,8 @@ defineProps({
   },
 });
 
-const handleLegendClick = (legendName: string) => {
-  lineChart.value.toggleSeries(legendName);
+const handleLegendClick = (legendName: string, a: string) => {
+  console.log(legendName, a);
+  // lineChart.value.toggleSeries(legendName);
 };
 </script>

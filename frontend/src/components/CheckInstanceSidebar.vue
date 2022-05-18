@@ -7,9 +7,16 @@
     <div class="fixed w-60 bg-white pt-1">
       <div class="mt-1 px-1">
         <n-button
-          disabled
+          :disabled="dataTableStore.checkedRowKey.length === 0"
           class="text-center w-full bg-green-600"
           type="primary"
+          @click="
+            () => {
+              $router.push({ name: 'compare' }).then(() => {
+                $emit('collapse', true);
+              });
+            }
+          "
         >
           <heroicons-solid:database class="" />
           <span class="ml-1 text-base align-middle">Compare Instance</span>

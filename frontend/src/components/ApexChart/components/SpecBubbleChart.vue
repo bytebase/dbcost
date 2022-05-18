@@ -40,6 +40,13 @@ const handleLegendClick = (
 };
 
 const options = computed(() => {
+  let maxCPU = -1;
+  let maxRAM = -1;
+  for (const row of props.data) {
+    maxCPU = Math.max(Number(row.cpu), maxCPU);
+    maxRAM = Math.max(Number(row.memory), maxRAM);
+  }
+
   return {
     chart: {
       toolbar: { show: false },
@@ -47,9 +54,9 @@ const options = computed(() => {
       events: {
         // The dom element is not available until the dom is mounted.
         // So we update this when everything is ready.
-        updated: chart.value
-          ? xkcdify.bind(this, chart.value.$el as HTMLElement, [])
-          : undefined,
+        // updated: chart.value
+        //   ? xkcdify.bind(this, chart.value.$el as HTMLElement, [])
+        //   : undefined,
       },
     },
     dataLabels: {
@@ -66,7 +73,7 @@ const options = computed(() => {
     xaxis: {
       forceNiceScale: true,
       tickAmount: 5,
-      max: 140,
+      max: maxCPU,
       min: 1,
       title: {
         text: "CPU / Core",
@@ -75,7 +82,7 @@ const options = computed(() => {
     yaxis: {
       forceNiceScale: true,
       tickAmount: 5,
-      max: 1100,
+      max: maxRAM,
       min: 1,
       title: {
         text: "RAM / GiB",
@@ -87,8 +94,8 @@ const options = computed(() => {
       dashArray: 0,
     },
     legend: {
-      position: "left",
-      horizontalAlign: "left",
+      position: "bottom",
+      horizontalAlign: "center",
 
       showForSingleSeries: true,
       show: props.data.length > 0,
