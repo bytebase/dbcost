@@ -4,36 +4,32 @@
     :class="isCollapsed ? '-left-60' : 'left-0'"
   >
     <!-- top title -->
-    <div class="fixed w-60 bg-white">
-      <div class="text-lg font-bold ml-3 mt-3">
-        <heroicons-solid:database class="h-6 inline align-top" />
-        <span>Selected Instance</span>
-      </div>
-
-      <div class="mt-1">
+    <div class="fixed w-60 bg-white pt-1">
+      <div class="mt-1 px-1">
         <n-button
           disabled
-          class="text-center w-full rounded-xl bg-green-600"
+          class="text-center w-full bg-green-600"
           type="primary"
         >
-          <span class="text-base">Compare Now</span>
+          <heroicons-solid:database class="" />
+          <span class="ml-1 text-base align-middle">Compare Instance</span>
         </n-button>
       </div>
     </div>
 
     <!-- content -->
     <div
-      class="fixed w-60 overflow-scroll h-full top-20 z-10 bg-white border-t mt-2"
+      class="fixed w-60 overflow-scroll h-full top-10 z-10 bg-white border-t mt-2"
     >
       <div class="mt-2">
         <!-- Checked Instance Card -->
         <div
-          class="bg-gray-100 hover:bg-gray-200 rounded-xl mx-1 mb-1"
+          class="border-b hover:bg-gray-200 rounded-xl mx-1 mb-1"
           v-for="dataRow in dataTableStore.checkedDataRow"
         >
           <!-- delete byn -->
           <div
-            class="flex float-right rounded-xl w-10 h-10 hover:bg-red-600 hover:text-white click:bg-red-700 justify-center"
+            class="flex float-right rounded-xl w-8 h-8 hover:bg-red-600 text-gray-400 hover:text-white click:bg-red-700 justify-center"
             @click.prevent="() => handleDeleteCard(dataRow.key)"
           >
             <heroicons-solid:trash class="place-self-center" />
@@ -43,7 +39,7 @@
           <div class="px-2 py-1">
             <!-- title -->
             <div class="flex mb-1">
-              <div class="font-semibold text-base">
+              <div class="text-base font-semibold font-mono">
                 {{ dataRow.name }}
               </div>
               <div></div>
@@ -52,7 +48,7 @@
             <!-- body -->
             <div class="mb-0.5">
               <div class="text-xs font-mono">
-                <strong>{{ dataRow.cpu }}</strong> Core,
+                <strong>{{ dataRow.cpu }}</strong> CPU,
                 <strong>{{ dataRow.memory }}</strong> GiB
               </div>
 
@@ -64,10 +60,10 @@
                   :src="EngineIcon[dataRow.engineType].src"
                   :size="16"
                 />
-                by
+
                 <n-avatar
                   color="none"
-                  class="align-top"
+                  class="align-top ml-1"
                   :src="ProviderIcon[dataRow.cloudProvider].src"
                   :size="ProviderIcon[dataRow.cloudProvider].size"
                 />
@@ -77,20 +73,17 @@
             <!-- footer -->
             <div class="text-right">
               <div class="text-xs font-mono">
-                $<strong>{{ dataRow.commitment.usd }}</strong> + $<strong>{{
+                ${{ dataRow.commitment.usd }} + ${{
                   dataRow.hourly.usd.toFixed(2)
-                }}</strong
-                >/hour
+                }}/hour
               </div>
 
               <div class="text-xs font-mono">
-                <strong>
-                  {{
-                    dataRow.leaseLength === "N/A"
-                      ? "On Demand"
-                      : `Reserved for ${dataRow.leaseLength}`
-                  }}
-                </strong>
+                {{
+                  dataRow.leaseLength === "N/A"
+                    ? "On Demand"
+                    : `Reserved for ${dataRow.leaseLength}`
+                }}
               </div>
             </div>
           </div>
