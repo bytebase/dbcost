@@ -19,6 +19,12 @@ export default defineStore("dataTable", {
     refresh() {
       this.dataRow = _generateDataRow();
     },
+    removeCheckedDataRowByKey(rowKeys: string) {
+      this.checkedRowKey = this.checkedRowKey.filter((key) => {
+        return key !== rowKeys;
+      });
+      this.refreshChecked(this.checkedRowKey);
+    },
     refreshChecked(rowKeys: string[]) {
       const rowKeySet = new Set<string>(rowKeys);
       const _checkedDataRow = this.dataRow.filter((row: DataRow) =>
