@@ -96,20 +96,23 @@ const pricingContent = {
     title: "Commitment",
     align: "right",
     render: (row: DataRow) => {
-      return `$${row.commitment.usd}`;
+      return h("span", { class: "font-mono" }, `$${row.commitment.usd}`);
     },
   },
   hourlyPay: {
     title: "Hourly Pay",
     align: "right",
     render: (row: DataRow) => {
-      return `$${row.hourly.usd.toFixed(2)}`;
+      return h("span", { class: "font-mono" }, `$${row.hourly.usd.toFixed(2)}`);
     },
   },
   leaseLength: {
     title: "Lease Length",
     key: "leaseLength",
     align: "right",
+    render: (row: DataRow) => {
+      return h("span", { class: "font-mono" }, row.leaseLength);
+    },
   },
 };
 
@@ -202,6 +205,12 @@ const columns: any = computed(() => [
 
       // if the screen is too short, hide the processor
       let render: any;
+      const cpuRender = h(
+        "div",
+        { class: "inline-block text-right w-6 font-mono" },
+        row.cpu
+      );
+
       if (window.innerWidth > 800) {
         render = h("div", {}, [
           h(
@@ -217,11 +226,11 @@ const columns: any = computed(() => [
               default: () => (row.processor === "" ? "N/A" : shortenProcessor),
             }
           ),
-          h("div", { class: "inline-block text-right w-6" }, row.cpu),
+          cpuRender,
         ]);
       } else {
         // if the screen is too short, hide the processor
-        render = row.cpu;
+        render = cpuRender;
       }
 
       return h(
@@ -244,6 +253,10 @@ const columns: any = computed(() => [
         Number(row1.memory) - Number(row2.memory),
       multiple: 2,
     },
+    render(row: DataRow) {
+      return h("span", { class: " font-mono" }, row.memory);
+    },
+
     rowSpan: (rowData: DataRow) => {
       return rowData.childCnt;
     },
