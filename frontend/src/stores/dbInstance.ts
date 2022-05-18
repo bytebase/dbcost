@@ -5,7 +5,7 @@ interface State {
   dbInstanceList: DBInstance[];
 }
 
-export const useDBInstanceStore = defineStore("dbInstance", {
+export default defineStore("dbInstance", {
   state: (): State => ({
     dbInstanceList: [],
   }),

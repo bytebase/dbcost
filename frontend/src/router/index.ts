@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import AppLayout from "../layout/AppLayout.vue";
 
-import { useSearchConfigStore } from "../stores/searchConfig";
+import { useSearchConfigStore } from "../stores";
 import {
   ChargeType,
   CloudProvider,
