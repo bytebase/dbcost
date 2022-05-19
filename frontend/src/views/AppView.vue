@@ -9,14 +9,14 @@
   <div class="mx-5 mt-4 border-b pb-4">
     <div class="mb-4 justify-center space-x-2 flex">
       <n-button @click="clearAll">Clear All</n-button>
-      <n-button @click="copyURL">Copy URL</n-button>
       <n-button
         :disabled="dataTableItemStore.checkedRowKey.length === 0"
-        class="bg-green-600 text-white"
+        class="text-center bg-green-600 text-white"
         @click="handleClickCompare"
       >
         Go Compare
       </n-button>
+      <n-button @click="copyURL">Copy URL</n-button>
     </div>
     <cost-table-region-menu
       class="border-b pb-4"

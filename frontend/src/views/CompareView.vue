@@ -4,6 +4,7 @@
       Cloud Database Instance Compare Sheet
     </h1>
 
+
     <div class="mb-4 justify-center space-x-2 flex">
       <n-button @click="router.push({ name: 'dashboard' })"
         >Back To Dashboard</n-button
@@ -57,4 +58,5 @@ const copyURL = () => {
       });
     });
 };
+
 </script>
