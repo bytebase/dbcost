@@ -131,22 +131,18 @@ const emit = defineEmits<{
   (e: "collapse", isCollapsed: boolean): void;
 }>();
 
-const ProviderIcon = {
+const ProviderIcon: any = {
   GCP: {
     src: new URL("../assets/icon/gcp.png", import.meta.url).href,
     size: 16,
-    class: "align-middle mb-1 mr-1",
-    color: "none",
   },
   AWS: {
     src: new URL("../assets/icon/aws.png", import.meta.url).href,
     size: 20,
-    class: "align-middle mr-1",
-    color: "none",
   },
 };
 
-const EngineIcon = {
+const EngineIcon: any = {
   MYSQL: {
     src: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
   },
