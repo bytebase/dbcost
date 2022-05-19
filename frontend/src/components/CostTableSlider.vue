@@ -9,7 +9,7 @@
               class="font-light align-baseline w-4 h-4 text-gray-500 ml-0.5"
             />
           </template>
-          Utilization is used to served as a multiplier in the derivation of the
+          Utilization is the time percentage actually used during the entire lease length.
           price.
         </n-tooltip>
         <span class="ml-2 font-mono">{{ Math.trunc(utilization * 100) }}%</span>
