@@ -12,25 +12,11 @@ import {
   isValidRegion,
   SearchConfig,
   SearchConfigDefault,
+  RouteQueryDashBoard,
+  RouteQueryCompare,
 } from "../types";
 
-// RouteParam is the query param used in the URL
-// to make the URL as simple as possible,
-// we do the following mapping between the attribute in SearchConfig and the attribute in Query Param:
-//    cloudProvider -> provider
-//    engineType -> engine
-//    chargeType -> charge
-export type RouteParam = {
-  provider?: string;
-  engine?: string;
-  charge?: string;
-  region?: string;
-  minCPU?: number;
-  minRAM?: number;
-  keyword?: string;
-};
-
-export const RouteParamDefault: RouteParam = {
+export const RouteQueryDashBoardDefault: RouteQueryDashBoard = {
   provider: SearchConfigDefault.cloudProvider?.join(","),
   region: SearchConfigDefault.region?.join(","),
   engine: SearchConfigDefault.engineType?.join(","),
@@ -98,25 +84,36 @@ router.beforeEach((to, from, next) => {
     next({ name: "404" });
     return;
   }
+
   try {
-    const query = to.query as RouteParam;
-    const config: SearchConfig = {
-      cloudProvider: query.provider?.split(",") as CloudProvider[],
-      region: query.region?.split(","),
-      chargeType: query.charge?.split(",") as ChargeType[],
-      engineType: query.engine?.split(",") as EngineType[],
-      keyword: query.keyword ? (query.keyword as string) : "",
-      minCPU: query.minCPU ? Number(query.minCPU) : 0,
-      minRAM: query.minRAM ? Number(query.minRAM) : 0,
-    };
-    if (
-      (!config.cloudProvider || isValidCloudProvider(config.cloudProvider)) &&
-      (!config.region || isValidRegion(config.region)) &&
-      (!config.chargeType || isValidChargeType(config.chargeType)) &&
-      (!config.engineType || isValidEngineType(config.engineType))
-    ) {
-      const searchConfigStore = useSearchConfigStore();
-      searchConfigStore.searchConfig = config;
+    if (to.name === "dashboard") {
+      const query = to.query as RouteQueryDashBoard;
+      const config: SearchConfig = {
+        cloudProvider: query.provider?.split(",") as CloudProvider[],
+        region: query.region?.split(","),
+        chargeType: query.charge?.split(",") as ChargeType[],
+        engineType: query.engine?.split(",") as EngineType[],
+        keyword: query.keyword ? (query.keyword as string) : "",
+        minCPU: query.minCPU ? Number(query.minCPU) : 0,
+        minRAM: query.minRAM ? Number(query.minRAM) : 0,
+      };
+      if (
+        (!config.cloudProvider || isValidCloudProvider(config.cloudProvider)) &&
+        (!config.region || isValidRegion(config.region)) &&
+        (!config.chargeType || isValidChargeType(config.chargeType)) &&
+        (!config.engineType || isValidEngineType(config.engineType))
+      ) {
+        const searchConfigStore = useSearchConfigStore();
+        searchConfigStore.searchConfig = config;
+        next();
+        return;
+      }
+    } else if (to.name === "compare") {
+      const query = to.query as RouteQueryCompare;
+      if (!query.key) {
+        next({ name: "404" });
+        return;
+      }
       next();
       return;
     }
@@ -126,7 +123,7 @@ router.beforeEach((to, from, next) => {
   next({
     name: "dashboard",
     replace: true,
-    query: RouteParamDefault,
+    query: RouteQueryDashBoardDefault,
   });
   return;
 });

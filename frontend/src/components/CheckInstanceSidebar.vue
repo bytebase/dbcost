@@ -10,13 +10,7 @@
           :disabled="dataTableItemStore.checkedRowKey.length === 0"
           class="text-center w-full bg-green-600"
           type="primary"
-          @click="
-            () => {
-              $router.push({ name: 'compare' }).then(() => {
-                $emit('collapse', true);
-              });
-            }
-          "
+          @click="handleClickCompare"
         >
           <heroicons-solid:database class="" />
           <span class="ml-1 text-base align-middle">Compare Instance</span>
@@ -119,12 +113,25 @@
 </template>
 <script lang="ts" setup>
 import { NButton, NAvatar } from "naive-ui";
+import { useRouter } from "vue-router";
 import { useDataTableItemStore } from "../stores";
+import { RouteQueryCompare } from "../types";
 
 const dataTableItemStore = useDataTableItemStore();
 
 const handleDeleteCard = (dataRowKey: string) => {
   dataTableItemStore.removeCheckedDataRowByKey(dataRowKey);
+};
+
+const router = useRouter();
+const handleClickCompare = () => {
+  const routeQuery: RouteQueryCompare = {
+    key: dataTableItemStore.checkedRowKey.join(","),
+  };
+
+  router.push({ name: "compare", query: routeQuery }).then(() => {
+    emit("collapse", true);
+  });
 };
 
 const props = defineProps({
