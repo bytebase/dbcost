@@ -1,8 +1,8 @@
 <template>
-  <div class="border-b pb-4">
+  <div>
     <n-checkbox-group
-      :value="(props.regionList as any)"
-      @update-value="handleUpdateRegion"
+      :value="(props.checkedRegionList as any)"
+      @update-value="(val) => emit('update-region', val as string[])"
     >
       <n-grid :y-gap="4" :cols="`2 760:3 980:4`">
         <n-gi v-for="(region, i) in availableRegionList" :key="i">
@@ -37,7 +37,7 @@ const props = defineProps({
     type: Object as PropType<AvailableRegion[]>,
     default: [],
   },
-  regionList: {
+  checkedRegionList: {
     type: Object as PropType<String[]>,
     default: [],
   },
@@ -51,8 +51,4 @@ const ProviderIcon = {
 const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
 }>();
-
-const handleUpdateRegion = (val: any[]) => {
-  emit("update-region", val);
-};
 </script>
