@@ -1,11 +1,13 @@
 <template>
   <div class="flex justify-start">
     <div class="border-r pr-2 mr-2 items-baseline">
-      <div class="flex mb-1">
+      <div class="flex mb-1 items-center">
         Utilization
         <n-tooltip trigger="hover">
           <template #trigger>
-            <heroicons-outline:information-circle class="font-light pt-1" />
+            <heroicons-outline:information-circle
+              class="font-light align-baseline w-4 h-4 text-gray-500 ml-0.5"
+            />
           </template>
           Utilization is used to served as a multiplier in the derivation of the
           price.
@@ -25,11 +27,13 @@
     </div>
 
     <div class="ml-2">
-      <div class="flex mb-1">
+      <div class="flex mb-1 items-center">
         Lease Length
         <n-tooltip trigger="hover">
           <template #trigger>
-            <heroicons-outline:information-circle class="font-light pt-1" />
+            <heroicons-outline:information-circle
+              class="font-light align-baseline w-4 h-4 text-gray-500 ml-0.5"
+            />
           </template>
           Utilization is the total length to derive the price in the last column
           of the the data table.
