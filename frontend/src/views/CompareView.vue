@@ -13,17 +13,16 @@
 
     <div class="border-b mb-2 pb-2">
       <cost-table-slider
-        :available-rate="state.availableRate"
+        :utilization="state.utilization"
         :rent-year="state.rentYear"
-        @update-available-rate="(val:number) => (state.availableRate = val)"
-        @update-rent-length="(val:number) => (state.rentYear = val)"
+        @update-utilization="(val:number) => (state.utilization = val)"
+        @update-lease-length="(val:number) => (state.rentYear = val)"
       />
     </div>
-
     <!-- selected dashboard -->
     <div class="border-b mb-2 pb-2">
       <cost-table
-        :available-rate="state.availableRate"
+        :utilization="state.utilization"
         :rent-year="state.rentYear"
         :allow-select="false"
         :is-loading="false"
@@ -52,12 +51,12 @@ onMounted(() => {
 });
 
 interface LocalState {
-  availableRate: number;
+  utilization: number;
   rentYear: number;
 }
 
 const state = reactive<LocalState>({
-  availableRate: 1,
+  utilization: 1,
   rentYear: 1,
 });
 

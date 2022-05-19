@@ -2,17 +2,15 @@
   <div class="flex justify-start">
     <div class="border-r pr-2 mr-2 items-baseline">
       <div class="flex mb-1">
-        Available Rate
+        Utilization
         <n-tooltip trigger="hover">
           <template #trigger>
             <heroicons-outline:information-circle class="font-light" />
           </template>
-          Available Rate is used to served as a multiplier in the derivation of
-          the price.
+          Utilization is used to served as a multiplier in the derivation of the
+          price.
         </n-tooltip>
-        <span class="ml-2 font-mono"
-          >{{ Math.trunc(availableRate * 100) }}%</span
-        >
+        <span class="ml-2 font-mono">{{ Math.trunc(utilization * 100) }}%</span>
       </div>
 
       <n-slider
@@ -20,20 +18,20 @@
         :min="0"
         :max="1"
         class="w-40"
-        :value="availableRate"
+        :value="utilization"
         :step="0.01"
-        @update-value="(val) => emit('update-available-rate', val)"
+        @update-value="(val) => emit('update-utilization', val)"
       />
     </div>
 
     <div class="ml-2">
       <div class="flex mb-1">
-        Rent Length
+        Lease Length
         <n-tooltip trigger="hover">
           <template #trigger>
             <heroicons-outline:information-circle class="font-light" />
           </template>
-          Rent Length is the total length to derive the price in the last column
+          Utilization is the total length to derive the price in the last column
           of the the data table.
         </n-tooltip>
         <span class="ml-2 font-mono">{{ rentYear }}Year</span>
@@ -46,7 +44,7 @@
         class="w-40 align-middle"
         :value="rentYear"
         :step="1"
-        @update-value="(val) => emit('update-rent-length', val)"
+        @update-value="(val) => emit('update-lease-length', val)"
       />
     </div>
   </div>
@@ -56,7 +54,7 @@
 import { NSlider, NTooltip } from "naive-ui";
 
 const props = defineProps({
-  availableRate: {
+  utilization: {
     type: Number,
     default: 1,
   },
@@ -67,7 +65,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: "update-available-rate", val: number): void;
-  (e: "update-rent-length", val: number): void;
+  (e: "update-utilization", val: number): void;
+  (e: "update-lease-length", val: number): void;
 }>();
 </script>

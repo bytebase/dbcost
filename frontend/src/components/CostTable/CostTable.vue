@@ -30,7 +30,7 @@ const props = defineProps({
   isLoading: { type: Boolean, default: false },
   showEngineType: { type: Boolean, default: false },
   showLeaseLength: { type: Boolean, default: false },
-  availableRate: { type: Number, default: 1 },
+  utilization: { type: Number, default: 1 },
   rentYear: { type: Number, default: 1 },
 });
 
@@ -126,42 +126,22 @@ const pricingContent = {
     key: "cost",
     align: "right",
     render: (row: DataRow) =>
-      h("div", { class: "flex float-right" }, [
-        h(
-          "span",
-          { class: "font-mono" },
-          `$${getPrice(row, props.availableRate, props.rentYear).toFixed(0)}`
-        ),
-        h(
-          NTooltip,
-          {},
-          {
-            default: () =>
-              `This cost is derived under the available rate of ${(
-                props.availableRate * 100
-              ).toFixed(0)}% for ${props.rentYear} year${
-                props.rentYear > 1 ? "s" : ""
-              }`,
-            trigger: () =>
-              // hero icon::information-circle
-              h(
-                "svg",
-                {
-                  xmlns: "http://www.w3.org/2000/svg",
-                  fill: "none",
-                  viewBox: "0 0 24 24",
-                  class: "h-3 w-3",
-                  stroke: "currentColor",
-                },
-                h("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-                })
-              ),
-          }
-        ),
-      ]),
+      h(
+        NTooltip,
+        {},
+        {
+          default: `This cost is derived under the available rate of ${(
+            props.utilization * 100
+          ).toFixed(0)}% for ${props.rentYear} year${
+            props.rentYear > 1 ? "s" : ""
+          }`,
+          trigger: h(
+            "span",
+            { class: "font-mono" },
+            `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
+          ),
+        }
+      ),
   },
 };
 
