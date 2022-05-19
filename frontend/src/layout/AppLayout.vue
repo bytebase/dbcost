@@ -6,7 +6,7 @@
     class="fixed z-20 m-4 left-4 bottom-20"
     @click="() => (state.isCollapsed = !state.isCollapsed)"
   >
-    <n-badge :value="dataTableStore.checkedDataRow.length">
+    <n-badge :value="dataTableItemStore.checkedDataRow.length">
       <n-avatar :size="48" round class="bg-green-600 hover:bg-green-800">
         <heroicons-outline:shopping-cart />
       </n-avatar>
@@ -40,9 +40,9 @@
 <script lang="ts" setup>
 import { NAvatar, NBadge } from "naive-ui";
 import { reactive } from "vue";
-import { useDataTableStore } from "../stores";
+import { useDataTableItemStore } from "../stores";
 
-const dataTableStore = useDataTableStore();
+const dataTableItemStore = useDataTableItemStore();
 
 interface LocalState {
   isCollapsed: boolean;

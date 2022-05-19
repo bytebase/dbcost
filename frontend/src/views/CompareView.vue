@@ -8,24 +8,24 @@
       <cost-table
         :is-loading="false"
         :is-expended="true"
-        :data-row="dataTableStore.dataRow"
-        :checked-row-keys="dataTableStore.checkedRowKey"
+        :data-row="dataTableItemStore.dataRow"
+        :checked-row-keys="dataTableItemStore.checkedRowKey"
       />
     </div>
     <!-- chart -->
-    <chart-tab :data="dataTableStore.dataRow" />
+    <chart-tab :data="dataTableItemStore.dataRow" />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useDataTableStore, useDBInstanceStore } from "../stores";
+import { useDataTableItemStore, useDBInstanceStore } from "../stores";
 
 const dbInstanceStore = useDBInstanceStore();
 dbInstanceStore.loadDBInstanceList();
 
-const dataTableStore = useDataTableStore();
+const dataTableItemStore = useDataTableItemStore();
 
 onMounted(() => {
-  dataTableStore.refresh();
+  dataTableItemStore.refresh();
 });
 </script>

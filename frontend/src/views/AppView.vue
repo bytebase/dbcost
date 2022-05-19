@@ -37,11 +37,11 @@
   <!-- dashboard -->
   <div class="mx-5 mt-5">
     <cost-table
-      :data-row="dataTableStore.dataRow"
+      :data-row="dataTableItemStore.dataRow"
       :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
-      :checked-row-keys="dataTableStore.checkedRowKey"
+      :checked-row-keys="dataTableItemStore.checkedRowKey"
       @update-checked-row-keys="
         (val:string[]) => {
           handleCheckRowKeys(val, true);
@@ -64,7 +64,7 @@ import {
 import {
   useSearchConfigStore,
   useDBInstanceStore,
-  useDataTableStore,
+  useDataTableItemStore,
 } from "../stores";
 import { useRouter } from "vue-router";
 
@@ -73,13 +73,13 @@ import { isEmptyArray } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
 
-const dataTableStore = useDataTableStore();
+const dataTableItemStore = useDataTableItemStore();
 
 watch(
   () => dbInstanceStore.dbInstanceList.length,
   () => {
     state.availableRegions = dbInstanceStore.getAvailableRegionList();
-    dataTableStore.refresh();
+    dataTableItemStore.refresh();
   }
 );
 
@@ -119,10 +119,10 @@ const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
 };
 const handleCheckRowKeys = (rowKeys: string[], needScroll: boolean) => {
-  dataTableStore.refreshChecked(rowKeys);
+  dataTableItemStore.refreshChecked(rowKeys);
 
   if (state.isCheckedTableExpended && needScroll) {
-    if (dataTableStore.checkedRowKey.length > rowKeys.length) {
+    if (dataTableItemStore.checkedRowKey.length > rowKeys.length) {
       window.scrollBy(0, -47);
     } else {
       window.scrollBy(0, 47);
@@ -191,10 +191,10 @@ watch(
   () => {
     // We set the dataRow to empty here for a better animation.
     // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
-    dataTableStore.clearDataRow();
+    dataTableItemStore.clearDataRow();
     state.isLoading = true;
     setTimeout(() => {
-      dataTableStore.refresh();
+      dataTableItemStore.refresh();
       state.isLoading = false;
     }, 100);
   },
@@ -213,12 +213,12 @@ const showLeaseLength = computed(() => {
 
 const clearAll = () => {
   searchConfigStore.clearAll();
-  dataTableStore.clearAll();
+  dataTableItemStore.clearAll();
 };
 
 onMounted(() => {
   state.availableRegions = dbInstanceStore.getAvailableRegionList();
-  dataTableStore.refresh();
+  dataTableItemStore.refresh();
 });
 </script>
 
