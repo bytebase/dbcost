@@ -10,6 +10,13 @@
     <div class="mb-4 justify-center space-x-2 flex">
       <n-button @click="clearAll">Clear All</n-button>
       <n-button @click="copyURL">Copy URL</n-button>
+      <n-button
+        :disabled="dataTableItemStore.checkedRowKey.length === 0"
+        class="bg-green-600 text-white"
+        @click="handleClickCompare"
+      >
+        Go Compare
+      </n-button>
     </div>
     <cost-table-region-menu
       class="border-b pb-4"
@@ -60,6 +67,7 @@ import {
   ChargeType,
   CloudProvider,
   EngineType,
+  RouteQueryDashBoard,
 } from "../types";
 import {
   useSearchConfigStore,
@@ -68,8 +76,8 @@ import {
 } from "../stores";
 import { useRouter } from "vue-router";
 
-import { RouteParam } from "../router";
 import { isEmptyArray } from "../util";
+import { RouteQueryCompare } from "../types/route";
 
 const dbInstanceStore = useDBInstanceStore();
 
@@ -130,6 +138,14 @@ const handleCheckRowKeys = (rowKeys: string[], needScroll: boolean) => {
   }
 };
 
+const handleClickCompare = () => {
+  const routeQuery: RouteQueryCompare = {
+    key: dataTableItemStore.checkedRowKey.join(","),
+  };
+
+  router.push({ name: "compare", query: routeQuery });
+};
+
 const handleToggleIsExpanded = () => {
   state.isCheckedTableExpended = !state.isCheckedTableExpended;
 };
@@ -139,7 +155,7 @@ watch(
   () => searchConfigStore.searchConfig,
   () => {
     const config = searchConfigStore.searchConfig;
-    const queryParam: RouteParam = {
+    const queryParam: RouteQueryDashBoard = {
       provider: isEmptyArray(config.cloudProvider)
         ? undefined
         : config.cloudProvider?.join(","),

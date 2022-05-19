@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 import { DataRow } from "../components/CostTable";
 import { getRegionCode, getRegionName } from "../util";
 import { useSearchConfigStore, useDBInstanceStore } from ".";
+import { filter } from "lodash";
+import { Region } from "../types";
+import { time } from "console";
 
 interface State {
   dataRow: DataRow[];
@@ -19,12 +22,88 @@ export default defineStore("dataTableItem", {
     refresh() {
       this.dataRow = _generateDataRow();
     },
-    removeCheckedDataRowByKey(rowKeys: string) {
+    removeCheckedDataRowByKey(rowKey: string) {
       this.checkedRowKey = this.checkedRowKey.filter((key) => {
-        return key !== rowKeys;
+        return key !== rowKey;
       });
       this.refreshChecked(this.checkedRowKey);
     },
+    loadCheckedDataRowByKey(rowKeys: string[]) {
+      let isNewlyEnter = false;
+
+      const storedRowKeySet = new Set<string>(this.checkedRowKey);
+      for (const key of rowKeys) {
+        if (!storedRowKeySet.has(key)) {
+          isNewlyEnter = true;
+        }
+      }
+
+      if (!isNewlyEnter) {
+        return;
+      }
+
+      const instanceNameMap = new Map<string, string[]>();
+      for (const key of rowKeys) {
+        // key == `${dbInstance.name}::${region.code}::${term.code}`
+        const name = key.split("::")[0];
+        if (instanceNameMap.has(name)) {
+          instanceNameMap.get(name)?.push(key);
+        }
+        instanceNameMap.set(name, [key]);
+      }
+
+      const dbInstanceStore = useDBInstanceStore();
+      dbInstanceStore.loadDBInstanceList();
+      console.log("accessing ", dbInstanceStore.dbInstanceList.length);
+      const dbInstances = dbInstanceStore.dbInstanceList.filter(
+        (dbInstance) => {
+          return instanceNameMap.has(dbInstance.name);
+        }
+      );
+
+      const checkedDataRow = [];
+      let cnt = 0;
+      for (const dbInstance of dbInstances) {
+        const keys = instanceNameMap.get(dbInstance.name) as string[];
+        for (const key of keys) {
+          const regionCode = key.split("::")[1];
+          const region = dbInstance.regionList.filter((region) => {
+            return region.code === regionCode;
+          })[0];
+
+          const termCode = key.split("::")[2];
+          const term = region.termList.filter((term) => {
+            return term.code === termCode;
+          })[0];
+
+          const newRow: DataRow = {
+            id: cnt,
+            key: key,
+            childCnt: 1,
+            cloudProvider: dbInstance.cloudProvider,
+            name: dbInstance.name,
+            processor: dbInstance.processor,
+            cpu: dbInstance.cpu,
+            memory: dbInstance.memory,
+            engineType: term.databaseEngine,
+            commitment: { usd: term.commitmentUSD },
+            hourly: { usd: term.hourlyUSD },
+            leaseLength: term.payload?.leaseContractLength ?? "N/A",
+            // we store the region code for each provider, and show the user the actual region information
+            // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
+            region: getRegionName(regionCode),
+          };
+          checkedDataRow.push(newRow);
+          cnt++;
+        }
+      }
+
+      this.checkedRowKey = rowKeys;
+      this.checkedDataRow = checkedDataRow;
+
+      console.log(checkedDataRow);
+    },
+
     refreshChecked(rowKeys: string[]) {
       const rowKeySet = new Set<string>(rowKeys);
       const _checkedDataRow = this.dataRow.filter((row: DataRow) =>
@@ -110,7 +189,8 @@ const _generateDataRow = (): DataRow[] => {
         const key = `${dbInstance.name}-${region.code}`;
         const newRow: DataRow = {
           id: -1,
-          key: term.code,
+          // we use :: for separation because AWS use . and GCP use - as separator.
+          key: `${dbInstance.name}::${region.code}::${term.code}`,
           childCnt: 1,
           cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,

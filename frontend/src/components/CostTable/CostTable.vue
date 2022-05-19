@@ -22,6 +22,10 @@ const props = defineProps({
     type: Array as PropType<string[]>,
     default: () => [],
   },
+  allowSelect: {
+    type: Boolean,
+    default: true,
+  },
   isLoading: { type: Boolean, default: () => false },
   showEngineType: { type: Boolean, default: () => false },
   showLeaseLength: { type: Boolean, default: () => false },
@@ -133,144 +137,153 @@ const getPricingContent = () => {
   return col;
 };
 
-const columns: any = computed(() => [
-  {
-    type: "selection",
-  },
-  {
-    title: "Name",
-    key: "name",
-    ellipsis: {
-      tooltip: true,
-    },
-    rowSpan: (rowData: DataRow) => {
-      return rowData.childCnt;
-    },
-    render(row: DataRow) {
-      if (row.cloudProvider === "AWS") {
-        return [ProviderIconRender.AWS, row.name];
-      } else if (row.cloudProvider === "GCP") {
-        return [ProviderIconRender.GCP, row.name];
-      }
+const columns: any = computed(() => {
+  let res = [];
+  if (props.allowSelect) {
+    res.push({
+      type: "selection",
+    });
+  }
+  res.push(
+    ...[
+      {
+        title: "Name",
+        key: "name",
+        ellipsis: {
+          tooltip: true,
+        },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
+        render(row: DataRow) {
+          if (row.cloudProvider === "AWS") {
+            return [ProviderIconRender.AWS, row.name];
+          } else if (row.cloudProvider === "GCP") {
+            return [ProviderIconRender.GCP, row.name];
+          }
 
-      return row.name;
-    },
-  },
-  {
-    title: "Region",
-    key: "region",
-    ellipsis: {
-      tooltip: true,
-    },
-    sorter: {
-      // sort by the case-insensitive alphabetical order
-      compare: (row1: DataRow, row2: DataRow) => {
-        const a = row1.region.toLocaleLowerCase();
-        const b = row2.region.toLocaleLowerCase();
-        const stringComp = a.localeCompare(b);
-        if (stringComp !== 0) {
-          return stringComp;
-        }
-
-        // if tow region are identical, sort them with id
-        return row1.id - row2.id;
+          return row.name;
+        },
       },
-      multiple: 1,
-    },
-    rowSpan: (rowData: DataRow) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "CPU",
-    key: "cpu",
-    align: "right",
-    sorter: {
-      compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
-      multiple: 2,
-    },
-    rowSpan: (rowData: DataRow) => {
-      return rowData.childCnt;
-    },
-    ellipsis: {
-      tooltip: false,
-    },
-    render(row: DataRow) {
-      let shortenProcessor = "";
-      if (window.innerWidth > 1080) {
-        shortenProcessor = row.processor.split(" ").slice(0, 2).join(" ");
-      } else if (window.innerWidth > 800) {
-        shortenProcessor = row.processor.split(" ")[0];
-      }
-
-      // if the screen is too short, hide the processor
-      let render: any;
-      const cpuRender = h(
-        "div",
-        { class: "inline-block text-right w-6 font-mono" },
-        row.cpu
-      );
-
-      if (window.innerWidth > 800) {
-        render = h("div", {}, [
-          h(
-            NTag,
-            {
-              round: true,
-              class: "inline mr-2 ",
-              type: row.processor === "" ? "warning" : "info",
-              size: "small",
-              bordered: false,
-            },
-            {
-              default: () => (row.processor === "" ? "N/A" : shortenProcessor),
+      {
+        title: "Region",
+        key: "region",
+        ellipsis: {
+          tooltip: true,
+        },
+        sorter: {
+          // sort by the case-insensitive alphabetical order
+          compare: (row1: DataRow, row2: DataRow) => {
+            const a = row1.region.toLocaleLowerCase();
+            const b = row2.region.toLocaleLowerCase();
+            const stringComp = a.localeCompare(b);
+            if (stringComp !== 0) {
+              return stringComp;
             }
-          ),
-          cpuRender,
-        ]);
-      } else {
-        // if the screen is too short, hide the processor
-        render = cpuRender;
-      }
 
-      return h(
-        NTooltip,
-        {},
-        {
-          default: () => (row.processor === "" ? "N/A" : row.processor),
-          trigger: () => render,
-        }
-      );
-    },
-  },
-  {
-    title: "Memory",
-    key: "memory",
-    align: "right",
-    defaultSortOrder: false,
-    sorter: {
-      compare: (row1: DataRow, row2: DataRow) =>
-        Number(row1.memory) - Number(row2.memory),
-      multiple: 2,
-    },
-    render(row: DataRow) {
-      return h("span", { class: " font-mono" }, row.memory);
-    },
+            // if tow region are identical, sort them with id
+            return row1.id - row2.id;
+          },
+          multiple: 1,
+        },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
+      },
+      {
+        title: "CPU",
+        key: "cpu",
+        align: "right",
+        sorter: {
+          compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
+          multiple: 2,
+        },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
+        ellipsis: {
+          tooltip: false,
+        },
+        render(row: DataRow) {
+          let shortenProcessor = "";
+          if (window.innerWidth > 1080) {
+            shortenProcessor = row.processor.split(" ").slice(0, 2).join(" ");
+          } else if (window.innerWidth > 800) {
+            shortenProcessor = row.processor.split(" ")[0];
+          }
 
-    rowSpan: (rowData: DataRow) => {
-      return rowData.childCnt;
-    },
-  },
-  {
-    title: "Pricing",
-    key: "pricing",
-    align: "center",
-    children: getPricingContent(),
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-]);
+          // if the screen is too short, hide the processor
+          let render: any;
+          const cpuRender = h(
+            "div",
+            { class: "inline-block text-right w-6 font-mono" },
+            row.cpu
+          );
+
+          if (window.innerWidth > 800) {
+            render = h("div", {}, [
+              h(
+                NTag,
+                {
+                  round: true,
+                  class: "inline mr-2 ",
+                  type: row.processor === "" ? "warning" : "info",
+                  size: "small",
+                  bordered: false,
+                },
+                {
+                  default: () =>
+                    row.processor === "" ? "N/A" : shortenProcessor,
+                }
+              ),
+              cpuRender,
+            ]);
+          } else {
+            // if the screen is too short, hide the processor
+            render = cpuRender;
+          }
+
+          return h(
+            NTooltip,
+            {},
+            {
+              default: () => (row.processor === "" ? "N/A" : row.processor),
+              trigger: () => render,
+            }
+          );
+        },
+      },
+      {
+        title: "Memory",
+        key: "memory",
+        align: "right",
+        defaultSortOrder: false,
+        sorter: {
+          compare: (row1: DataRow, row2: DataRow) =>
+            Number(row1.memory) - Number(row2.memory),
+          multiple: 2,
+        },
+        render(row: DataRow) {
+          return h("span", { class: " font-mono" }, row.memory);
+        },
+
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
+      },
+      {
+        title: "Pricing",
+        key: "pricing",
+        align: "center",
+        children: getPricingContent(),
+        ellipsis: {
+          tooltip: true,
+        },
+      },
+    ]
+  );
+  return res;
+});
 
 const emit = defineEmits<{
   (e: "update-checked-row-keys", checkedRowKeys: string[]): void;

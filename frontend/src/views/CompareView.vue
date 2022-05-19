@@ -3,29 +3,58 @@
     <h1 class="font-semibold text-4xl text-center my-4">
       Cloud Database Instance Compare Sheet
     </h1>
+
+    <div class="mb-4 justify-center space-x-2 flex">
+      <n-button @click="router.push({ name: 'dashboard' })"
+        >Back To Dashboard</n-button
+      >
+      <n-button @click="copyURL">Copy URL</n-button>
+    </div>
+
     <!-- selected dashboard -->
-    <div class="border-b mb-4">
+    <div class="border-b mb-2 pb-2">
       <cost-table
+        :allow-select="false"
         :is-loading="false"
         :is-expended="true"
-        :data-row="dataTableItemStore.dataRow"
-        :checked-row-keys="dataTableItemStore.checkedRowKey"
+        :data-row="dataTableItemStore.checkedDataRow"
       />
     </div>
     <!-- chart -->
-    <chart-tab :data="dataTableItemStore.dataRow" />
+    <chart-tab :data="dataTableItemStore.checkedDataRow" />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useDataTableItemStore, useDBInstanceStore } from "../stores";
-
-const dbInstanceStore = useDBInstanceStore();
-dbInstanceStore.loadDBInstanceList();
+import { useRouter } from "vue-router";
+import { useDataTableItemStore } from "../stores";
+import { RouteQueryCompare } from "../types";
+import { NButton, useNotification } from "naive-ui";
 
 const dataTableItemStore = useDataTableItemStore();
-
+const router = useRouter();
 onMounted(() => {
-  dataTableItemStore.refresh();
+  const query: RouteQueryCompare = router.currentRoute.value.query;
+  useDataTableItemStore().loadCheckedDataRowByKey(
+    query.key?.split(",") as string[]
+  );
 });
+
+const notification = useNotification();
+const copyURL = () => {
+  navigator.clipboard
+    .writeText(document.location.href)
+    .then(() => {
+      notification.success({
+        content: "Successfully copied to clipboard",
+        duration: 2000,
+      });
+    })
+    .catch(() => {
+      notification.error({
+        content: "Fail to copy, please try again",
+        duration: 2000,
+      });
+    });
+};
 </script>
