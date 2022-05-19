@@ -117,7 +117,6 @@ import { useDataTableStore } from "../stores";
 const dataTableStore = useDataTableStore();
 
 const handleDeleteCard = (dataRowKey: string) => {
-  console.log(dataRowKey);
   dataTableStore.removeCheckedDataRowByKey(dataRowKey);
 };
 
