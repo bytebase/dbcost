@@ -5,7 +5,7 @@
         Utilization
         <n-tooltip trigger="hover">
           <template #trigger>
-            <heroicons-outline:information-circle class="font-light" />
+            <heroicons-outline:information-circle class="font-light pt-1" />
           </template>
           Utilization is used to served as a multiplier in the derivation of the
           price.
@@ -29,12 +29,12 @@
         Lease Length
         <n-tooltip trigger="hover">
           <template #trigger>
-            <heroicons-outline:information-circle class="font-light" />
+            <heroicons-outline:information-circle class="font-light pt-1" />
           </template>
           Utilization is the total length to derive the price in the last column
           of the the data table.
         </n-tooltip>
-        <span class="ml-2 font-mono">{{ rentYear }}Year</span>
+        <span class="ml-2 font-mono">{{ rentYear }} Year</span>
       </div>
 
       <n-slider
