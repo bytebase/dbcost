@@ -2,7 +2,10 @@
   <div>
     <n-button quaternary @click="handleToggleIsExpanded">
       <div class="flex">
-        <div class="font-medium text-lg pb-1">Compare Selection</div>
+        <div class="font-medium text-lg pb-1">
+          Compare Selection {{ dataRow.length === 0 ? "" : dataRow.length }}
+        </div>
+
         <heroicons-outline:chevron-down class="ml-1 h-6" v-show="isExpended" />
         <heroicons-outline:chevron-up class="ml-1 h-6" v-show="!isExpended" />
       </div>

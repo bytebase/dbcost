@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import AppLayout from "../layout/AppLayout.vue";
 
-import { useSearchConfigStore } from "../stores/searchConfig";
+import { useSearchConfigStore } from "../stores";
 import {
   ChargeType,
   CloudProvider,
@@ -48,6 +48,13 @@ const routes: Array<RouteRecordRaw> = [
         name: "dashboard",
         components: {
           body: () => import("../views/AppView.vue"),
+        },
+      },
+      {
+        path: "compare",
+        name: "compare",
+        components: {
+          body: () => import("../views/CompareView.vue"),
         },
       },
       {

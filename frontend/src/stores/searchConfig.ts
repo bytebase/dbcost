@@ -5,7 +5,7 @@ interface State {
   searchConfig: SearchConfig;
 }
 
-export const useSearchConfigStore = defineStore("searchConfig", {
+export default defineStore("searchConfig", {
   state: (): State => ({
     searchConfig: SearchConfigDefault,
   }),

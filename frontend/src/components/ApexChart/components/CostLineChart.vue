@@ -9,7 +9,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, PropType, computed, onMounted } from "vue";
+import { ref, PropType, computed } from "vue";
 import { xkcdify } from "../utils";
 import { DataRow } from "../../CostTable";
 import VueApexCharts from "vue3-apexcharts";
@@ -62,9 +62,9 @@ const options = computed(() => {
       events: {
         // The dom element is not available until the dom is mounted.
         // So we update this when everything is ready.
-        animationEnd: chart.value
-          ? xkcdify.bind(this, chart.value.$el as HTMLElement, [])
-          : undefined,
+        // animationEnd: chart.value
+        //   ? xkcdify.bind(this, chart.value.$el as HTMLElement, [])
+        //   : undefined,
       },
     },
     xaxis: {
@@ -84,9 +84,15 @@ const options = computed(() => {
       width: 3,
       dashArray: 0,
     },
+
     legend: {
-      show: false,
+      position: "bottom",
+      horizontalAlign: "center",
+
+      showForSingleSeries: true,
+      show: props.data.length > 0,
     },
+
     tooltip: {
       x: {
         show: true,

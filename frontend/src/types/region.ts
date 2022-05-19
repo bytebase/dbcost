@@ -1,5 +1,5 @@
 import { Term } from "./term";
-import { useDBInstanceStore } from "../stores/dbInstance";
+import { useDBInstanceStore } from "../stores";
 
 export type Region = {
   code: string;
