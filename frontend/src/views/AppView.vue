@@ -42,8 +42,17 @@
   </div>
 
   <!-- dashboard -->
-  <div class="mx-5 mt-5">
+  <div class="mx-5 mt-4">
+    <cost-table-slider
+      :utilization="state.utilization"
+      :rent-year="state.rentYear"
+      @update-utilization="(val:number) => (state.utilization = val)"
+      @update-lease-length="(val:number) => (state.rentYear = val)"
+    />
     <cost-table
+      class="mt-4"
+      :utilization="state.utilization"
+      :rent-year="state.rentYear"
       :data-row="dataTableItemStore.dataRow"
       :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
@@ -97,12 +106,16 @@ interface LocalState {
   availableRegions: AvailableRegion[];
   isLoading: boolean;
   isCheckedTableExpended: boolean;
+  utilization: number;
+  rentYear: number;
 }
 
 const state = reactive<LocalState>({
   availableRegions: [],
   isLoading: false,
   isCheckedTableExpended: false,
+  utilization: 1,
+  rentYear: 1,
 });
 
 const handleUpdateRegion = (val: string[]) => {

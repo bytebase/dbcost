@@ -1,3 +1,5 @@
+import { DataRow } from "../components/CostTable";
+
 export const isEmptyArray = (arr: any[] | undefined) => {
   if (Array.isArray(arr) && !arr.length) {
     return true;
@@ -89,4 +91,30 @@ export const getRegionCode = (regionName: string): string[] => {
   });
 
   return regionCode;
+};
+
+const YearInHour = 365 * 24;
+export const getPrice = (
+  dataRow: DataRow,
+  availableRate: number,
+  rentYear: number
+): number => {
+  const onDemandCharge =
+    rentYear * YearInHour * dataRow.hourly.usd * availableRate;
+  // charged on demand.
+  if (dataRow.leaseLength === "N/A") {
+    return onDemandCharge;
+  }
+
+  // If pass the lease length, the commitment should be charged immediately.
+  // const rentYear = Math.ceil(rentDay / YearInDay);
+  let commitmentCharge = 0;
+  if (dataRow.leaseLength === "1yr") {
+    commitmentCharge = dataRow.commitment.usd * rentYear;
+  }
+  if (dataRow.leaseLength === "3yr" && rentYear) {
+    commitmentCharge = dataRow.commitment.usd * Math.ceil(rentYear / 3);
+  }
+
+  return commitmentCharge + onDemandCharge;
 };

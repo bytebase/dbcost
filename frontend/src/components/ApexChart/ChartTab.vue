@@ -40,9 +40,4 @@ defineProps({
     default: [],
   },
 });
-
-const handleLegendClick = (legendName: string, a: string) => {
-  console.log(legendName, a);
-  // lineChart.value.toggleSeries(legendName);
-};
 </script>

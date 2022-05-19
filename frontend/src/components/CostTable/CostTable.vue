@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
+import { getPrice } from "../../util";
 
 import { DataRow } from "./";
 
@@ -26,9 +27,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  isLoading: { type: Boolean, default: () => false },
-  showEngineType: { type: Boolean, default: () => false },
-  showLeaseLength: { type: Boolean, default: () => false },
+  isLoading: { type: Boolean, default: false },
+  showEngineType: { type: Boolean, default: false },
+  showLeaseLength: { type: Boolean, default: false },
+  utilization: { type: Number, default: 1 },
+  rentYear: { type: Number, default: 1 },
 });
 
 const ProviderIconRender = {
@@ -104,7 +107,7 @@ const pricingContent = {
     },
   },
   hourlyPay: {
-    title: "Hourly Pay",
+    title: "Hourly",
     align: "right",
     render: (row: DataRow) => {
       return h("span", { class: "font-mono" }, `$${row.hourly.usd.toFixed(2)}`);
@@ -118,22 +121,45 @@ const pricingContent = {
       return h("span", { class: "font-mono" }, row.leaseLength);
     },
   },
+  cost: {
+    title: "Expected Cost",
+    key: "cost",
+    align: "right",
+    render: (row: DataRow) =>
+      h(
+        NTooltip,
+        {},
+        {
+          default: `Cost is based on utilization ${(
+            props.utilization * 100
+          ).toFixed(0)}% for ${props.rentYear} year${
+            props.rentYear > 1 ? "s" : ""
+          } lease`,
+          trigger: h(
+            "span",
+            { class: "font-mono" },
+            `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
+          ),
+        }
+      ),
+  },
 };
 
 // the order of the array will affect the order of the column of the table
 // the desired order is: [engine, hourly pay, commitment, lease length]
 const getPricingContent = () => {
   const col = [];
+  if (props.showLeaseLength) {
+    col.push(pricingContent.leaseLength);
+  }
   if (props.showEngineType) {
     col.push(pricingContent.commitmentWithEngine);
   } else {
     col.push(pricingContent.commitmentWithoutEngine);
   }
   col.push(pricingContent.hourlyPay);
-  if (props.showLeaseLength) {
-    col.push(pricingContent.leaseLength);
-  }
 
+  col.push(pricingContent.cost);
   return col;
 };
 

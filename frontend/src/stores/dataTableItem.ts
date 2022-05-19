@@ -54,7 +54,7 @@ export default defineStore("dataTableItem", {
 
       const dbInstanceStore = useDBInstanceStore();
       dbInstanceStore.loadDBInstanceList();
-      console.log("accessing ", dbInstanceStore.dbInstanceList.length);
+
       const dbInstances = dbInstanceStore.dbInstanceList.filter(
         (dbInstance) => {
           return instanceNameMap.has(dbInstance.name);
@@ -100,8 +100,6 @@ export default defineStore("dataTableItem", {
 
       this.checkedRowKey = rowKeys;
       this.checkedDataRow = checkedDataRow;
-
-      console.log(checkedDataRow);
     },
 
     refreshChecked(rowKeys: string[]) {
