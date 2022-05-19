@@ -1,5 +1,5 @@
 import useDBInstanceStore from "./dbInstance";
 import useSearchConfigStore from "./searchConfig";
-import useDataTableStore from "./dataTable";
+import useDataTableItemStore from "./dataTableItem";
 
-export { useDBInstanceStore, useSearchConfigStore, useDataTableStore };
+export { useDBInstanceStore, useSearchConfigStore, useDataTableItemStore };

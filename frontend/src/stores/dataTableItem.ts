@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { DataRow } from "../components/CostTable";
 import { getRegionCode, getRegionName } from "../util";
-import { useSearchConfigStore, useDBInstanceStore } from "./";
+import { useSearchConfigStore, useDBInstanceStore } from ".";
 
 interface State {
   dataRow: DataRow[];
@@ -9,7 +9,7 @@ interface State {
   checkedRowKey: string[];
 }
 
-export default defineStore("dataTable", {
+export default defineStore("dataTableItem", {
   state: (): State => ({
     dataRow: [],
     checkedDataRow: [],

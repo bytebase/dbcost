@@ -25,7 +25,7 @@
         <!-- Checked Instance Card -->
         <div
           class="border-b hover:bg-gray-200 rounded-xl mx-1 mb-1"
-          v-for="dataRow in dataTableStore.checkedDataRow"
+          v-for="dataRow in dataTableItemStore.checkedDataRow"
         >
           <!-- delete byn -->
           <div
@@ -90,7 +90,7 @@
         </div>
 
         <div
-          v-if="dataTableStore.checkedDataRow.length === 0"
+          v-if="dataTableItemStore.checkedDataRow.length === 0"
           class="text-center"
         >
           <heroicons-outline:emoji-sad class="mt-4 text-lg inline" />
@@ -112,12 +112,12 @@
 </template>
 <script lang="ts" setup>
 import { NButton, NAvatar } from "naive-ui";
-import { useDataTableStore } from "../stores";
+import { useDataTableItemStore } from "../stores";
 
-const dataTableStore = useDataTableStore();
+const dataTableItemStore = useDataTableItemStore();
 
 const handleDeleteCard = (dataRowKey: string) => {
-  dataTableStore.removeCheckedDataRowByKey(dataRowKey);
+  dataTableItemStore.removeCheckedDataRowByKey(dataRowKey);
 };
 
 const props = defineProps({
