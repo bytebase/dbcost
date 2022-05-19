@@ -4,7 +4,6 @@
       Cloud Database Instance Compare Sheet
     </h1>
 
-
     <div class="mb-4 justify-center space-x-2 flex">
       <n-button @click="router.push({ name: 'dashboard' })"
         >Back To Dashboard</n-button
@@ -12,9 +11,20 @@
       <n-button @click="copyURL">Copy URL</n-button>
     </div>
 
+    <div class="border-b mb-2 pb-2">
+      <cost-table-slider
+        :available-rate="state.availableRate"
+        :rent-year="state.rentYear"
+        @update-available-rate="(val:number) => (state.availableRate = val)"
+        @update-rent-length="(val:number) => (state.rentYear = val)"
+      />
+    </div>
+
     <!-- selected dashboard -->
     <div class="border-b mb-2 pb-2">
       <cost-table
+        :available-rate="state.availableRate"
+        :rent-year="state.rentYear"
         :allow-select="false"
         :is-loading="false"
         :is-expended="true"
@@ -26,7 +36,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useDataTableItemStore } from "../stores";
 import { RouteQueryCompare } from "../types";
@@ -39,6 +49,16 @@ onMounted(() => {
   useDataTableItemStore().loadCheckedDataRowByKey(
     query.key?.split(",") as string[]
   );
+});
+
+interface LocalState {
+  availableRate: number;
+  rentYear: number;
+}
+
+const state = reactive<LocalState>({
+  availableRate: 1,
+  rentYear: 1,
 });
 
 const notification = useNotification();
@@ -58,5 +78,4 @@ const copyURL = () => {
       });
     });
 };
-
 </script>

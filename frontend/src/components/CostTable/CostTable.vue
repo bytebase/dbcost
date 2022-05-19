@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
+import { getPrice } from "../../util";
 
 import { DataRow } from "./";
 
@@ -26,9 +27,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  isLoading: { type: Boolean, default: () => false },
-  showEngineType: { type: Boolean, default: () => false },
-  showLeaseLength: { type: Boolean, default: () => false },
+  isLoading: { type: Boolean, default: false },
+  showEngineType: { type: Boolean, default: false },
+  showLeaseLength: { type: Boolean, default: false },
+  availableRate: { type: Number, default: 1 },
+  rentYear: { type: Number, default: 1 },
 });
 
 const ProviderIconRender = {
@@ -104,7 +107,7 @@ const pricingContent = {
     },
   },
   hourlyPay: {
-    title: "Hourly Pay",
+    title: "Hourly",
     align: "right",
     render: (row: DataRow) => {
       return h("span", { class: "font-mono" }, `$${row.hourly.usd.toFixed(2)}`);
@@ -118,22 +121,65 @@ const pricingContent = {
       return h("span", { class: "font-mono" }, row.leaseLength);
     },
   },
+  cost: {
+    title: "Expected Cost",
+    key: "cost",
+    align: "right",
+    render: (row: DataRow) =>
+      h("div", { class: "flex float-right" }, [
+        h(
+          "span",
+          { class: "font-mono" },
+          `$${getPrice(row, props.availableRate, props.rentYear).toFixed(0)}`
+        ),
+        h(
+          NTooltip,
+          {},
+          {
+            default: () =>
+              `This cost is derived under the available rate of ${(
+                props.availableRate * 100
+              ).toFixed(0)}% for ${props.rentYear} year${
+                props.rentYear > 1 ? "s" : ""
+              }`,
+            trigger: () =>
+              // hero icon::information-circle
+              h(
+                "svg",
+                {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  fill: "none",
+                  viewBox: "0 0 24 24",
+                  class: "h-3 w-3",
+                  stroke: "currentColor",
+                },
+                h("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+                })
+              ),
+          }
+        ),
+      ]),
+  },
 };
 
 // the order of the array will affect the order of the column of the table
 // the desired order is: [engine, hourly pay, commitment, lease length]
 const getPricingContent = () => {
   const col = [];
+  if (props.showLeaseLength) {
+    col.push(pricingContent.leaseLength);
+  }
   if (props.showEngineType) {
     col.push(pricingContent.commitmentWithEngine);
   } else {
     col.push(pricingContent.commitmentWithoutEngine);
   }
   col.push(pricingContent.hourlyPay);
-  if (props.showLeaseLength) {
-    col.push(pricingContent.leaseLength);
-  }
 
+  col.push(pricingContent.cost);
   return col;
 };
 
