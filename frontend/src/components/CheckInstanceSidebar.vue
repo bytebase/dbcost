@@ -7,7 +7,7 @@
     <div class="fixed w-60 bg-white pt-1">
       <div class="mt-1 px-1">
         <n-button
-          :disabled="dataTableStore.checkedRowKey.length === 0"
+          :disabled="dataTableItemStore.checkedRowKey.length === 0"
           class="text-center w-full bg-green-600"
           type="primary"
           @click="
@@ -32,7 +32,7 @@
         <!-- Checked Instance Card -->
         <div
           class="border-b hover:bg-gray-200 rounded-xl mx-1 mb-1"
-          v-for="dataRow in dataTableStore.checkedDataRow"
+          v-for="dataRow in dataTableItemStore.checkedDataRow"
         >
           <!-- delete byn -->
           <div
@@ -97,7 +97,7 @@
         </div>
 
         <div
-          v-if="dataTableStore.checkedDataRow.length === 0"
+          v-if="dataTableItemStore.checkedDataRow.length === 0"
           class="text-center"
         >
           <heroicons-outline:emoji-sad class="mt-4 text-lg inline" />
@@ -119,13 +119,12 @@
 </template>
 <script lang="ts" setup>
 import { NButton, NAvatar } from "naive-ui";
-import { useDataTableStore } from "../stores";
+import { useDataTableItemStore } from "../stores";
 
-const dataTableStore = useDataTableStore();
+const dataTableItemStore = useDataTableItemStore();
 
 const handleDeleteCard = (dataRowKey: string) => {
-  console.log(dataRowKey);
-  dataTableStore.removeCheckedDataRowByKey(dataRowKey);
+  dataTableItemStore.removeCheckedDataRowByKey(dataRowKey);
 };
 
 const props = defineProps({
@@ -139,22 +138,18 @@ const emit = defineEmits<{
   (e: "collapse", isCollapsed: boolean): void;
 }>();
 
-const ProviderIcon = {
+const ProviderIcon: any = {
   GCP: {
     src: new URL("../assets/icon/gcp.png", import.meta.url).href,
     size: 16,
-    class: "align-middle mb-1 mr-1",
-    color: "none",
   },
   AWS: {
     src: new URL("../assets/icon/aws.png", import.meta.url).href,
     size: 20,
-    class: "align-middle mr-1",
-    color: "none",
   },
 };
 
-const EngineIcon = {
+const EngineIcon: any = {
   MYSQL: {
     src: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
   },

@@ -103,11 +103,6 @@ const series = computed(() => {
     onDemandRes.push(Math.trunc(onDemandYearly));
     commitmentRes.push(Math.trunc(commitmentYearly));
   }
-
-  console.log([
-    { name: "Commitment", data: commitmentRes },
-    { name: "On Demand", data: onDemandRes },
-  ]);
   return [
     { name: "Commitment", data: commitmentRes },
     { name: "On Demand", data: onDemandRes },
