@@ -130,11 +130,11 @@ const pricingContent = {
         NTooltip,
         {},
         {
-          default: `This cost is derived under the available rate of ${(
+          default: `Cost is based on utilization ${(
             props.utilization * 100
           ).toFixed(0)}% for ${props.rentYear} year${
             props.rentYear > 1 ? "s" : ""
-          }`,
+          } lease`,
           trigger: h(
             "span",
             { class: "font-mono" },
