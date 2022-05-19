@@ -2,7 +2,7 @@
   <h1
     class="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800 space-x-2"
   >
-    The Ultimate AWS RDS and Google Cloud SQL Instance Pricing Sheet
+    {{ title }}
   </h1>
 
   <!-- menu -->
@@ -26,6 +26,7 @@
     />
 
     <cost-table-menu
+      :has-provider="$route.name !== 'provider'"
       :cloud-provider="searchConfigStore.searchConfig.cloudProvider"
       :engine-type="searchConfigStore.searchConfig.engineType"
       :charge-type="searchConfigStore.searchConfig.chargeType"
@@ -118,6 +119,19 @@ const state = reactive<LocalState>({
   rentYear: 1,
 });
 
+const title = computed(() => {
+  const curRoute = router.currentRoute.value;
+  if (curRoute.name === "provider") {
+    if (curRoute.params.provider === "AWS") {
+      return `The Ultimate AWS RDS Instance Pricing Sheet`;
+    }
+    if (curRoute.params.provider === "GCP") {
+      return `The Ultimate Google Cloud SQL Instance Pricing Sheet`;
+    }
+  }
+  return "The Ultimate AWS RDS and Google Cloud SQL Instance Pricing Sheet";
+});
+
 const handleUpdateRegion = (val: string[]) => {
   searchConfigStore.searchConfig.region = val;
 };
@@ -159,16 +173,12 @@ const handleClickCompare = () => {
   router.push({ name: "compare", query: routeQuery });
 };
 
-const handleToggleIsExpanded = () => {
-  state.isCheckedTableExpended = !state.isCheckedTableExpended;
-};
-
 const router = useRouter();
 watch(
   () => searchConfigStore.searchConfig,
   () => {
     const config = searchConfigStore.searchConfig;
-    const queryParam: RouteQueryDashBoard = {
+    const routeQuery: RouteQueryDashBoard = {
       provider: isEmptyArray(config.cloudProvider)
         ? undefined
         : config.cloudProvider?.join(","),
@@ -186,9 +196,13 @@ watch(
       keyword: config.keyword === "" ? undefined : config.keyword,
     };
 
+    const curRoute = router.currentRoute.value;
+    if (curRoute.name === "provider") {
+      routeQuery.provider = undefined;
+    }
     router.push({
-      name: "dashboard",
-      query: queryParam,
+      name: curRoute.name as string,
+      query: routeQuery,
     });
   },
   {
