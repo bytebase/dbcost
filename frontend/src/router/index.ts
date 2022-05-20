@@ -23,7 +23,8 @@ export const RouteQueryDashBoardDefault: RouteQueryDashBoard = {
   charge: SearchConfigDefault.chargeType?.join(","),
 };
 
-const routes: Array<RouteRecordRaw> = [
+// If any route is updated, please update the routes in ./util/sitemap.ts also.
+export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "app",
