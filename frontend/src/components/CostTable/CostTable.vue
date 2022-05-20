@@ -130,16 +130,18 @@ const pricingContent = {
         NTooltip,
         {},
         {
-          default: `This cost is derived under the available rate of ${(
-            props.utilization * 100
-          ).toFixed(0)}% for ${props.rentYear} year${
-            props.rentYear > 1 ? "s" : ""
-          }`,
-          trigger: h(
-            "span",
-            { class: "font-mono" },
-            `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
-          ),
+          default: () =>
+            `This cost is derived under the available rate of ${(
+              props.utilization * 100
+            ).toFixed(0)}% for ${props.rentYear} year${
+              props.rentYear > 1 ? "s" : ""
+            }`,
+          trigger: () =>
+            h(
+              "span",
+              { class: "font-mono" },
+              `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
+            ),
         }
       ),
   },
