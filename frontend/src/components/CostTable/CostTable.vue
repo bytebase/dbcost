@@ -130,16 +130,18 @@ const pricingContent = {
         NTooltip,
         {},
         {
-          default: `Cost is based on utilization ${(
-            props.utilization * 100
-          ).toFixed(0)}% for ${props.rentYear} year${
-            props.rentYear > 1 ? "s" : ""
-          } lease`,
-          trigger: h(
-            "span",
-            { class: "font-mono" },
-            `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
-          ),
+          default: () =>
+            `Cost is based on utilization ${(props.utilization * 100).toFixed(
+              0
+            )}% for ${props.rentYear} year${
+              props.rentYear > 1 ? "s" : ""
+            } lease`,
+          trigger: () =>
+            h(
+              "span",
+              { class: "font-mono" },
+              `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
+            ),
         }
       ),
   },
