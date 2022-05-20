@@ -9,7 +9,7 @@
               class="font-light align-baseline w-4 h-4 text-gray-500 ml-0.5"
             />
           </template>
-          Utilization is used to served as a multiplier in the derivation of the
+          Utilization is the time percentage actually used during the entire lease length.
           price.
         </n-tooltip>
         <span class="ml-2 font-mono">{{ Math.trunc(utilization * 100) }}%</span>
@@ -29,15 +29,6 @@
     <div class="ml-2">
       <div class="flex mb-1 items-center">
         Lease Length
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <heroicons-outline:information-circle
-              class="font-light align-baseline w-4 h-4 text-gray-500 ml-0.5"
-            />
-          </template>
-          Utilization is the total length to derive the price in the last column
-          of the the data table.
-        </n-tooltip>
         <span class="ml-2 font-mono">{{ rentYear }} Year</span>
       </div>
 
