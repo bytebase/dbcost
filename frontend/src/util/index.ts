@@ -64,8 +64,6 @@ const regionCodeMap: Map<string, string> = new Map<string, string>([
   ["us-central1", "US Central (Iowa)"],
   ["us-east1", "US East (South Carolina)"],
   ["us-east4", "US East (N. Virginia)"],
-  ["us-east5", "US East (us-east5)"],
-  ["us-east7", "US East (us-east7)"],
   ["us-west1", "US West (Oregon)"],
   ["us-west2", "US West (Los Angeles)"],
   ["us-west3", "US West (Salt Lake City)"],
@@ -76,8 +74,7 @@ export const getRegionName = (regionCode: string): string => {
   if (!regionCodeMap.has(regionCode)) {
     // If the code is not included in the map, we just show user the code.
     // Also, we need to update the map manually.
-    regionCodeMap.set(regionCode, regionCode);
-    return regionCode;
+    regionCodeMap.set(regionCode, `Unknown (${regionCode})`);
   }
   return regionCodeMap.get(regionCode) as string;
 };

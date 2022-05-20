@@ -121,14 +121,20 @@ const regionOptionList = computed(() => {
   const res = [];
 
   const set = new Set(props.checkedRegionList);
-  for (const region of props.availableRegionList) {
-    if (set.has(region.name)) {
-      res.push(region);
+
+  // push the checked region first, so that when its parent is unchecked this region will still rendered at the child region checkbox.
+  // the for loop is to keep the order as it is.
+  for (const checkedRegionName of props.checkedRegionList) {
+    for (const region of props.availableRegionList) {
+      if (checkedRegionName == region.name) {
+        res.push(region);
+      }
     }
   }
 
   for (const parentRegion of state.checkedParentRegionList) {
     for (const region of props.availableRegionList) {
+      // prevent duplicate
       if (set.has(region.name)) {
         continue;
       }
