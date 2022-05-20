@@ -4,6 +4,8 @@ import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import vue from "@vitejs/plugin-vue";
+import Pages from "vite-plugin-pages";
+import generateSitemap from "vite-plugin-pages-sitemap";
 
 const r = (...args: string[]) => resolve(__dirname, ...args);
 
@@ -21,6 +23,15 @@ export default defineConfig({
       ],
     }),
     Icons(),
+    // Generating sitemap for better SEO.
+    Pages({
+      onRoutesGenerated: (routes) =>
+        generateSitemap({
+          routes,
+          hostname: "https://dbcost.com/",
+          changefreq: "s",
+        }),
+    }),
   ],
   assetsInclude: [r("../data")],
   server: {
