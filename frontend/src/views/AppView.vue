@@ -21,7 +21,7 @@
     <cost-table-region-menu
       class="border-b pb-4"
       :available-region-list="state.availableRegions"
-      :region-list="searchConfigStore.searchConfig.region"
+      :checked-region-list="searchConfigStore.searchConfig.region"
       @update-region="handleUpdateRegion"
     />
 
