@@ -46,6 +46,11 @@ export default defineStore("dbInstance", {
 
       return availableRegionList.sort(
         (a: AvailableRegion, b: AvailableRegion) => {
+          if (a.name.includes("Other")) {
+            return 1;
+          } else if (b.name.includes("Other")) {
+            return -1;
+          }
           return a.name.localeCompare(b.name);
         }
       );
