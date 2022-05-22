@@ -3,15 +3,15 @@
     <div class="border-r mr-4 pr-2">
       <n-checkbox-group
         class="flex-col mt-2"
-        v-model:value="state.checkedParentRegionList"
-        @update-value="(val) => handleUpdateParentRegion(val as string[])"
+        :value="state.checkedParentRegionList"
       >
         <n-grid :y-gap="4" :cols="`1`">
           <n-gi v-for="(parentRegion, i) in state.parentRegionList" :key="i">
             <n-checkbox
-              :indeterminate="isIndeterminate(parentRegion)"
               :value="parentRegion"
               :label="parentRegion"
+              :indeterminate="isIndeterminate(parentRegion)"
+              @click="handleClickParentRegion(parentRegion)"
             />
           </n-gi>
         </n-grid>
@@ -22,7 +22,7 @@
       <n-checkbox-group
         class="mt-2"
         :value="(props.checkedRegionList as string[])"
-        @update-value="(val) => handleUpdateChildRegion( val as string[])"
+        @update-value="(val) =>  $emit('update-region', val as string[])"
       >
         <n-grid :y-gap="4" :cols="`2 s:3 m:4 l:5`" :responsive="'screen'">
           <n-gi v-for="(region, i) in availableRegionList" :key="i">
@@ -56,9 +56,15 @@ import {
   reactive,
   watch,
   onMounted,
+  computed,
 } from "vue";
 import { NGrid, NGi, NCheckboxGroup, NCheckbox, NAvatar } from "naive-ui";
 import { AvailableRegion } from "../types";
+
+const ProviderIcon = {
+  GCP: new URL("../assets/icon/gcp.png", import.meta.url).href,
+  AWS: new URL("../assets/icon/aws.png", import.meta.url).href,
+};
 
 const props = defineProps({
   availableRegionList: {
@@ -74,19 +80,16 @@ const props = defineProps({
 interface LocalState {
   parentRegionMap: Map<string, string[]>;
   parentRegionList: string[];
+  isIndeterminate: Map<string, boolean>;
   checkedParentRegionList: string[];
 }
 
 const state = reactive<LocalState>({
   parentRegionMap: new Map<string, string[]>(),
   parentRegionList: [],
+  isIndeterminate: new Map<string, boolean>(),
   checkedParentRegionList: [],
 });
-
-const ProviderIcon = {
-  GCP: new URL("../assets/icon/gcp.png", import.meta.url).href,
-  AWS: new URL("../assets/icon/aws.png", import.meta.url).href,
-};
 
 const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
@@ -124,41 +127,50 @@ watch(
   { deep: true }
 );
 
-const handleUpdateParentRegion = (checkedParentRegion: string[]) => {
-  // toggle a parent region will not affect other regions at a different parent region.
-  const set = new Set(checkedParentRegion);
-  const affectedRegionSet = new Set(state.checkedParentRegionList);
-  const checkedRegionList: String[] = props.checkedRegionList.filter(
-    (regionName) => {
-      const parentName = getParentRegionName(regionName as string);
-      console.log(parentName, affectedRegionSet);
-      if (affectedRegionSet.has(parentName) && !set.has(parentName)) {
-        return false;
+const handleClickParentRegion = (parentRegionName: string) => {
+  const set = new Set(state.checkedParentRegionList);
+  let checkedRegionList: String[] = props.checkedRegionList;
+  // uncheck the parent region, all its child region should be unchecked.
+  if (set.has(parentRegionName)) {
+    set.delete(parentRegionName);
+
+    checkedRegionList = checkedRegionList.filter(
+      (regionName) =>
+        getParentRegionName(regionName as string) !== parentRegionName
+    );
+  } else {
+    // checking a new parent region, all its child region should be checked.
+    set.add(parentRegionName);
+    for (const region of props.availableRegionList) {
+      const _parentRegionName = getParentRegionName(region.name);
+      if (parentRegionName === _parentRegionName) {
+        checkedRegionList.push(region.name);
       }
-      return true;
     }
-  );
-
-  for (const region of checkedParentRegion) {
-    checkedRegionList.push(...(state.parentRegionMap.get(region) as string[]));
   }
-
+  const checkedParentRegionList: string[] = [];
+  for (const key of set) {
+    checkedParentRegionList.push(key);
+  }
+  state.checkedParentRegionList = checkedParentRegionList;
   emit("update-region", checkedRegionList as string[]);
 };
 
-const handleUpdateChildRegion = (checkedChildRegion: string[]) => {
-  // if there is no child region of a parent region checked, set the parent region status to unchecked.
-  const set = new Set();
-  for (const regionName of checkedChildRegion) {
-    set.add(getParentRegionName(regionName as string));
+watch(
+  () => props.checkedRegionList,
+  () => {
+    // if there is no child region of a parent region checked, set the parent region status to unchecked.
+    const set = new Set();
+    for (const regionName of props.checkedRegionList) {
+      set.add(getParentRegionName(regionName as string));
+    }
+    state.checkedParentRegionList = state.parentRegionList.filter(
+      (parentRegionName) => set.has(parentRegionName)
+    );
   }
-  state.checkedParentRegionList = state.parentRegionList.filter(
-    (parentRegionName) => set.has(parentRegionName)
-  );
-  emit("update-region", checkedChildRegion as string[]);
-};
+);
 
-const isIndeterminate = (parentName: string): boolean => {
+const isIndeterminate = computed(() => (parentName: string): boolean => {
   const childRegionList = state.parentRegionMap.get(parentName) as String[];
   const childSRegionSet = new Set(childRegionList);
   let cnt = 0;
@@ -169,7 +181,7 @@ const isIndeterminate = (parentName: string): boolean => {
   }
 
   return 0 < cnt && cnt < childRegionList.length;
-};
+});
 
 onMounted(() => {
   // init the status of the parent region
