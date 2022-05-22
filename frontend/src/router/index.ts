@@ -44,6 +44,13 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "provider/:provider",
+        name: "provider",
+        components: {
+          body: () => import("../views/AppView.vue"),
+        },
+      },
+      {
         path: "404",
         name: "404",
         components: {
@@ -85,6 +92,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
+  const searchConfigStore = useSearchConfigStore();
   try {
     if (to.name === "dashboard") {
       const query = to.query as RouteQueryDashBoard;
@@ -103,17 +111,33 @@ router.beforeEach((to, from, next) => {
         (!config.chargeType || isValidChargeType(config.chargeType)) &&
         (!config.engineType || isValidEngineType(config.engineType))
       ) {
-        const searchConfigStore = useSearchConfigStore();
         searchConfigStore.searchConfig = config;
         next();
         return;
       }
-    } else if (to.name === "compare") {
+    }
+
+    if (to.name === "compare") {
       const query = to.query as RouteQueryCompare;
       if (!query.key) {
         next({ name: "404" });
         return;
       }
+      next();
+      return;
+    }
+
+    if (to.name === "provider") {
+      const provider = to.params.provider as string;
+      if (!provider || !isValidCloudProvider([provider])) {
+        next({ name: "404" });
+        return;
+      }
+
+      searchConfigStore.searchConfig.cloudProvider = [
+        provider as CloudProvider,
+      ];
+
       next();
       return;
     }

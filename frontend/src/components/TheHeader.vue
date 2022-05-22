@@ -8,6 +8,39 @@
           alt="Bytebase"
         />
       </a>
+
+      <n-button-group class="ml-2">
+        <n-button
+          :bordered="false"
+          @click="
+            () =>
+              $router.push({ name: 'provider', params: { provider: 'AWS' } })
+          "
+        >
+          <a
+            class="h-8 text-lg pt-0.5 text-white"
+            href="https://dbcost.com/provider/AWS"
+            @click.prevent=""
+          >
+            AWS
+          </a>
+        </n-button>
+        <n-button
+          :bordered="false"
+          @click="
+            () =>
+              $router.push({ name: 'provider', params: { provider: 'GCP' } })
+          "
+        >
+          <a
+            class="h-8 text-lg pt-0.5 text-white"
+            href="https://dbcost.com/provider/GCP"
+            @click.prevent=""
+          >
+            GCP
+          </a>
+        </n-button>
+      </n-button-group>
     </div>
 
     <div class="inline-flex flex-row items-center text-3xl">
@@ -54,5 +87,5 @@
 </template>
 
 <script setup lang="ts">
-import { NTooltip } from "naive-ui";
+import { NTooltip, NButton, NButtonGroup } from "naive-ui";
 </script>

@@ -2,6 +2,7 @@
   <div class="mt-2 flex flex-wrap">
     <!-- Cloud Provider  -->
     <n-checkbox-group
+      v-if="hasProvider"
       class="mr-4 pt-2"
       :value="props.cloudProvider"
       @update:value="handleUpdateCloudProvider"
@@ -107,6 +108,10 @@ import {
 import { PropType } from "vue";
 
 const props = defineProps({
+  hasProvider: {
+    type: Boolean,
+    default: true,
+  },
   cloudProvider: {
     type: Object as PropType<CloudProvider[]>,
     default: [""],
