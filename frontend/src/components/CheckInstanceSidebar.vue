@@ -1,7 +1,7 @@
 <template>
   <div
     class="fixed w-60 h-full bg-white z-10 transition-all duration-500"
-    :class="isCollapsed ? '-left-60' : 'left-0'"
+    :class="isCollapsed ? '-right-60' : 'right-0'"
   >
     <!-- top title -->
     <div class="fixed w-60 bg-white pt-1">
@@ -105,10 +105,10 @@
   <!-- collapse btn -->
   <div
     class="fixed top-1/2 bg-white rounded-2xl z-0 hover:bg-gray-300 opacity-50 transition-all duration-500"
-    :style="isCollapsed ? 'left: -100px' : 'left: 230px'"
+    :style="isCollapsed ? 'right: -100px' : 'right: 230px'"
     @click="() => emit('collapse', true)"
   >
-    <heroicons-solid:chevron-left class="text-2xl pl-1" />
+    <heroicons-solid:chevron-right class="text-2xl pr-1" />
   </div>
 </template>
 <script lang="ts" setup>
