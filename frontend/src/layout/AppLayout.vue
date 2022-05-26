@@ -3,7 +3,7 @@
 
   <!-- side bar toggle -->
   <div
-    class="fixed z-20 m-4 left-4 bottom-20"
+    class="fixed z-20 m-4 right-4 bottom-20"
     @click="() => (state.isCollapsed = !state.isCollapsed)"
   >
     <n-badge :value="dataTableItemStore.checkedDataRow.length">
