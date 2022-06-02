@@ -1,13 +1,18 @@
 <template>
   <header class="p-2 flex justify-between items-center bg-slate-800 text-white">
     <div class="inline-flex flex-row items-center">
-      <a href="https://dbcost.com" target="_blank">
-        <img
-          class="h-8"
-          src="../assets/icon/dbcost-logo-full.png"
-          alt="Bytebase"
-        />
-      </a>
+      <n-button
+        :bordered="false"
+        @click="() => $router.push({ name: 'dashboard' })"
+      >
+        <a href="https://dbcost.com" @click.prevent="">
+          <img
+            class="h-8"
+            src="../assets/icon/dbcost-logo-full.png"
+            alt="Bytebase"
+          />
+        </a>
+      </n-button>
 
       <n-button-group class="ml-2">
         <n-button
