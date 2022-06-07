@@ -8,7 +8,7 @@
   />
 </template>
 <script setup lang="ts">
-import { NDataTable, NAvatar, NTag, NTooltip } from "naive-ui";
+import { NDataTable, NAvatar, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
 import { getPrice } from "../../util";
 
@@ -233,50 +233,19 @@ const columns: any = computed(() => {
           tooltip: false,
         },
         render(row: DataRow) {
-          let shortenProcessor = "";
-          if (window.innerWidth > 1080) {
-            shortenProcessor = row.processor.split(" ").slice(0, 2).join(" ");
-          } else if (window.innerWidth > 800) {
-            shortenProcessor = row.processor.split(" ")[0];
-          }
-
-          // if the screen is too short, hide the processor
-          let render: any;
           const cpuRender = h(
             "div",
             { class: "inline-block text-right w-6 font-mono" },
             row.cpu
           );
 
-          if (window.innerWidth > 800) {
-            render = h("div", {}, [
-              h(
-                NTag,
-                {
-                  round: true,
-                  class: "inline mr-2 ",
-                  type: row.processor === "" ? "warning" : "info",
-                  size: "small",
-                  bordered: false,
-                },
-                {
-                  default: () =>
-                    row.processor === "" ? "N/A" : shortenProcessor,
-                }
-              ),
-              cpuRender,
-            ]);
-          } else {
-            // if the screen is too short, hide the processor
-            render = cpuRender;
-          }
-
           return h(
             NTooltip,
             {},
             {
-              default: () => (row.processor === "" ? "N/A" : row.processor),
-              trigger: () => render,
+              default: () =>
+                row.processor === "" ? "N/A" : row.processor.split(" ")[1],
+              trigger: () => cpuRender,
             }
           );
         },
