@@ -3,13 +3,14 @@
 
   <!-- side bar toggle -->
   <div
-    class="fixed z-20 m-4 right-4 bottom-20"
+    v-show="dataTableItemStore.checkedDataRow.length > 0"
+    class="fixed z-20 m-4 right-4 top-20"
     @click="() => (state.isCollapsed = !state.isCollapsed)"
   >
     <n-badge :value="dataTableItemStore.checkedDataRow.length">
-      <n-avatar :size="48" round class="bg-green-600 hover:bg-green-800">
-        <heroicons-outline:shopping-cart />
-      </n-avatar>
+      <n-button round type="primary" class="text-white bg-green-600 text-base">
+        Compare
+      </n-button>
     </n-badge>
   </div>
 
@@ -38,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NAvatar, NBadge } from "naive-ui";
+import { NButton, NBadge } from "naive-ui";
 import { reactive } from "vue";
 import { useDataTableItemStore } from "../stores";
 
