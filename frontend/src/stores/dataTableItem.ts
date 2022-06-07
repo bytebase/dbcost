@@ -2,9 +2,6 @@ import { defineStore } from "pinia";
 import { DataRow } from "../components/CostTable";
 import { getRegionCode, getRegionName } from "../util";
 import { useSearchConfigStore, useDBInstanceStore } from ".";
-import { filter } from "lodash";
-import { Region } from "../types";
-import { time } from "console";
 
 interface State {
   dataRow: DataRow[];
@@ -23,10 +20,10 @@ export default defineStore("dataTableItem", {
       this.dataRow = _generateDataRow();
     },
     removeCheckedDataRowByKey(rowKey: string) {
-      this.checkedRowKey = this.checkedRowKey.filter((key) => {
-        return key !== rowKey;
-      });
-      this.refreshChecked(this.checkedRowKey);
+      this.checkedRowKey = this.checkedRowKey.filter((key) => key !== rowKey);
+      this.checkedDataRow = this.checkedDataRow.filter(
+        (dataRow) => dataRow.key !== rowKey
+      );
     },
     loadCheckedDataRowByKey(rowKeys: string[]) {
       let isNewlyEnter = false;
@@ -101,19 +98,10 @@ export default defineStore("dataTableItem", {
       this.checkedRowKey = rowKeys;
       this.checkedDataRow = checkedDataRow;
     },
-
-    refreshChecked(rowKeys: string[]) {
-      const rowKeySet = new Set<string>(rowKeys);
-      const _checkedDataRow = this.dataRow.filter((row: DataRow) =>
-        rowKeySet.has(row.key)
-      );
-      _checkedDataRow.forEach((row) => {
-        // cancel the aggregation of the col.
-        row.childCnt = 1;
-      });
-
-      this.checkedRowKey = rowKeys;
-      this.checkedDataRow = _checkedDataRow;
+    addCheckedDataRowByKey(rowKey: string) {
+      this.checkedRowKey.push(rowKey);
+      const newAddedDataRow = this.dataRow.filter((row) => row.key === rowKey);
+      this.checkedDataRow.push(...newAddedDataRow);
     },
     clearDataRow() {
       this.dataRow = [];

@@ -4,7 +4,7 @@
     :data="dataRow"
     :loading="isLoading"
     :checked-row-keys="checkedRowKeys"
-    @update-checked-row-keys="handleCheckRowKeys"
+    @update-checked-row-keys="(rowKeys:any[])=>emit('update-checked-row-keys', rowKeys)"
   />
 </template>
 <script setup lang="ts">
@@ -316,8 +316,4 @@ const columns: any = computed(() => {
 const emit = defineEmits<{
   (e: "update-checked-row-keys", checkedRowKeys: string[]): void;
 }>();
-
-const handleCheckRowKeys = (rowKeys: any[]) => {
-  emit("update-checked-row-keys", rowKeys);
-};
 </script>

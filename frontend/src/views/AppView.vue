@@ -59,11 +59,7 @@
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
       :checked-row-keys="dataTableItemStore.checkedRowKey"
-      @update-checked-row-keys="
-        (val:string[]) => {
-          handleCheckRowKeys(val, true);
-        }
-      "
+      @update-checked-row-keys="(val:string[]) => handleCheckRowKeys(val)"
     />
   </div>
 </template>
@@ -106,7 +102,6 @@ const searchConfigStore = useSearchConfigStore();
 interface LocalState {
   availableRegions: AvailableRegion[];
   isLoading: boolean;
-  isCheckedTableExpended: boolean;
   utilization: number;
   rentYear: number;
 }
@@ -114,7 +109,6 @@ interface LocalState {
 const state = reactive<LocalState>({
   availableRegions: [],
   isLoading: false,
-  isCheckedTableExpended: false,
   utilization: 1,
   rentYear: 1,
 });
@@ -153,14 +147,24 @@ const handleUpdateMinRAM = (val: any) => {
 const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
 };
-const handleCheckRowKeys = (rowKeys: string[], needScroll: boolean) => {
-  dataTableItemStore.refreshChecked(rowKeys);
-
-  if (state.isCheckedTableExpended && needScroll) {
-    if (dataTableItemStore.checkedRowKey.length > rowKeys.length) {
-      window.scrollBy(0, -47);
-    } else {
-      window.scrollBy(0, 47);
+const handleCheckRowKeys = (rowKeys: string[]) => {
+  const checkRowKey = dataTableItemStore.checkedRowKey;
+  // a key is added
+  if (rowKeys.length > checkRowKey.length) {
+    const set = new Set(checkRowKey);
+    for (const rowKey of rowKeys) {
+      if (!set.has(rowKey)) {
+        dataTableItemStore.addCheckedDataRowByKey(rowKey);
+      }
+    }
+  }
+  // a key is removed
+  else {
+    const set = new Set(rowKeys);
+    for (const rowKey of checkRowKey) {
+      if (!set.has(rowKey)) {
+        dataTableItemStore.removeCheckedDataRowByKey(rowKey);
+      }
     }
   }
 };
