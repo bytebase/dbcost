@@ -1,10 +1,10 @@
 <template>
   <div
-    class="fixed w-60 h-full bg-white z-10 transition-all duration-500"
-    :class="isCollapsed ? '-right-60' : 'right-0'"
+    class="fixed w-64 h-full bg-white z-10 transition-all duration-500"
+    :class="isCollapsed ? '-right-64' : 'right-0'"
   >
     <!-- top title -->
-    <div class="fixed w-60 bg-white pt-1">
+    <div class="fixed w-64 bg-white pt-1">
       <div class="mt-1 px-1">
         <n-button
           :disabled="dataTableItemStore.checkedRowKey.length === 0"
@@ -20,7 +20,7 @@
 
     <!-- content -->
     <div
-      class="fixed w-60 overflow-scroll h-full top-10 z-10 bg-white border-t mt-2"
+      class="fixed w-64 overflow-scroll h-full top-10 z-10 bg-white border-t mt-2"
     >
       <div class="mt-2">
         <!-- Checked Instance Card -->
@@ -105,7 +105,7 @@
   <!-- collapse btn -->
   <div
     class="fixed top-1/2 bg-white rounded-2xl z-0 hover:bg-gray-300 opacity-50 transition-all duration-500"
-    :style="isCollapsed ? 'right: -100px' : 'right: 230px'"
+    :style="isCollapsed ? 'right: -100px' : 'right: 245px'"
     @click="() => emit('collapse', true)"
   >
     <heroicons-solid:chevron-right class="text-2xl pr-1" />
