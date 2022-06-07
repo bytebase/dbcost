@@ -125,6 +125,13 @@ const pricingContent = {
     title: "Expected Cost",
     key: "cost",
     align: "right",
+    defaultSortOrder: "ascend",
+    sorter: {
+      compare: (row1: DataRow, row2: DataRow) =>
+        getPrice(row1, props.utilization, props.rentYear) -
+        getPrice(row2, props.utilization, props.rentYear),
+      multiple: 2,
+    },
     render: (row: DataRow) =>
       h(
         NTooltip,
