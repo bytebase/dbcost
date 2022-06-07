@@ -1,13 +1,16 @@
 <template>
   <header class="p-2 flex justify-between items-center bg-slate-800 text-white">
     <div class="inline-flex flex-row items-center">
-      <a href="https://dbcost.com" target="_blank">
+      <n-button
+        :bordered="false"
+        @click="() => $router.push({ name: 'dashboard' })"
+      >
         <img
           class="h-8"
           src="../assets/icon/dbcost-logo-full.png"
           alt="Bytebase"
         />
-      </a>
+      </n-button>
 
       <n-button-group class="ml-2">
         <n-button
@@ -17,13 +20,7 @@
               $router.push({ name: 'provider', params: { provider: 'AWS' } })
           "
         >
-          <a
-            class="h-8 text-lg pt-0.5 text-white"
-            href="https://dbcost.com/provider/AWS"
-            @click.prevent=""
-          >
-            AWS
-          </a>
+          <span class="h-8 text-lg pt-0.5 text-white"> AWS </span>
         </n-button>
         <n-button
           :bordered="false"
@@ -32,13 +29,7 @@
               $router.push({ name: 'provider', params: { provider: 'GCP' } })
           "
         >
-          <a
-            class="h-8 text-lg pt-0.5 text-white"
-            href="https://dbcost.com/provider/GCP"
-            @click.prevent=""
-          >
-            GCP
-          </a>
+          <span class="h-8 text-lg pt-0.5 text-white"> GCP </span>
         </n-button>
       </n-button-group>
     </div>
