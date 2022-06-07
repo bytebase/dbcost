@@ -5,13 +5,11 @@
         :bordered="false"
         @click="() => $router.push({ name: 'dashboard' })"
       >
-        <a href="https://dbcost.com" @click.prevent="">
-          <img
-            class="h-8"
-            src="../assets/icon/dbcost-logo-full.png"
-            alt="Bytebase"
-          />
-        </a>
+        <img
+          class="h-8"
+          src="../assets/icon/dbcost-logo-full.png"
+          alt="Bytebase"
+        />
       </n-button>
 
       <n-button-group class="ml-2">
@@ -22,13 +20,7 @@
               $router.push({ name: 'provider', params: { provider: 'AWS' } })
           "
         >
-          <a
-            class="h-8 text-lg pt-0.5 text-white"
-            href="https://dbcost.com/provider/AWS"
-            @click.prevent=""
-          >
-            AWS
-          </a>
+          <span class="h-8 text-lg pt-0.5 text-white"> AWS </span>
         </n-button>
         <n-button
           :bordered="false"
@@ -37,13 +29,7 @@
               $router.push({ name: 'provider', params: { provider: 'GCP' } })
           "
         >
-          <a
-            class="h-8 text-lg pt-0.5 text-white"
-            href="https://dbcost.com/provider/GCP"
-            @click.prevent=""
-          >
-            GCP
-          </a>
+          <span class="h-8 text-lg pt-0.5 text-white"> GCP </span>
         </n-button>
       </n-button-group>
     </div>
