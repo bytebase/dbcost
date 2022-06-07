@@ -3,22 +3,17 @@
     <!-- Cloud Provider  -->
     <n-checkbox-group
       v-if="hasProvider"
-      class="mr-4 pt-2"
+      class="mr-4 pt-3.5"
       :value="props.cloudProvider"
       @update:value="handleUpdateCloudProvider"
     >
       <n-checkbox
-        class="align-middle pt-1.5"
+        :class="val.class"
         v-for="val in ProviderCheckbox"
         :value="val.key"
       >
         <template #default>
-          <n-avatar
-            :class="val.style"
-            size="small"
-            color="none"
-            :src="val.iconPath"
-          />
+          <img :src="val.iconPath" :width="val.width" :style="val.style" />
         </template>
       </n-checkbox>
     </n-checkbox-group>
@@ -29,13 +24,9 @@
       :value="props.engineType"
       @update:value="handleUpdateEngineType"
     >
-      <n-checkbox
-        class="align-middle pt-1.5"
-        v-for="val in EngineCheckbox"
-        :value="val.key"
-      >
+      <n-checkbox class="pt-1.5" v-for="val in EngineCheckbox" :value="val.key">
         <template #default>
-          <n-avatar size="small" color="none" :src="val.iconPath" />
+          <img :src="val.iconPath" :width="val.width" />
         </template>
       </n-checkbox>
     </n-checkbox-group>
@@ -98,13 +89,7 @@
 
 <script lang="ts" setup>
 import { ChargeType, CloudProvider, EngineType } from "../types";
-import {
-  NCheckboxGroup,
-  NCheckbox,
-  NAvatar,
-  NInput,
-  NInputNumber,
-} from "naive-ui";
+import { NCheckboxGroup, NCheckbox, NInput, NInputNumber } from "naive-ui";
 import { PropType } from "vue";
 
 const props = defineProps({
@@ -140,14 +125,17 @@ const props = defineProps({
 
 const ProviderCheckbox = [
   {
-    key: "GCP",
-    iconPath: new URL("../assets/icon/gcp.png", import.meta.url).href,
-    style: "align-top pb-1 pr-1",
-  },
-  {
     key: "AWS",
     iconPath: new URL("../assets/icon/aws.png", import.meta.url).href,
-    style: "align-top pb-0.5 pr-0.5",
+    width: 24,
+    class: "pr-1",
+    style: "transform:scale(1.3)",
+  },
+  {
+    key: "GCP",
+    iconPath: new URL("../assets/icon/gcp.png", import.meta.url).href,
+    width: 24,
+    style: "transform:scale(0.9)",
   },
 ];
 
@@ -155,10 +143,12 @@ const EngineCheckbox = [
   {
     key: "MYSQL",
     iconPath: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
+    width: 24,
   },
   {
     key: "POSTGRES",
     iconPath: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
+    width: 24,
   },
 ];
 
