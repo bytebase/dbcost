@@ -8,7 +8,7 @@
   <!-- menu -->
   <div class="mx-5 mt-4 border-b pb-4">
     <div class="mb-4 justify-center space-x-2 flex">
-      <n-button @click="clearAll">Clear All</n-button>
+      <n-button @click="reset">Reset</n-button>
 
       <n-button @click="copyURL">Copy URL</n-button>
     </div>
@@ -163,14 +163,6 @@ const handleCheckRowKeys = (rowKeys: string[]) => {
   }
 };
 
-const handleClickCompare = () => {
-  const routeQuery: RouteQueryCompare = {
-    key: dataTableItemStore.checkedRowKey.join(","),
-  };
-
-  router.push({ name: "compare", query: routeQuery });
-};
-
 const router = useRouter();
 watch(
   () => searchConfigStore.searchConfig,
@@ -252,9 +244,8 @@ const showLeaseLength = computed(() => {
   return chargeTypeSet.size > 1 || chargeTypeSet.has("Reserved");
 });
 
-const clearAll = () => {
-  searchConfigStore.clearAll();
-  dataTableItemStore.clearAll();
+const reset = () => {
+  searchConfigStore.setToDefault();
 };
 
 onMounted(() => {
