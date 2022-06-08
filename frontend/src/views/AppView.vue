@@ -6,7 +6,7 @@
   </h1>
 
   <!-- menu -->
-  <div class="mx-5 mt-4 border-b pb-4">
+  <div class="mx-5 mt-4 border-b pb-2">
     <div class="mb-4 justify-center space-x-2 flex">
       <n-button @click="clearAll">Clear All</n-button>
 
@@ -27,23 +27,21 @@
       :keyword="searchConfigStore.searchConfig.keyword"
       :min-r-a-m="searchConfigStore.searchConfig.minRAM"
       :min-c-p-u="searchConfigStore.searchConfig.minCPU"
+      :utilization="state.utilization"
+      :rent-year="state.rentYear"
       @update-cloud-provider="handleUpdateCloudProvider"
       @update-engine-type="handleUpdateEngineType"
       @update-charge-type="handleUpdateChargeType"
       @update-keyword="handleUpdateKeyword"
       @update-min-vcpu="handleUpdateMinCPU"
       @update-min-ram="handleUpdateMinRAM"
+      @update-utilization="(val:number) => (state.utilization = val)"
+      @update-lease-length="(val:number) => (state.rentYear = val)"
     />
   </div>
 
   <!-- dashboard -->
   <div class="mx-5 mt-4">
-    <cost-table-slider
-      :utilization="state.utilization"
-      :rent-year="state.rentYear"
-      @update-utilization="(val:number) => (state.utilization = val)"
-      @update-lease-length="(val:number) => (state.rentYear = val)"
-    />
     <cost-table
       class="mt-4"
       :utilization="state.utilization"
