@@ -51,6 +51,7 @@
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
       :checked-row-keys="dataTableItemStore.checkedRowKey"
+      :show-diff="searchConfigStore.searchConfig.chargeType?.length === 2"
       @update-checked-row-keys="(val:string[]) => handleCheckRowKeys(val)"
     />
   </div>

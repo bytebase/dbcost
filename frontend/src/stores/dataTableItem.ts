@@ -76,7 +76,6 @@ export default defineStore("dataTableItem", {
           const newRow: DataRow = {
             id: cnt,
             key: key,
-            childCnt: 1,
             cloudProvider: dbInstance.cloudProvider,
             name: dbInstance.name,
             processor: dbInstance.processor,
@@ -177,7 +176,6 @@ const _generateDataRow = (): DataRow[] => {
           id: -1,
           // we use :: for separation because AWS use . and GCP use - as separator.
           key: `${dbInstance.name}::${region.code}::${term.code}`,
-          childCnt: 1,
           cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
           processor: dbInstance.processor,
@@ -216,7 +214,6 @@ const _generateDataRow = (): DataRow[] => {
         }
         return Number(a.leaseLength[0]) - Number(b.leaseLength[0]);
       });
-      val[0].childCnt = val.length;
       dataRowList.push(...val);
     });
 

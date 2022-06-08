@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
-import { getPrice } from "../../util";
+import { getDiff, getPrice } from "../../util";
 
 import { DataRow } from "./";
 
@@ -28,6 +28,7 @@ const props = defineProps({
     default: true,
   },
   isLoading: { type: Boolean, default: false },
+  showDiff: { type: Boolean, default: false },
   showEngineType: { type: Boolean, default: false },
   showLeaseLength: { type: Boolean, default: false },
   utilization: { type: Number, default: 1 },
@@ -147,7 +148,19 @@ const pricingContent = {
             h(
               "span",
               { class: "font-mono" },
-              `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
+              `
+              
+              $${getPrice(row, props.utilization, props.rentYear).toFixed(0)}
+              ${
+                row.leaseLength !== "N/A" && props.showDiff
+                  ? "(" +
+                    (
+                      getDiff(row, props.utilization, props.rentYear) * 100
+                    ).toFixed(0) +
+                    "%)"
+                  : ""
+              }
+              `
             ),
         }
       ),
@@ -187,9 +200,6 @@ const columns: any = computed(() => {
         ellipsis: {
           tooltip: true,
         },
-        rowSpan: (rowData: DataRow) => {
-          return rowData.childCnt;
-        },
         render(row: DataRow) {
           if (row.cloudProvider === "AWS") {
             return [ProviderIconRender.AWS, row.name];
@@ -221,9 +231,6 @@ const columns: any = computed(() => {
           },
           multiple: 1,
         },
-        rowSpan: (rowData: DataRow) => {
-          return rowData.childCnt;
-        },
       },
       {
         title: "CPU",
@@ -233,9 +240,7 @@ const columns: any = computed(() => {
           compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
           multiple: 2,
         },
-        rowSpan: (rowData: DataRow) => {
-          return rowData.childCnt;
-        },
+
         ellipsis: {
           tooltip: false,
         },
@@ -269,10 +274,6 @@ const columns: any = computed(() => {
         },
         render(row: DataRow) {
           return h("span", { class: " font-mono" }, row.memory);
-        },
-
-        rowSpan: (rowData: DataRow) => {
-          return rowData.childCnt;
         },
       },
       {

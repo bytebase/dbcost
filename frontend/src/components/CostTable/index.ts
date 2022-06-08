@@ -14,8 +14,6 @@ type DataRow = {
   engineType: string;
   commitment: { usd: number };
   hourly: { usd: number };
-
-  childCnt: number;
 };
 
 export { CostTable, DataRow };
