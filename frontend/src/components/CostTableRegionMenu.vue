@@ -1,48 +1,48 @@
 <template>
   <div class="flex w-full justify-start">
-    <div class="border-r mr-4 pr-2">
-      <n-checkbox-group
-        class="flex-col mt-2"
-        :value="state.checkedParentRegionList"
-      >
-        <n-grid :y-gap="4" :cols="`1`">
-          <n-gi v-for="(parentRegion, i) in state.parentRegionList" :key="i">
-            <n-checkbox
-              :value="parentRegion"
-              :label="parentRegion"
-              :indeterminate="isIndeterminate(parentRegion)"
-              @click="handleClickParentRegion(parentRegion)"
-            />
-          </n-gi>
-        </n-grid>
+    <!-- parent region -->
+    <div class="border-r flex-col mr-4 w-36">
+      <n-checkbox-group class="mt-2" :value="state.checkedParentRegionList">
+        <n-checkbox
+          class="pb-1 w-36"
+          v-for="(parentRegion, i) in state.parentRegionList"
+          :key="i"
+          :value="parentRegion"
+          :label="parentRegion"
+          :indeterminate="isIndeterminate(parentRegion)"
+          @click="handleClickParentRegion(parentRegion)"
+        />
       </n-checkbox-group>
     </div>
 
-    <div>
+    <!-- child region -->
+    <div class="w-full">
       <n-checkbox-group
-        class="mt-2"
+        class="mt-2 flex flex-wrap justify-start"
         :value="(props.checkedRegionList as string[])"
         @update-value="(val) =>  $emit('update-region', val as string[])"
       >
-        <n-grid :y-gap="4" :cols="`2 s:3 m:4 l:5`" :responsive="'screen'">
-          <n-gi v-for="(region, i) in availableRegionList" :key="i">
-            <n-checkbox :value="region.name" :label="region.name" />
-            <n-avatar
-              v-if="region.providerCode.has('AWS')"
-              :src="ProviderIcon.AWS"
-              color="none"
-              :size="20"
-              class="align-bottom"
-            />
-            <n-avatar
-              v-if="region.providerCode.has('GCP')"
-              :src="ProviderIcon.GCP"
-              color="none"
-              :size="16"
-              class="align-bottom ml-0.5 mb-0.5"
-            />
-          </n-gi>
-        </n-grid>
+        <div
+          class="pr-6 w-80 pb-1"
+          v-for="(region, i) in availableRegionList"
+          :key="i"
+        >
+          <n-checkbox :value="region.name" :label="region.name" />
+          <n-avatar
+            v-if="region.providerCode.has('AWS')"
+            :src="ProviderIcon.AWS"
+            color="none"
+            :size="20"
+            class="align-bottom"
+          />
+          <n-avatar
+            v-if="region.providerCode.has('GCP')"
+            :src="ProviderIcon.GCP"
+            color="none"
+            :size="16"
+            class="align-bottom ml-0.5 mb-0.5"
+          />
+        </div>
       </n-checkbox-group>
     </div>
   </div>
@@ -58,7 +58,7 @@ import {
   onMounted,
   computed,
 } from "vue";
-import { NGrid, NGi, NCheckboxGroup, NCheckbox, NAvatar } from "naive-ui";
+import { NCheckboxGroup, NCheckbox, NAvatar } from "naive-ui";
 import { AvailableRegion } from "../types";
 
 const ProviderIcon = {
