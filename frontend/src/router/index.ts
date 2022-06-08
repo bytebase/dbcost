@@ -119,7 +119,7 @@ router.beforeEach((to, from, next) => {
 
     if (to.name === "compare") {
       const query = to.query as RouteQueryCompare;
-      if (!query.key) {
+      if (!query.instance) {
         next({ name: "404" });
         return;
       }

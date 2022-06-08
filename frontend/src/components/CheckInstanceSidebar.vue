@@ -126,7 +126,7 @@ const handleDeleteCard = (dataRowKey: string) => {
 const router = useRouter();
 const handleClickCompare = () => {
   const routeQuery: RouteQueryCompare = {
-    key: dataTableItemStore.checkedRowKey.join(","),
+    instance: dataTableItemStore.checkedRowKey.join(","),
   };
 
   router.push({ name: "compare", query: routeQuery }).then(() => {

@@ -77,7 +77,6 @@ import {
 import { useRouter } from "vue-router";
 
 import { isEmptyArray } from "../util";
-import { RouteQueryCompare } from "../types/route";
 
 const dbInstanceStore = useDBInstanceStore();
 
