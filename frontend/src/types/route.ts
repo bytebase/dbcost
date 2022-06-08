@@ -17,8 +17,6 @@ export type RouteQueryDashBoard = {
 };
 
 // RouteQueryCompare is the query param used in the URL for compare page
-// to make the URL as simple as possible,
-//    checkedRowKey -> key
 export type RouteQueryCompare = {
-  key?: string;
+  instance?: string;
 };

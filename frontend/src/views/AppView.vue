@@ -77,7 +77,6 @@ import {
 import { useRouter } from "vue-router";
 
 import { isEmptyArray } from "../util";
-import { RouteQueryCompare } from "../types/route";
 
 const dbInstanceStore = useDBInstanceStore();
 
@@ -161,14 +160,6 @@ const handleCheckRowKeys = (rowKeys: string[]) => {
       }
     }
   }
-};
-
-const handleClickCompare = () => {
-  const routeQuery: RouteQueryCompare = {
-    key: dataTableItemStore.checkedRowKey.join(","),
-  };
-
-  router.push({ name: "compare", query: routeQuery });
 };
 
 const router = useRouter();
