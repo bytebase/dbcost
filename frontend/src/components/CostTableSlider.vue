@@ -17,7 +17,7 @@
 
       <n-slider
         :format-tooltip="(val) => `${Math.trunc(val * 100)}%`"
-        :min="0"
+        :min="0.01"
         :max="1"
         class="w-40"
         :value="utilization"

@@ -18,6 +18,8 @@ export default defineStore("searchConfig", {
       this.searchConfig.keyword = "";
       this.searchConfig.minCPU = undefined;
       this.searchConfig.minRAM = undefined;
+      this.searchConfig.utilization = SearchConfigDefault.utilization;
+      this.searchConfig.leaseLength = SearchConfigDefault.leaseLength;
     },
     clearAll() {
       this.searchConfig.chargeType = [];
@@ -27,6 +29,8 @@ export default defineStore("searchConfig", {
       this.searchConfig.minCPU = undefined;
       this.searchConfig.minRAM = undefined;
       this.searchConfig.region = [];
+      this.searchConfig.utilization = SearchConfigDefault.utilization;
+      this.searchConfig.leaseLength = SearchConfigDefault.leaseLength;
     },
   },
 });
