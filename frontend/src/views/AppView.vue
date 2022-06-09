@@ -101,7 +101,7 @@ interface LocalState {
 const state = reactive<LocalState>({
   availableRegions: [],
   isLoading: false,
-  lastConfig: searchConfigStore.searchConfig,
+  lastConfig: { ...searchConfigStore.searchConfig },
 });
 
 const title = computed(() => {
