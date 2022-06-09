@@ -23,7 +23,7 @@
         @update-value="(val) =>  $emit('update-region', val as string[])"
       >
         <div
-          class="pr-6 w-80 pb-1"
+          class="w-72 pb-1"
           v-for="(region, i) in availableRegionList"
           :key="i"
         >
