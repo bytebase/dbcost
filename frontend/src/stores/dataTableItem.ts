@@ -192,7 +192,7 @@ const _generateDataRow = (): DataRow[] => {
 
       const regionName = getRegionName(region.code);
       selectedTermList.forEach((term) => {
-        const regionInstanceKey = `${dbInstance.name}::${region.code}`;
+        const regionInstanceKey = `${dbInstance.name}::${region.code}::${term.databaseEngine}`;
         if (term.type === "OnDemand") {
         }
         const newRow: DataRow = {

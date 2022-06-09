@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
-import { getDiff, getPrice } from "../../util";
+import { getDiff } from "../../util";
 
 import { DataRow } from "./";
 
@@ -133,19 +133,15 @@ const pricingContent = {
         if (row1.baseHourly === row2.baseHourly) {
           if (row1.id === row2.id) {
             if (row1.childCnt === row2.childCnt) {
-              if (row1.engineType === row2.engineType) {
-                if (row1.leaseLength !== "N/A" && row2.leaseLength !== "N/A") {
-                  return row1.expectedCost - row2.expectedCost;
-                }
-
-                // put the on demand type at the top
-                if (row1.leaseLength === "N/A") {
-                  return -1;
-                } else {
-                  return 1;
-                }
+              if (row1.leaseLength !== "N/A" && row2.leaseLength !== "N/A") {
+                return row1.expectedCost - row2.expectedCost;
               }
-              return row1.engineType.localeCompare(row2.engineType);
+              // put the on demand type at the top
+              if (row1.leaseLength === "N/A") {
+                return -1;
+              } else {
+                return 1;
+              }
             }
             // make sure that the on demand type is always at the top
             return row2.childCnt - row1.childCnt;
