@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
-import { getDiff } from "../../util";
+import { getDiff, getDigit } from "../../util";
 
 import { DataRow } from "./";
 
@@ -111,7 +111,11 @@ const pricingContent = {
     title: "Hourly",
     align: "right",
     render: (row: DataRow) => {
-      return h("span", { class: "font-mono" }, `$${row.hourly.usd.toFixed(2)}`);
+      return h(
+        "span",
+        { class: "font-mono" },
+        `$${getDigit(row.hourly.usd, 2)}`
+      );
     },
   },
   leaseLength: {
@@ -158,9 +162,12 @@ const pricingContent = {
         {},
         {
           default: () =>
-            `Cost is based on utilization ${(props.utilization * 100).toFixed(
-              0
-            )}% for ${props.rentYear} year${
+            `$${getDigit(
+              row.expectedCost,
+              2
+            )} is calculated based on utilization ${(
+              props.utilization * 100
+            ).toFixed(0)}% for ${props.rentYear} year${
               props.rentYear > 1 ? "s" : ""
             } lease`,
           trigger: () =>
@@ -168,8 +175,7 @@ const pricingContent = {
               "span",
               { class: "font-mono" },
               `
-
-              $${row.expectedCost.toFixed(0)}
+              $${getDigit(row.expectedCost, 0)}
               ${
                 row.leaseLength !== "N/A" && props.showDiff
                   ? "(" +
