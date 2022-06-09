@@ -1,4 +1,5 @@
 import { DataRow } from "../components/CostTable";
+import { SearchConfig } from "../types";
 
 export const isEmptyArray = (arr: any[] | undefined) => {
   if (Array.isArray(arr) && !arr.length) {
@@ -148,4 +149,12 @@ export const getDigit = (val: number, leastDigitCnt: number): string => {
       return res;
     }
   }
+};
+
+export const isConfigChange = (
+  oldConfig: SearchConfig,
+  newConfig: SearchConfig
+): boolean => {
+  console.log(oldConfig.region, newConfig.region);
+  return JSON.stringify(oldConfig) !== JSON.stringify(newConfig);
 };

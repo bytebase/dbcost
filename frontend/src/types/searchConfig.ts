@@ -18,6 +18,9 @@ export const SearchConfigDefault: SearchConfig = {
   engineType: ["MYSQL"],
   chargeType: ["OnDemand"],
   region: ["US East (N. Virginia)"],
+  keyword: undefined,
+  minCPU: 0,
+  minRAM: 0,
   utilization: 1,
   leaseLength: 1,
 };

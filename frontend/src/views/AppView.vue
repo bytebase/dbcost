@@ -76,7 +76,7 @@ import {
 } from "../stores";
 import { useRouter } from "vue-router";
 
-import { isEmptyArray } from "../util";
+import { isEmptyArray, isConfigChange } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
 
@@ -101,7 +101,7 @@ interface LocalState {
 const state = reactive<LocalState>({
   availableRegions: [],
   isLoading: false,
-  lastConfig: searchConfigStore.searchConfig,
+  lastConfig: { ...searchConfigStore.searchConfig },
 });
 
 const title = computed(() => {
@@ -170,17 +170,9 @@ const router = useRouter();
 const config = ref(searchConfigStore.searchConfig);
 watch(
   config,
-  (newConfig) => {
+  () => {
     // if any of the following config has changed, we need to update the route
-    if (
-      state.lastConfig.chargeType !== newConfig.chargeType ||
-      state.lastConfig.cloudProvider !== newConfig.cloudProvider ||
-      state.lastConfig.engineType !== newConfig.engineType ||
-      state.lastConfig.keyword !== newConfig.keyword ||
-      state.lastConfig.minCPU !== newConfig.minCPU ||
-      state.lastConfig.minRAM !== newConfig.minRAM ||
-      state.lastConfig.region !== newConfig.region
-    ) {
+    if (isConfigChange(state.lastConfig, config.value)) {
       const config = searchConfigStore.searchConfig;
       const routeQuery: RouteQueryDashBoard = {
         provider: isEmptyArray(config.cloudProvider)
@@ -198,6 +190,8 @@ watch(
         minCPU: config.minCPU === 0 ? undefined : config.minCPU,
         minRAM: config.minRAM === 0 ? undefined : config.minRAM,
         keyword: config.keyword === "" ? undefined : config.keyword,
+        utilization: config.utilization,
+        lease: config.leaseLength,
       };
 
       const curRoute = router.currentRoute.value;
@@ -237,18 +231,7 @@ watch(
   config, // ref to searchConfigStore.searchConfig
   (newConfig) => {
     // if any of the following config has changed, we need to update the entire table
-    if (
-      state.lastConfig.chargeType?.join(",") !==
-        newConfig.chargeType?.join(",") ||
-      state.lastConfig.cloudProvider?.join(",") !==
-        newConfig.cloudProvider?.join(",") ||
-      state.lastConfig.engineType?.join(",") !==
-        newConfig.engineType?.join(",") ||
-      state.lastConfig.region?.join(",") !== newConfig.region?.join(",") ||
-      state.lastConfig.keyword !== newConfig.keyword ||
-      state.lastConfig.minCPU !== newConfig.minCPU ||
-      state.lastConfig.minRAM !== newConfig.minRAM
-    ) {
+    if (isConfigChange(state.lastConfig, newConfig)) {
       // We set the dataRow to empty here for a better animation.
       // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
       dataTableItemStore.clearDataRow();
