@@ -27,16 +27,16 @@
       :keyword="searchConfigStore.searchConfig.keyword"
       :min-r-a-m="searchConfigStore.searchConfig.minRAM"
       :min-c-p-u="searchConfigStore.searchConfig.minCPU"
-      :utilization="state.utilization"
-      :rent-year="state.rentYear"
+      :utilization="searchConfigStore.searchConfig.utilization"
+      :rent-year="searchConfigStore.searchConfig.leaseLength"
       @update-cloud-provider="handleUpdateCloudProvider"
       @update-engine-type="handleUpdateEngineType"
       @update-charge-type="handleUpdateChargeType"
       @update-keyword="handleUpdateKeyword"
       @update-min-vcpu="handleUpdateMinCPU"
       @update-min-ram="handleUpdateMinRAM"
-      @update-utilization="(val:number) => (state.utilization = val)"
-      @update-lease-length="(val:number) => (state.rentYear = val)"
+      @update-utilization="handleUpdateUtilization"
+      @update-lease-length="handleUpdateLeaseLength"
     />
   </div>
 
@@ -44,8 +44,8 @@
   <div class="mx-5 mt-4">
     <cost-table
       class="mt-4"
-      :utilization="state.utilization"
-      :rent-year="state.rentYear"
+      :utilization="searchConfigStore.searchConfig.utilization"
+      :rent-year="searchConfigStore.searchConfig.leaseLength"
       :data-row="dataTableItemStore.dataRow"
       :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
@@ -67,6 +67,7 @@ import {
   CloudProvider,
   EngineType,
   RouteQueryDashBoard,
+  SearchConfig,
 } from "../types";
 import {
   useSearchConfigStore,
@@ -94,15 +95,13 @@ const searchConfigStore = useSearchConfigStore();
 interface LocalState {
   availableRegions: AvailableRegion[];
   isLoading: boolean;
-  utilization: number;
-  rentYear: number;
+  lastConfig: SearchConfig;
 }
 
 const state = reactive<LocalState>({
   availableRegions: [],
   isLoading: false,
-  utilization: 1,
-  rentYear: 1,
+  lastConfig: searchConfigStore.searchConfig,
 });
 
 const title = computed(() => {
@@ -139,6 +138,12 @@ const handleUpdateMinRAM = (val: any) => {
 const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
 };
+const handleUpdateLeaseLength = (val: number) => {
+  searchConfigStore.searchConfig.leaseLength = val;
+};
+const handleUpdateUtilization = (val: number) => {
+  searchConfigStore.searchConfig.utilization = val;
+};
 const handleCheckRowKeys = (rowKeys: string[]) => {
   const checkRowKey = dataTableItemStore.checkedRowKey;
   // a key is added
@@ -162,36 +167,48 @@ const handleCheckRowKeys = (rowKeys: string[]) => {
 };
 
 const router = useRouter();
+const config = ref(searchConfigStore.searchConfig);
 watch(
-  () => searchConfigStore.searchConfig,
-  () => {
-    const config = searchConfigStore.searchConfig;
-    const routeQuery: RouteQueryDashBoard = {
-      provider: isEmptyArray(config.cloudProvider)
-        ? undefined
-        : config.cloudProvider?.join(","),
-      region: isEmptyArray(config.region)
-        ? undefined
-        : config.region?.join(","),
-      engine: isEmptyArray(config.engineType)
-        ? undefined
-        : config.engineType?.join(","),
-      charge: isEmptyArray(config.chargeType)
-        ? undefined
-        : config.chargeType?.join(","),
-      minCPU: config.minCPU === 0 ? undefined : config.minCPU,
-      minRAM: config.minRAM === 0 ? undefined : config.minRAM,
-      keyword: config.keyword === "" ? undefined : config.keyword,
-    };
+  config,
+  (newConfig) => {
+    // if any of the following config has changed, we need to update the route
+    if (
+      state.lastConfig.chargeType !== newConfig.chargeType ||
+      state.lastConfig.cloudProvider !== newConfig.cloudProvider ||
+      state.lastConfig.engineType !== newConfig.engineType ||
+      state.lastConfig.keyword !== newConfig.keyword ||
+      state.lastConfig.minCPU !== newConfig.minCPU ||
+      state.lastConfig.minRAM !== newConfig.minRAM ||
+      state.lastConfig.region !== newConfig.region
+    ) {
+      const config = searchConfigStore.searchConfig;
+      const routeQuery: RouteQueryDashBoard = {
+        provider: isEmptyArray(config.cloudProvider)
+          ? undefined
+          : config.cloudProvider?.join(","),
+        region: isEmptyArray(config.region)
+          ? undefined
+          : config.region?.join(","),
+        engine: isEmptyArray(config.engineType)
+          ? undefined
+          : config.engineType?.join(","),
+        charge: isEmptyArray(config.chargeType)
+          ? undefined
+          : config.chargeType?.join(","),
+        minCPU: config.minCPU === 0 ? undefined : config.minCPU,
+        minRAM: config.minRAM === 0 ? undefined : config.minRAM,
+        keyword: config.keyword === "" ? undefined : config.keyword,
+      };
 
-    const curRoute = router.currentRoute.value;
-    if (curRoute.name === "provider") {
-      routeQuery.provider = undefined;
+      const curRoute = router.currentRoute.value;
+      if (curRoute.name === "provider") {
+        routeQuery.provider = undefined;
+      }
+      router.push({
+        name: curRoute.name as string,
+        query: routeQuery,
+      });
     }
-    router.push({
-      name: curRoute.name as string,
-      query: routeQuery,
-    });
   },
   {
     deep: true,
@@ -216,18 +233,36 @@ const copyURL = () => {
     });
 };
 
-const config = ref(searchConfigStore.searchConfig);
 watch(
   config, // ref to searchConfigStore.searchConfig
-  () => {
-    // We set the dataRow to empty here for a better animation.
-    // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
-    dataTableItemStore.clearDataRow();
-    state.isLoading = true;
-    setTimeout(() => {
-      dataTableItemStore.refresh();
-      state.isLoading = false;
-    }, 100);
+  (newConfig) => {
+    // if any of the following config has changed, we need to update the entire table
+    if (
+      state.lastConfig.chargeType?.join(",") !==
+        newConfig.chargeType?.join(",") ||
+      state.lastConfig.cloudProvider?.join(",") !==
+        newConfig.cloudProvider?.join(",") ||
+      state.lastConfig.engineType?.join(",") !==
+        newConfig.engineType?.join(",") ||
+      state.lastConfig.region?.join(",") !== newConfig.region?.join(",") ||
+      state.lastConfig.keyword !== newConfig.keyword ||
+      state.lastConfig.minCPU !== newConfig.minCPU ||
+      state.lastConfig.minRAM !== newConfig.minRAM
+    ) {
+      // We set the dataRow to empty here for a better animation.
+      // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
+      dataTableItemStore.clearDataRow();
+      state.isLoading = true;
+      setTimeout(() => {
+        dataTableItemStore.refresh();
+        state.isLoading = false;
+      }, 100);
+    } else {
+      // otherwise, we only need to update the expected cost
+      dataTableItemStore.refreshExpectedCost();
+    }
+
+    state.lastConfig = { ...newConfig };
   },
   {
     deep: true,

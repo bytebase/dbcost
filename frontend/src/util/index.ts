@@ -90,21 +90,16 @@ export const getRegionCode = (regionName: string): string[] => {
   return regionCode;
 };
 
-// basePrice store the hourly price of the on demand charge type of a given instance in a region
-// key: instanceName::regionCode
-// value: on demand hourly price
-const basePrice = new Map<String, number>();
 const YearInHour = 365 * 24;
 export const getPrice = (
   dataRow: DataRow,
-  availableRate: number,
-  rentYear: number
+  utilization: number,
+  leaseLength: number
 ): number => {
   const onDemandCharge =
-    rentYear * YearInHour * dataRow.hourly.usd * availableRate;
+    leaseLength * YearInHour * dataRow.hourly.usd * utilization;
   // charged on demand.
   if (dataRow.leaseLength === "N/A") {
-    basePrice.set(`${dataRow.name}::${dataRow.region}`, dataRow.hourly.usd);
     return onDemandCharge;
   }
 
@@ -112,10 +107,10 @@ export const getPrice = (
   // const rentYear = Math.ceil(rentDay / YearInDay);
   let commitmentCharge = 0;
   if (dataRow.leaseLength === "1yr") {
-    commitmentCharge = dataRow.commitment.usd * rentYear;
+    commitmentCharge = dataRow.commitment.usd * leaseLength;
   }
-  if (dataRow.leaseLength === "3yr" && rentYear) {
-    commitmentCharge = dataRow.commitment.usd * Math.ceil(rentYear / 3);
+  if (dataRow.leaseLength === "3yr" && leaseLength) {
+    commitmentCharge = dataRow.commitment.usd * Math.ceil(leaseLength / 3);
   }
 
   return commitmentCharge + onDemandCharge;
@@ -124,30 +119,9 @@ export const getPrice = (
 export const getDiff = (
   dataRow: DataRow,
   availableRate: number,
-  rentYear: number
+  leaseLength: number
 ): number => {
-  // charged on demand.
-  if (dataRow.leaseLength === "N/A") {
-    return 0;
-  }
-
-  if (basePrice.has(`${dataRow.name}::${dataRow.region}`)) {
-    const baseCharge =
-      rentYear *
-      YearInHour *
-      (basePrice.get(`${dataRow.name}::${dataRow.region}`) as number) *
-      availableRate;
-    const onDemandCharge =
-      rentYear * YearInHour * dataRow.hourly.usd * availableRate;
-    let commitmentCharge = 0;
-    if (dataRow.leaseLength === "1yr") {
-      commitmentCharge = dataRow.commitment.usd * rentYear;
-    }
-    if (dataRow.leaseLength === "3yr" && rentYear) {
-      commitmentCharge = dataRow.commitment.usd * Math.ceil(rentYear / 3);
-    }
-
-    return (commitmentCharge + onDemandCharge - baseCharge) / baseCharge;
-  }
-  return 0;
+  const baseCharge =
+    leaseLength * YearInHour * dataRow.baseHourly * availableRate;
+  return (dataRow.expectedCost - baseCharge) / baseCharge;
 };

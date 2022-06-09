@@ -128,9 +128,32 @@ const pricingContent = {
     align: "right",
     defaultSortOrder: "ascend",
     sorter: {
-      compare: (row1: DataRow, row2: DataRow) =>
-        getPrice(row1, props.utilization, props.rentYear) -
-        getPrice(row2, props.utilization, props.rentYear),
+      // we sort the price col by the baseline(on demand) price
+      compare: (row1: DataRow, row2: DataRow) => {
+        if (row1.baseHourly === row2.baseHourly) {
+          if (row1.id === row2.id) {
+            if (row1.childCnt === row2.childCnt) {
+              if (row1.engineType === row2.engineType) {
+                if (row1.leaseLength !== "N/A" && row2.leaseLength !== "N/A") {
+                  return row1.expectedCost - row2.expectedCost;
+                }
+
+                // put the on demand type at the top
+                if (row1.leaseLength === "N/A") {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              }
+              return row1.engineType.localeCompare(row2.engineType);
+            }
+            // make sure that the on demand type is always at the top
+            return row2.childCnt - row1.childCnt;
+          }
+          return row1.id - row2.id;
+        }
+        return row1.baseHourly - row2.baseHourly;
+      },
       multiple: 2,
     },
     render: (row: DataRow) =>
@@ -149,8 +172,8 @@ const pricingContent = {
               "span",
               { class: "font-mono" },
               `
-              
-              $${getPrice(row, props.utilization, props.rentYear).toFixed(0)}
+
+              $${row.expectedCost.toFixed(0)}
               ${
                 row.leaseLength !== "N/A" && props.showDiff
                   ? "(" +
@@ -200,6 +223,9 @@ const columns: any = computed(() => {
         ellipsis: {
           tooltip: true,
         },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
         render(row: DataRow) {
           if (row.cloudProvider === "AWS") {
             return [ProviderIconRender.AWS, row.name];
@@ -215,6 +241,9 @@ const columns: any = computed(() => {
         key: "region",
         ellipsis: {
           tooltip: true,
+        },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
         },
         sorter: {
           // sort by the case-insensitive alphabetical order
@@ -240,7 +269,9 @@ const columns: any = computed(() => {
           compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
           multiple: 2,
         },
-
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
         ellipsis: {
           tooltip: false,
         },
@@ -274,6 +305,9 @@ const columns: any = computed(() => {
         },
         render(row: DataRow) {
           return h("span", { class: " font-mono" }, row.memory);
+        },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
         },
       },
       {

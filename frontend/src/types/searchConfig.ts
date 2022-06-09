@@ -9,6 +9,8 @@ export type SearchConfig = {
   minCPU?: number;
   minRAM?: number;
   keyword?: string;
+  utilization: number;
+  leaseLength: number;
 };
 
 export const SearchConfigDefault: SearchConfig = {
@@ -16,4 +18,6 @@ export const SearchConfigDefault: SearchConfig = {
   engineType: ["MYSQL"],
   chargeType: ["OnDemand"],
   region: ["US East (N. Virginia)"],
+  utilization: 1,
+  leaseLength: 1,
 };

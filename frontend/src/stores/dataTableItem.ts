@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { DataRow } from "../components/CostTable";
-import { getRegionCode, getRegionName } from "../util";
+import { getPrice, getRegionCode, getRegionName } from "../util";
 import { useSearchConfigStore, useDBInstanceStore } from ".";
 
 interface State {
@@ -18,6 +18,16 @@ export default defineStore("dataTableItem", {
   actions: {
     refresh() {
       this.dataRow = _generateDataRow();
+    },
+    refreshExpectedCost() {
+      const config = useSearchConfigStore().searchConfig;
+      for (const item of this.dataRow) {
+        item.expectedCost = getPrice(
+          item,
+          config.utilization,
+          config.leaseLength
+        );
+      }
     },
     removeCheckedDataRowByKey(rowKey: string) {
       this.checkedRowKey = this.checkedRowKey.filter((key) => key !== rowKey);
@@ -76,6 +86,7 @@ export default defineStore("dataTableItem", {
           const newRow: DataRow = {
             id: cnt,
             key: key,
+            childCnt: 1,
             cloudProvider: dbInstance.cloudProvider,
             name: dbInstance.name,
             processor: dbInstance.processor,
@@ -88,6 +99,9 @@ export default defineStore("dataTableItem", {
             // we store the region code for each provider, and show the user the actual region information
             // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
             region: getRegionName(regionCode),
+            // we do not show user the diff at the compare page
+            baseHourly: 0,
+            expectedCost: 0,
           };
           checkedDataRow.push(newRow);
           cnt++;
@@ -169,13 +183,23 @@ const _generateDataRow = (): DataRow[] => {
         return false;
       });
 
+      let basePriceMap = new Map<string, number>();
+      selectedTermList.forEach((term) => {
+        if (term.type === "OnDemand") {
+          basePriceMap.set(term.databaseEngine, term.hourlyUSD);
+        }
+      });
+
       const regionName = getRegionName(region.code);
       selectedTermList.forEach((term) => {
-        const key = `${dbInstance.name}-${region.code}`;
+        const regionInstanceKey = `${dbInstance.name}::${region.code}`;
+        if (term.type === "OnDemand") {
+        }
         const newRow: DataRow = {
           id: -1,
           // we use :: for separation because AWS use . and GCP use - as separator.
           key: `${dbInstance.name}::${region.code}::${term.code}`,
+          childCnt: 1,
           cloudProvider: dbInstance.cloudProvider,
           name: dbInstance.name,
           processor: dbInstance.processor,
@@ -188,32 +212,44 @@ const _generateDataRow = (): DataRow[] => {
           // we store the region code for each provider, and show the user the actual region information
           // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
           region: regionName,
+          baseHourly: basePriceMap.get(term.databaseEngine) as number,
+          // we set this field
+          expectedCost: 0,
         };
+        newRow.expectedCost = getPrice(
+          newRow,
+          config.utilization,
+          config.leaseLength
+        );
 
-        if (dataRowMap.has(key)) {
-          const existedDataRowList = dataRowMap.get(key) as DataRow[];
+        if (dataRowMap.has(regionInstanceKey)) {
+          const existedDataRowList = dataRowMap.get(
+            regionInstanceKey
+          ) as DataRow[];
           newRow.id = existedDataRowList[0].id;
           existedDataRowList.push(newRow);
         } else {
           rowCnt++;
           newRow.id = rowCnt;
-          dataRowMap.set(key, [newRow]);
+          dataRowMap.set(regionInstanceKey, [newRow]);
         }
       });
     });
 
     dataRowMap.forEach((val) => {
       val.sort((a, b) => {
-        // sort the row according to the following criteria
-        // 1. charge type
-        // 2. ascend by lease length
-        if (a.leaseLength == "N/A") {
+        // sort the row according to the following criterion:
+        // 1. on demand price go first
+        // 2. sort on their expected cost
+        if (a.leaseLength === "N/A") {
           return -1;
-        } else if (b.leaseLength == "N/A") {
+        } else if (b.leaseLength === "N/A") {
           return 1;
         }
-        return Number(a.leaseLength[0]) - Number(b.leaseLength[0]);
+
+        return a.expectedCost - b.expectedCost;
       });
+      val[0].childCnt = val.length;
       dataRowList.push(...val);
     });
 
