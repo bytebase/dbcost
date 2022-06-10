@@ -6,9 +6,9 @@
   </h1>
 
   <!-- menu -->
-  <div class="mx-5 mt-4 border-b pb-4">
+  <div class="mx-5 mt-4 border-b pb-2">
     <div class="mb-4 justify-center space-x-2 flex">
-      <n-button @click="clearAll">Clear All</n-button>
+      <n-button @click="reset">Reset</n-button>
 
       <n-button @click="copyURL">Copy URL</n-button>
     </div>
@@ -27,32 +27,31 @@
       :keyword="searchConfigStore.searchConfig.keyword"
       :min-r-a-m="searchConfigStore.searchConfig.minRAM"
       :min-c-p-u="searchConfigStore.searchConfig.minCPU"
+      :utilization="searchConfigStore.searchConfig.utilization"
+      :rent-year="searchConfigStore.searchConfig.leaseLength"
       @update-cloud-provider="handleUpdateCloudProvider"
       @update-engine-type="handleUpdateEngineType"
       @update-charge-type="handleUpdateChargeType"
       @update-keyword="handleUpdateKeyword"
       @update-min-vcpu="handleUpdateMinCPU"
       @update-min-ram="handleUpdateMinRAM"
+      @update-utilization="handleUpdateUtilization"
+      @update-lease-length="handleUpdateLeaseLength"
     />
   </div>
 
   <!-- dashboard -->
   <div class="mx-5 mt-4">
-    <cost-table-slider
-      :utilization="state.utilization"
-      :rent-year="state.rentYear"
-      @update-utilization="(val:number) => (state.utilization = val)"
-      @update-lease-length="(val:number) => (state.rentYear = val)"
-    />
     <cost-table
       class="mt-4"
-      :utilization="state.utilization"
-      :rent-year="state.rentYear"
+      :utilization="searchConfigStore.searchConfig.utilization"
+      :rent-year="searchConfigStore.searchConfig.leaseLength"
       :data-row="dataTableItemStore.dataRow"
       :is-loading="state.isLoading"
       :show-engine-type="showEngineType"
       :show-lease-length="showLeaseLength"
       :checked-row-keys="dataTableItemStore.checkedRowKey"
+      :show-diff="searchConfigStore.searchConfig.chargeType?.length === 2"
       @update-checked-row-keys="(val:string[]) => handleCheckRowKeys(val)"
     />
   </div>
@@ -68,6 +67,7 @@ import {
   CloudProvider,
   EngineType,
   RouteQueryDashBoard,
+  SearchConfig,
 } from "../types";
 import {
   useSearchConfigStore,
@@ -76,8 +76,7 @@ import {
 } from "../stores";
 import { useRouter } from "vue-router";
 
-import { isEmptyArray } from "../util";
-import { RouteQueryCompare } from "../types/route";
+import { isEmptyArray, isConfigChange } from "../util";
 
 const dbInstanceStore = useDBInstanceStore();
 
@@ -96,15 +95,13 @@ const searchConfigStore = useSearchConfigStore();
 interface LocalState {
   availableRegions: AvailableRegion[];
   isLoading: boolean;
-  utilization: number;
-  rentYear: number;
+  lastConfig: SearchConfig;
 }
 
 const state = reactive<LocalState>({
   availableRegions: [],
   isLoading: false,
-  utilization: 1,
-  rentYear: 1,
+  lastConfig: { ...searchConfigStore.searchConfig },
 });
 
 const title = computed(() => {
@@ -141,6 +138,12 @@ const handleUpdateMinRAM = (val: any) => {
 const handleUpdateMinCPU = (val: any) => {
   searchConfigStore.searchConfig.minCPU = val;
 };
+const handleUpdateLeaseLength = (val: number) => {
+  searchConfigStore.searchConfig.leaseLength = val;
+};
+const handleUpdateUtilization = (val: number) => {
+  searchConfigStore.searchConfig.utilization = val;
+};
 const handleCheckRowKeys = (rowKeys: string[]) => {
   const checkRowKey = dataTableItemStore.checkedRowKey;
   // a key is added
@@ -163,45 +166,43 @@ const handleCheckRowKeys = (rowKeys: string[]) => {
   }
 };
 
-const handleClickCompare = () => {
-  const routeQuery: RouteQueryCompare = {
-    key: dataTableItemStore.checkedRowKey.join(","),
-  };
-
-  router.push({ name: "compare", query: routeQuery });
-};
-
 const router = useRouter();
+const config = ref(searchConfigStore.searchConfig);
 watch(
-  () => searchConfigStore.searchConfig,
+  config,
   () => {
-    const config = searchConfigStore.searchConfig;
-    const routeQuery: RouteQueryDashBoard = {
-      provider: isEmptyArray(config.cloudProvider)
-        ? undefined
-        : config.cloudProvider?.join(","),
-      region: isEmptyArray(config.region)
-        ? undefined
-        : config.region?.join(","),
-      engine: isEmptyArray(config.engineType)
-        ? undefined
-        : config.engineType?.join(","),
-      charge: isEmptyArray(config.chargeType)
-        ? undefined
-        : config.chargeType?.join(","),
-      minCPU: config.minCPU === 0 ? undefined : config.minCPU,
-      minRAM: config.minRAM === 0 ? undefined : config.minRAM,
-      keyword: config.keyword === "" ? undefined : config.keyword,
-    };
+    // if any of the following config has changed, we need to update the route
+    if (isConfigChange(state.lastConfig, config.value)) {
+      const config = searchConfigStore.searchConfig;
+      const routeQuery: RouteQueryDashBoard = {
+        provider: isEmptyArray(config.cloudProvider)
+          ? undefined
+          : config.cloudProvider?.join(","),
+        region: isEmptyArray(config.region)
+          ? undefined
+          : config.region?.join(","),
+        engine: isEmptyArray(config.engineType)
+          ? undefined
+          : config.engineType?.join(","),
+        charge: isEmptyArray(config.chargeType)
+          ? undefined
+          : config.chargeType?.join(","),
+        minCPU: config.minCPU === 0 ? undefined : config.minCPU,
+        minRAM: config.minRAM === 0 ? undefined : config.minRAM,
+        keyword: config.keyword === "" ? undefined : config.keyword,
+        utilization: config.utilization,
+        lease: config.leaseLength,
+      };
 
-    const curRoute = router.currentRoute.value;
-    if (curRoute.name === "provider") {
-      routeQuery.provider = undefined;
+      const curRoute = router.currentRoute.value;
+      if (curRoute.name === "provider") {
+        routeQuery.provider = undefined;
+      }
+      router.push({
+        name: curRoute.name as string,
+        query: routeQuery,
+      });
     }
-    router.push({
-      name: curRoute.name as string,
-      query: routeQuery,
-    });
   },
   {
     deep: true,
@@ -226,18 +227,25 @@ const copyURL = () => {
     });
 };
 
-const config = ref(searchConfigStore.searchConfig);
 watch(
   config, // ref to searchConfigStore.searchConfig
-  () => {
-    // We set the dataRow to empty here for a better animation.
-    // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
-    dataTableItemStore.clearDataRow();
-    state.isLoading = true;
-    setTimeout(() => {
-      dataTableItemStore.refresh();
-      state.isLoading = false;
-    }, 100);
+  (newConfig) => {
+    // if any of the following config has changed, we need to update the entire table
+    if (isConfigChange(state.lastConfig, newConfig)) {
+      // We set the dataRow to empty here for a better animation.
+      // Otherwise the loading circle would appear right in the middle of the data table, which may be elusive.
+      dataTableItemStore.clearDataRow();
+      state.isLoading = true;
+      setTimeout(() => {
+        dataTableItemStore.refresh();
+        state.isLoading = false;
+      }, 100);
+    } else {
+      // otherwise, we only need to update the expected cost
+      dataTableItemStore.refreshExpectedCost();
+    }
+
+    state.lastConfig = { ...newConfig };
   },
   {
     deep: true,
@@ -252,9 +260,8 @@ const showLeaseLength = computed(() => {
   return chargeTypeSet.size > 1 || chargeTypeSet.has("Reserved");
 });
 
-const clearAll = () => {
-  searchConfigStore.clearAll();
-  dataTableItemStore.clearAll();
+const reset = () => {
+  searchConfigStore.setToDefault();
 };
 
 onMounted(() => {

@@ -5,12 +5,13 @@
       justify-content="space-evenly"
       type="segment"
     >
-      <n-tab-pane name="specification">
+      <!-- hide this for now -->
+      <!-- <n-tab-pane name="specification">
         <template #tab>
           <span class="font-semibold text-base">Specification</span>
         </template>
         <spec-bubble-chart class="mx-4" ref="bubbleChart" :data="data" />
-      </n-tab-pane>
+      </n-tab-pane> -->
       <n-tab-pane name="total-cost" tab="Total Cost">
         <template #tab>
           <span class="font-semibold text-base">Total Cost</span>

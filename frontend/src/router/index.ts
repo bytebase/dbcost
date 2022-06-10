@@ -104,6 +104,8 @@ router.beforeEach((to, from, next) => {
         keyword: query.keyword ? (query.keyword as string) : "",
         minCPU: query.minCPU ? Number(query.minCPU) : 0,
         minRAM: query.minRAM ? Number(query.minRAM) : 0,
+        leaseLength: query.lease ? Number(query.lease) : 1,
+        utilization: query.utilization ? Number(query.utilization) : 1,
       };
       if (
         (!config.cloudProvider || isValidCloudProvider(config.cloudProvider)) &&
@@ -119,7 +121,7 @@ router.beforeEach((to, from, next) => {
 
     if (to.name === "compare") {
       const query = to.query as RouteQueryCompare;
-      if (!query.key) {
+      if (!query.instance) {
         next({ name: "404" });
         return;
       }

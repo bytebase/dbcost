@@ -15,7 +15,12 @@ type DataRow = {
   commitment: { usd: number };
   hourly: { usd: number };
 
+  // childCnt is for calculating the number of col needed to collapse
   childCnt: number;
+  // baseHourly is the on demand hourly price of the instance in the same region
+  baseHourly: number;
+  // expectedCost is the expected cost with lease length and utilization
+  expectedCost: number;
 };
 
 export { CostTable, DataRow };

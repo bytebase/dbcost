@@ -12,6 +12,7 @@
 import { ref, PropType, computed } from "vue";
 import { DataRow } from "../../CostTable";
 import VueApexCharts from "vue3-apexcharts";
+import { getRegionName } from "../../../util";
 
 const chart = ref();
 const props = defineProps({
@@ -33,8 +34,16 @@ defineExpose({
 
 const getXGrid = () => {
   const res = [];
-  for (const i in props.data) {
-    res.push(`Instance-${i}`);
+  // <<Name>> << Region>>  Reserved | On Demand
+  for (const item of props.data) {
+    getRegionName;
+    res.push(
+      `
+      ${item.name}
+      ${item.region.split(")")[0].split(" (")[1]}
+      ${item.leaseLength === "N/A" ? "On Demand" : "Reserved"}
+      `
+    );
   }
 
   return res;
@@ -103,9 +112,15 @@ const series = computed(() => {
     onDemandRes.push(Math.trunc(onDemandYearly));
     commitmentRes.push(Math.trunc(commitmentYearly));
   }
-  return [
-    { name: "Commitment", data: commitmentRes },
-    { name: "On Demand", data: onDemandRes },
-  ];
+  const res = [];
+  if (commitmentRes.filter((val) => val !== 0).length != 0) {
+    res.push({ name: "Commitment", data: commitmentRes });
+  }
+
+  if (onDemandRes.filter((val) => val !== 0).length != 0) {
+    res.push({ name: "On Demand", data: onDemandRes });
+  }
+
+  return res;
 });
 </script>

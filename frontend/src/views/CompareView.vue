@@ -46,7 +46,7 @@ const router = useRouter();
 onMounted(() => {
   const query: RouteQueryCompare = router.currentRoute.value.query;
   useDataTableItemStore().loadCheckedDataRowByKey(
-    query.key?.split(",") as string[]
+    query.instance?.split(",") as string[]
   );
 });
 

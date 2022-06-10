@@ -6,6 +6,7 @@ export type RouteQuery = RouteQueryDashBoard | RouteQueryCompare;
 //    cloudProvider -> provider
 //    engineType -> engine
 //    chargeType -> charge
+//    leaseLength -> lease
 export type RouteQueryDashBoard = {
   provider?: string;
   engine?: string;
@@ -14,11 +15,11 @@ export type RouteQueryDashBoard = {
   minCPU?: number;
   minRAM?: number;
   keyword?: string;
+  lease?: number;
+  utilization?: number;
 };
 
 // RouteQueryCompare is the query param used in the URL for compare page
-// to make the URL as simple as possible,
-//    checkedRowKey -> key
 export type RouteQueryCompare = {
-  key?: string;
+  instance?: string;
 };

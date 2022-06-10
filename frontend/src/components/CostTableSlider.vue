@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-start">
-    <div class="border-r pr-2 mr-2 items-baseline">
+    <div class="pr-2 mr-2 items-baseline">
       <div class="flex mb-1 items-center">
         Utilization
         <n-tooltip trigger="hover">
@@ -9,15 +9,15 @@
               class="font-light align-baseline w-4 h-4 text-gray-500 ml-0.5"
             />
           </template>
-          Utilization is the time percentage actually used during the entire lease length.
-          price.
+          Utilization is the time percentage actually used during the entire
+          lease length.
         </n-tooltip>
         <span class="ml-2 font-mono">{{ Math.trunc(utilization * 100) }}%</span>
       </div>
 
       <n-slider
         :format-tooltip="(val) => `${Math.trunc(val * 100)}%`"
-        :min="0"
+        :min="0.01"
         :max="1"
         class="w-40"
         :value="utilization"

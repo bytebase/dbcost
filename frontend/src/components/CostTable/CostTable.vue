@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { NDataTable, NAvatar, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
-import { getPrice } from "../../util";
+import { getDiff, getDigit } from "../../util";
 
 import { DataRow } from "./";
 
@@ -28,6 +28,7 @@ const props = defineProps({
     default: true,
   },
   isLoading: { type: Boolean, default: false },
+  showDiff: { type: Boolean, default: false },
   showEngineType: { type: Boolean, default: false },
   showLeaseLength: { type: Boolean, default: false },
   utilization: { type: Number, default: 1 },
@@ -110,7 +111,11 @@ const pricingContent = {
     title: "Hourly",
     align: "right",
     render: (row: DataRow) => {
-      return h("span", { class: "font-mono" }, `$${row.hourly.usd.toFixed(2)}`);
+      return h(
+        "span",
+        { class: "font-mono" },
+        `$${getDigit(row.hourly.usd, 2)}`
+      );
     },
   },
   leaseLength: {
@@ -127,9 +132,28 @@ const pricingContent = {
     align: "right",
     defaultSortOrder: "ascend",
     sorter: {
-      compare: (row1: DataRow, row2: DataRow) =>
-        getPrice(row1, props.utilization, props.rentYear) -
-        getPrice(row2, props.utilization, props.rentYear),
+      // we sort the price col by the baseline(on demand) price
+      compare: (row1: DataRow, row2: DataRow) => {
+        if (row1.baseHourly === row2.baseHourly) {
+          if (row1.id === row2.id) {
+            if (row1.childCnt === row2.childCnt) {
+              if (row1.leaseLength !== "N/A" && row2.leaseLength !== "N/A") {
+                return row1.expectedCost - row2.expectedCost;
+              }
+              // put the on demand type at the top
+              if (row1.leaseLength === "N/A") {
+                return -1;
+              } else {
+                return 1;
+              }
+            }
+            // make sure that the on demand type is always at the top
+            return row2.childCnt - row1.childCnt;
+          }
+          return row1.id - row2.id;
+        }
+        return row1.baseHourly - row2.baseHourly;
+      },
       multiple: 2,
     },
     render: (row: DataRow) =>
@@ -138,16 +162,30 @@ const pricingContent = {
         {},
         {
           default: () =>
-            `Cost is based on utilization ${(props.utilization * 100).toFixed(
-              0
-            )}% for ${props.rentYear} year${
+            `$${getDigit(
+              row.expectedCost,
+              2
+            )} is calculated based on utilization ${(
+              props.utilization * 100
+            ).toFixed(0)}% for ${props.rentYear} year${
               props.rentYear > 1 ? "s" : ""
             } lease`,
           trigger: () =>
             h(
               "span",
               { class: "font-mono" },
-              `$${getPrice(row, props.utilization, props.rentYear).toFixed(0)}`
+              `
+              $${getDigit(row.expectedCost, 0)}
+              ${
+                row.leaseLength !== "N/A" && props.showDiff
+                  ? "(" +
+                    (
+                      getDiff(row, props.utilization, props.rentYear) * 100
+                    ).toFixed(0) +
+                    "%)"
+                  : ""
+              }
+              `
             ),
         }
       ),
@@ -206,6 +244,9 @@ const columns: any = computed(() => {
         ellipsis: {
           tooltip: true,
         },
+        rowSpan: (rowData: DataRow) => {
+          return rowData.childCnt;
+        },
         sorter: {
           // sort by the case-insensitive alphabetical order
           compare: (row1: DataRow, row2: DataRow) => {
@@ -220,9 +261,6 @@ const columns: any = computed(() => {
             return row1.id - row2.id;
           },
           multiple: 1,
-        },
-        rowSpan: (rowData: DataRow) => {
-          return rowData.childCnt;
         },
       },
       {
@@ -270,7 +308,6 @@ const columns: any = computed(() => {
         render(row: DataRow) {
           return h("span", { class: " font-mono" }, row.memory);
         },
-
         rowSpan: (rowData: DataRow) => {
           return rowData.childCnt;
         },
