@@ -7,17 +7,17 @@ interface State {
 
 export default defineStore("searchConfig", {
   state: (): State => ({
-    searchConfig: SearchConfigDefault,
+    searchConfig: { ...SearchConfigDefault },
   }),
   actions: {
     setToDefault() {
       this.searchConfig.chargeType = SearchConfigDefault.chargeType;
       this.searchConfig.cloudProvider = SearchConfigDefault.cloudProvider;
       this.searchConfig.engineType = SearchConfigDefault.engineType;
+      this.searchConfig.keyword = SearchConfigDefault.keyword;
+      this.searchConfig.minCPU = SearchConfigDefault.minCPU;
+      this.searchConfig.minRAM = SearchConfigDefault.minRAM;
       this.searchConfig.region = SearchConfigDefault.region;
-      this.searchConfig.keyword = "";
-      this.searchConfig.minCPU = undefined;
-      this.searchConfig.minRAM = undefined;
       this.searchConfig.utilization = SearchConfigDefault.utilization;
       this.searchConfig.leaseLength = SearchConfigDefault.leaseLength;
     },
