@@ -97,33 +97,31 @@ export const getPrice = (
   utilization: number,
   leaseLength: number
 ): number => {
-  const onDemandCharge =
-    leaseLength * YearInHour * dataRow.hourly.usd * utilization;
   // charged on demand.
   if (dataRow.leaseLength === "N/A") {
-    return onDemandCharge;
+    return leaseLength * YearInHour * dataRow.hourly.usd * utilization;
   }
 
-  // If pass the lease length, the commitment should be charged immediately.
-  // const rentYear = Math.ceil(rentDay / YearInDay);
-  let commitmentCharge = 0;
+  // Charged reserved
+  // Reserved means you will be charged anytime, even you do not use it, so the utilization factor is left here.
+  let reservedCharge = leaseLength * YearInHour * dataRow.hourly.usd;
+  // The commitment should be charged immediately.
   if (dataRow.leaseLength === "1yr") {
-    commitmentCharge = dataRow.commitment.usd * leaseLength;
+    reservedCharge += dataRow.commitment.usd * leaseLength;
   }
   if (dataRow.leaseLength === "3yr" && leaseLength) {
-    commitmentCharge = dataRow.commitment.usd * Math.ceil(leaseLength / 3);
+    reservedCharge += dataRow.commitment.usd * Math.ceil(leaseLength / 3);
   }
-
-  return commitmentCharge + onDemandCharge;
+  return reservedCharge;
 };
 
 export const getDiff = (
   dataRow: DataRow,
-  availableRate: number,
+  utilization: number,
   leaseLength: number
 ): number => {
   const baseCharge =
-    leaseLength * YearInHour * dataRow.baseHourly * availableRate;
+    leaseLength * YearInHour * dataRow.baseHourly * utilization;
   return (dataRow.expectedCost - baseCharge) / baseCharge;
 };
 
