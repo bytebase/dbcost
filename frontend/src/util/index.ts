@@ -1,5 +1,5 @@
-import { DataRow } from "../components/CostTable";
-import { SearchConfig } from "../types";
+import { SearchConfig, DataRow } from "../types";
+import { isEqual } from "lodash";
 
 export const isEmptyArray = (arr: any[] | undefined) => {
   if (Array.isArray(arr) && !arr.length) {
@@ -160,5 +160,5 @@ export const isConfigChange = (
   _new.utilization = 0;
   _new.leaseLength = 0;
 
-  return JSON.stringify(_old) !== JSON.stringify(_new);
+  return isEqual(_old, _new);
 };

@@ -12,9 +12,8 @@ export const dashboardCostComparer = (row1: DataRow, row2: DataRow) => {
         // put the on demand type at the top
         if (row1.leaseLength === "N/A") {
           return -1;
-        } else {
-          return 1;
         }
+        return 1;
       }
       // make sure that the on demand type is always at the top
       return row2.childCnt - row1.childCnt;
