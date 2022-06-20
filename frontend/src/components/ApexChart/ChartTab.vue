@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { PropType, ref } from "vue";
 import { NTabs, NTabPane } from "naive-ui";
-import { DataRow } from "../CostTable";
+import { DataRow } from "../../types";
 
 const lineChart = ref();
 

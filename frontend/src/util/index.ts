@@ -153,6 +153,12 @@ export const isConfigChange = (
   oldConfig: SearchConfig,
   newConfig: SearchConfig
 ): boolean => {
-  console.log(oldConfig.region, newConfig.region);
-  return JSON.stringify(oldConfig) !== JSON.stringify(newConfig);
+  const _old = { ...oldConfig };
+  const _new = { ...newConfig };
+  _old.utilization = 0;
+  _old.leaseLength = 0;
+  _new.utilization = 0;
+  _new.leaseLength = 0;
+
+  return JSON.stringify(_old) !== JSON.stringify(_new);
 };

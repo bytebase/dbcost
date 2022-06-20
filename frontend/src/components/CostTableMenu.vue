@@ -93,7 +93,7 @@
     <cost-table-slider
       class="pt-2 items-center"
       :utilization="props.utilization"
-      :rent-year="props.rentYear"
+      :lease-length="props.leaseLength"
       @update-utilization="(val:number) => emit('update-utilization',val)"
       @update-lease-length="(val:number) => emit('update-lease-length',val)"
     />
@@ -138,7 +138,7 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
-  rentYear: {
+  leaseLength: {
     type: Number,
     default: 1,
   },

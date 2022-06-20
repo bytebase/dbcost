@@ -16,30 +16,30 @@
       </div>
 
       <n-slider
-        :format-tooltip="(val) => `${Math.trunc(val * 100)}%`"
+        :format-tooltip="(val:number) => `${Math.trunc(val * 100)}%`"
         :min="0.01"
         :max="1"
         class="w-40"
         :value="utilization"
         :step="0.01"
-        @update-value="(val) => emit('update-utilization', val)"
+        @update-value="(val:number) => emit('update-utilization', val)"
       />
     </div>
 
     <div class="ml-2">
       <div class="flex mb-1 items-center">
         Lease Length
-        <span class="ml-2 font-mono">{{ rentYear }} Year</span>
+        <span class="ml-2 font-mono">{{ leaseLength }} Year</span>
       </div>
 
       <n-slider
-        :format-tooltip="(val) => `${val} Year`"
+        :format-tooltip="(val:number) => `${val} Year`"
         :min="1"
         :max="3"
         class="w-40 align-middle"
-        :value="rentYear"
+        :value="leaseLength"
         :step="1"
-        @update-value="(val) => emit('update-lease-length', val)"
+        @update-value="(val:number) => emit('update-lease-length', val)"
       />
     </div>
   </div>
@@ -53,7 +53,7 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
-  rentYear: {
+  leaseLength: {
     type: Number,
     default: 1,
   },
