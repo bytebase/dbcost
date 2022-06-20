@@ -129,7 +129,7 @@ watch(
 
 const handleClickParentRegion = (parentRegionName: string) => {
   const set = new Set(state.checkedParentRegionList);
-  let checkedRegionList: String[] = props.checkedRegionList;
+  let checkedRegionList: String[] = [...props.checkedRegionList];
   // uncheck the parent region, all its child region should be unchecked.
   if (set.has(parentRegionName)) {
     set.delete(parentRegionName);
