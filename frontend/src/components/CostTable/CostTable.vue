@@ -41,7 +41,7 @@ const ProviderIconRender = {
     {
       src: new URL("../../assets/icon/gcp.png", import.meta.url).href,
       size: 12,
-      class: "align-middle mb-1 mr-1",
+      class: "mr-1 pt-0.5",
       color: "none",
     },
     {}
@@ -50,8 +50,8 @@ const ProviderIconRender = {
     NAvatar,
     {
       src: new URL("../../assets/icon/aws.png", import.meta.url).href,
-      size: 16,
-      class: "align-middle mr-1",
+      size: 12,
+      class: " mr-1 py-0.5",
       color: "none",
     },
     {}
