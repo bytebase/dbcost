@@ -23,29 +23,31 @@
         @update-value="(val :string[]) => $emit('update-region', val)"
       >
         <div
-          class="pr-6 w-80 pb-1"
+          class="pr-6 w-80 pb-1 flex"
           v-for="(region, i) in activeAvailableRegionList"
           :key="i"
         >
           <n-checkbox :value="region.name" :label="region.name" />
-          <n-avatar
-            v-if="
-              region.providerCode.has('AWS') && routeParamProvide.has('AWS')
-            "
-            :src="ProviderIcon.AWS"
-            color="none"
-            :size="20"
-            class="align-bottom"
-          />
-          <n-avatar
-            v-if="
-              region.providerCode.has('GCP') && routeParamProvide.has('GCP')
-            "
-            :src="ProviderIcon.GCP"
-            color="none"
-            :size="16"
-            class="align-bottom ml-0.5 mb-0.5"
-          />
+          <div class="flex">
+            <img
+              v-if="
+                region.providerCode.has('AWS') && routeParamProvide.has('AWS')
+              "
+              :src="ProviderIcon.AWS"
+              width="20"
+              class="py-1 mr-1 items-bottom"
+              style="transform: scale(0.9)"
+            />
+            <img
+              v-if="
+                region.providerCode.has('GCP') && routeParamProvide.has('GCP')
+              "
+              :src="ProviderIcon.GCP"
+              width="24"
+              class="p-0.5 items-bottom"
+              style="transform: scale(0.9)"
+            />
+          </div>
         </div>
       </n-checkbox-group>
     </div>
@@ -159,7 +161,7 @@ watch(
 
 const handleClickParentRegion = (parentRegionName: string) => {
   const set = new Set(state.checkedParentRegionList);
-  let checkedRegionList: String[] = props.checkedRegionList;
+  let checkedRegionList: String[] = [...props.checkedRegionList];
   // uncheck the parent region, all its child region should be unchecked.
   if (set.has(parentRegionName)) {
     set.delete(parentRegionName);

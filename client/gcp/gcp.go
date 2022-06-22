@@ -171,8 +171,33 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		if offer.ChargeType == client.ChargeTypeReserved {
 			continue
 		}
-
 		offerList = append(offerList, offer)
+		incrID++
+
+		// This is a little bit hack.
+		// GCP charge MySQL and PostgreSQL equally, but only provide MySQL at their API message.
+		// We manually create a PostgreSQL with exactly the same price here.
+		virtualSKU := fmt.Sprintf("%s-%s", rawOffer.ID, "PG")
+		postgreSQLoffer := &client.Offer{
+			ID:            incrID,
+			SKU:           virtualSKU,
+			TermCode:      virtualSKU,
+			OfferType:     offer.OfferType,
+			ChargeType:    offer.ChargeType,
+			RegionList:    offer.RegionList,
+			Description:   offer.Description,
+			CommitmentUSD: offer.CommitmentUSD,
+			HourlyUSD:     offer.HourlyUSD,
+			InstancePayload: &client.OfferInstancePayload{
+				Type:           offer.InstancePayload.Type,
+				InstanceFamily: offer.InstancePayload.InstanceFamily,
+				CPU:            offer.InstancePayload.CPU,
+				Memory:         offer.InstancePayload.Memory,
+				DatabaseEngine: client.EngineTypePostgreSQL,
+			},
+		}
+		offerList = append(offerList, postgreSQLoffer)
+
 		incrID++
 	}
 	return offerList, nil
