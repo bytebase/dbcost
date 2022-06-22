@@ -11,7 +11,7 @@
       <n-button @click="copyURL">Copy URL</n-button>
     </div>
 
-    <div class="border-b mb-2 pb-2">
+    <div class="border-b mb-2 pb-2 flex justify-end">
       <cost-table-slider
         :utilization="searchConfigStore.searchConfig.utilization"
         :lease-length="searchConfigStore.searchConfig.leaseLength"

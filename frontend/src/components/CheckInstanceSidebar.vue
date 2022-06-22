@@ -1,10 +1,10 @@
 <template>
   <div
-    class="fixed w-64 h-full bg-white z-10 transition-all duration-500"
-    :class="isCollapsed ? '-right-64' : 'right-0'"
+    class="fixed w-96 h-full bg-white z-10 transition-all duration-500"
+    :class="isCollapsed ? '-right-96' : 'right-0'"
   >
     <!-- top title -->
-    <div class="fixed w-64 bg-white pt-1">
+    <div class="fixed w-96 bg-white pt-1">
       <div class="mt-1 px-1">
         <n-button
           :disabled="dataTableItemStore.checkedRowKey.length === 0"
@@ -19,18 +19,16 @@
     </div>
 
     <!-- content -->
-    <div
-      class="fixed w-64 overflow-scroll h-full top-10 z-10 bg-white border-t mt-2"
-    >
+    <div class="fixed w-96 overflow-scroll h-full top-10 z-10 border-t mt-2">
       <div class="mt-2">
         <!-- Checked Instance Card -->
         <div
-          class="border-b hover:bg-gray-200 rounded-xl mx-1 mb-1"
+          class="border-b hover:bg-gray-200 mx-1 mb-1"
           v-for="dataRow in dataTableItemStore.checkedDataRow"
         >
           <!-- delete byn -->
           <div
-            class="flex float-right rounded-xl w-8 h-8 hover:bg-red-600 text-gray-400 hover:text-white click:bg-red-700 justify-center"
+            class="flex float-right w-8 h-8 hover:bg-red-600 text-gray-400 hover:text-white click:bg-red-700 justify-center"
             @click.prevent="() => handleDeleteCard(dataRow.key)"
           >
             <heroicons-solid:trash class="place-self-center" />
@@ -105,7 +103,7 @@
   <!-- collapse btn -->
   <div
     class="fixed top-1/2 bg-white rounded-2xl z-0 hover:bg-gray-300 opacity-50 transition-all duration-500"
-    :style="isCollapsed ? 'right: -100px' : 'right: 245px'"
+    :style="isCollapsed ? 'right: -9900px' : 'right: 373px'"
     @click="() => emit('collapse', true)"
   >
     <heroicons-solid:chevron-right class="text-2xl pr-1" />

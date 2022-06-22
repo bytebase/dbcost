@@ -27,7 +27,7 @@
       >
         <n-checkbox v-for="val in EngineCheckbox" :value="val.key">
           <template #default>
-            <img :src="val.iconPath" :width="val.width" />
+            <img :src="val.iconPath" :width="val.width" :style="val.style" />
           </template>
         </n-checkbox>
       </n-checkbox-group>
@@ -149,13 +149,14 @@ const ProviderCheckbox = [
     key: "AWS",
     iconPath: new URL("../assets/icon/aws.png", import.meta.url).href,
     width: 24,
-    class: "pr-1",
-    style: "transform:scale(1.3)",
+    class: "pr-1 items-center",
+    style: "transform:scale(1)",
   },
   {
     key: "GCP",
     iconPath: new URL("../assets/icon/gcp.png", import.meta.url).href,
     width: 24,
+    class: "items-center",
     style: "transform:scale(0.9)",
   },
 ];
@@ -165,11 +166,13 @@ const EngineCheckbox = [
     key: "MYSQL",
     iconPath: new URL("../assets/icon/db-mysql.png", import.meta.url).href,
     width: 24,
+    style: "transform:scale(0.75)",
   },
   {
     key: "POSTGRES",
     iconPath: new URL("../assets/icon/db-postgres.png", import.meta.url).href,
     width: 24,
+    style: "transform:scale(0.75)",
   },
 ];
 
