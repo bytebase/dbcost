@@ -59,7 +59,7 @@ const options = computed(() => {
     },
     plotOptions: {
       bar: {
-        horizontal: true,
+        horizontal: false,
       },
     },
     chart: {
@@ -70,10 +70,7 @@ const options = computed(() => {
     xaxis: {
       categories: xGrid,
       title: {
-        text: "USD",
-      },
-      labels: {
-        formatter: (val: number) => "$" + val,
+        text: "Instance",
       },
     },
     yaxis: {
@@ -90,7 +87,7 @@ const options = computed(() => {
     },
     legend: {
       position: "top",
-      horizontalAlign: "left",
+      horizontalAlign: "right",
       offsetX: 40,
     },
   };
