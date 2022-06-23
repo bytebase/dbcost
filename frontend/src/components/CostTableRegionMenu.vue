@@ -24,20 +24,24 @@
       >
         <div
           class="pr-6 w-80 pb-1 flex"
-          v-for="(region, i) in availableRegionList"
+          v-for="(region, i) in activeAvailableRegionList"
           :key="i"
         >
           <n-checkbox :value="region.name" :label="region.name" />
           <div class="flex">
             <img
-              v-if="region.providerCode.has('AWS')"
+              v-if="
+                region.providerCode.has('AWS') && routeParamProvide.has('AWS')
+              "
               :src="ProviderIcon.AWS"
               width="20"
               class="py-1 mr-1 items-bottom"
               style="transform: scale(0.9)"
             />
             <img
-              v-if="region.providerCode.has('GCP')"
+              v-if="
+                region.providerCode.has('GCP') && routeParamProvide.has('GCP')
+              "
               :src="ProviderIcon.GCP"
               width="24"
               class="p-0.5 items-bottom"
