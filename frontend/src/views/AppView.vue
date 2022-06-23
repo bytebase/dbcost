@@ -28,7 +28,7 @@
       :min-r-a-m="searchConfigStore.searchConfig.minRAM"
       :min-c-p-u="searchConfigStore.searchConfig.minCPU"
       :utilization="searchConfigStore.searchConfig.utilization"
-      :rent-year="searchConfigStore.searchConfig.leaseLength"
+      :lease-length="searchConfigStore.searchConfig.leaseLength"
       @update-cloud-provider="handleUpdateCloudProvider"
       @update-engine-type="handleUpdateEngineType"
       @update-charge-type="handleUpdateChargeType"
@@ -45,7 +45,7 @@
     <cost-table
       class="mt-4"
       :utilization="searchConfigStore.searchConfig.utilization"
-      :rent-year="searchConfigStore.searchConfig.leaseLength"
+      :lease-length="searchConfigStore.searchConfig.leaseLength"
       :data-row="dataTableItemStore.dataRow"
       :is-loading="state.isLoading"
       :show-engine-type="showEngineType"

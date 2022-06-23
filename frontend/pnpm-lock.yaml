@@ -7,6 +7,7 @@ specifiers:
   apexcharts: ^3.35.2
   autoprefixer: ^10.4.4
   d3-selection: ^3.0.0
+  lodash: ^4.17.21
   naive-ui: ^2.26.4
   pinia: ^2.0.11
   postcss: ^8.4.12
@@ -26,6 +27,7 @@ dependencies:
   apexcharts: 3.35.2
   autoprefixer: 10.4.4_postcss@8.4.12
   d3-selection: 3.0.0
+  lodash: 4.17.21
   naive-ui: 2.28.0_vue@3.2.31
   pinia: 2.0.13_typescript@4.6.3+vue@3.2.31
   postcss: 8.4.12

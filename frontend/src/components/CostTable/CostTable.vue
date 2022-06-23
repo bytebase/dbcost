@@ -11,8 +11,10 @@
 import { NDataTable, NAvatar, NTooltip } from "naive-ui";
 import { PropType, h, computed } from "vue";
 import { getDiff, getDigit } from "../../util";
+import { compareTableCostComparer, dashboardCostComparer } from "./util";
 
-import { DataRow } from "./";
+import { DataRow } from "../../types";
+import { router } from "../../router";
 
 const props = defineProps({
   dataRow: {
@@ -32,7 +34,7 @@ const props = defineProps({
   showEngineType: { type: Boolean, default: false },
   showLeaseLength: { type: Boolean, default: false },
   utilization: { type: Number, default: 1 },
-  rentYear: { type: Number, default: 1 },
+  leaseLength: { type: Number, default: 1 },
 });
 
 const ProviderIconRender = {
@@ -126,34 +128,16 @@ const pricingContent = {
       return h("span", { class: "font-mono" }, row.leaseLength);
     },
   },
-  cost: {
+  expectedCost: {
     title: "Expected Cost",
-    key: "cost",
+    key: "expectedCost",
     align: "right",
     defaultSortOrder: "ascend",
     sorter: {
-      // we sort the price col by the baseline(on demand) price
-      compare: (row1: DataRow, row2: DataRow) => {
-        if (row1.baseHourly === row2.baseHourly) {
-          if (row1.id === row2.id) {
-            if (row1.childCnt === row2.childCnt) {
-              if (row1.leaseLength !== "N/A" && row2.leaseLength !== "N/A") {
-                return row1.expectedCost - row2.expectedCost;
-              }
-              // put the on demand type at the top
-              if (row1.leaseLength === "N/A") {
-                return -1;
-              } else {
-                return 1;
-              }
-            }
-            // make sure that the on demand type is always at the top
-            return row2.childCnt - row1.childCnt;
-          }
-          return row1.id - row2.id;
-        }
-        return row1.baseHourly - row2.baseHourly;
-      },
+      compare:
+        router.currentRoute.value.name === "dashboard"
+          ? dashboardCostComparer
+          : compareTableCostComparer,
       multiple: 2,
     },
     render: (row: DataRow) =>
@@ -167,8 +151,8 @@ const pricingContent = {
               2
             )} is calculated based on utilization ${(
               props.utilization * 100
-            ).toFixed(0)}% for ${props.rentYear} year${
-              props.rentYear > 1 ? "s" : ""
+            ).toFixed(0)}% for ${props.leaseLength} year${
+              props.leaseLength > 1 ? "s" : ""
             } lease`,
           trigger: () =>
             h(
@@ -180,7 +164,7 @@ const pricingContent = {
                 row.leaseLength !== "N/A" && props.showDiff
                   ? "(" +
                     (
-                      getDiff(row, props.utilization, props.rentYear) * 100
+                      getDiff(row, props.utilization, props.leaseLength) * 100
                     ).toFixed(0) +
                     "%)"
                   : ""
@@ -206,7 +190,7 @@ const getPricingContent = () => {
   }
   col.push(pricingContent.hourlyPay);
 
-  col.push(pricingContent.cost);
+  col.push(pricingContent.expectedCost);
   return col;
 };
 

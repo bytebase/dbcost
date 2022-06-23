@@ -20,7 +20,7 @@
       <n-checkbox-group
         class="mt-2 flex flex-wrap justify-start"
         :value="(props.checkedRegionList as string[])"
-        @update-value="(val) =>  $emit('update-region', val as string[])"
+        @update-value="(val :string[]) => $emit('update-region', val)"
       >
         <div
           class="pr-6 w-80 pb-1 flex"
@@ -62,6 +62,7 @@ import {
 } from "vue";
 import { NCheckboxGroup, NCheckbox, NAvatar } from "naive-ui";
 import { AvailableRegion } from "../types";
+import { useRouter } from "vue-router";
 
 const ProviderIcon = {
   GCP: new URL("../assets/icon/gcp.png", import.meta.url).href,
@@ -97,16 +98,41 @@ const emit = defineEmits<{
   (e: "update-region", selectedRegion: string[]): void;
 }>();
 
+const router = useRouter();
+const routeParamProvide = computed(() =>
+  router.currentRoute.value.params?.provider
+    ? new Set([router.currentRoute.value.params?.provider])
+    : new Set(["GCP", "AWS"])
+);
+const activeAvailableRegionList = computed(
+  (): AvailableRegion[] | undefined => {
+    // all provider is included (AWS, GCP)
+    if (routeParamProvide.value.size === 2) {
+      return props.availableRegionList;
+    }
+    if (routeParamProvide.value.has("AWS")) {
+      return props.availableRegionList.filter((region) =>
+        region.providerCode.has("AWS")
+      );
+    }
+    if (routeParamProvide.value.has("GCP")) {
+      return props.availableRegionList.filter((region) =>
+        region.providerCode.has("GCP")
+      );
+    }
+  }
+);
+
 // "Asia Pacific (Hong Kong)" --->  ["Asia Pacific (Hong Kong", ""] ---> ["Asia Pacific", "Hong Kong"]
 const getParentRegionName = (regionName: string) =>
   regionName.split(")")[0].split(" (")[0];
 
 watch(
-  () => props.availableRegionList,
+  activeAvailableRegionList,
   () => {
     const parentRegionList = [];
     state.parentRegionMap.clear();
-    for (const region of props.availableRegionList) {
+    for (const region of activeAvailableRegionList?.value) {
       const parent = getParentRegionName(region.name);
 
       if (state.parentRegionMap.has(parent)) {
