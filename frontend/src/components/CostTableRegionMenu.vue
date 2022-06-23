@@ -136,7 +136,7 @@ watch(
   () => {
     const parentRegionList = [];
     state.parentRegionMap.clear();
-    for (const region of activeAvailableRegionList.value) {
+    for (const region of activeAvailableRegionList?.value) {
       const parent = getParentRegionName(region.name);
 
       if (state.parentRegionMap.has(parent)) {

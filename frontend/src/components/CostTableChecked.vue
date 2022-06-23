@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 import { PropType, reactive, defineProps } from "vue";
-import { DataRow } from "./CostTable";
+import { DataRow } from "../types";
 
 import { NButton } from "naive-ui";
 

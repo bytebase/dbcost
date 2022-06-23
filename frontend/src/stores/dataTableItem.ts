@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { DataRow } from "../components/CostTable";
+import { DataRow } from "../types";
 import { getPrice, getRegionCode, getRegionName } from "../util";
 import { useSearchConfigStore, useDBInstanceStore } from ".";
 

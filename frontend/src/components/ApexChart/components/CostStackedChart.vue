@@ -10,7 +10,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, PropType, computed } from "vue";
-import { DataRow } from "../../CostTable";
+import { DataRow } from "../../../types";
 import VueApexCharts from "vue3-apexcharts";
 import { getRegionName } from "../../../util";
 

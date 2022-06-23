@@ -13,17 +13,17 @@
 
     <div class="border-b mb-2 pb-2 flex justify-end">
       <cost-table-slider
-        :utilization="state.utilization"
-        :rent-year="state.rentYear"
-        @update-utilization="(val:number) => (state.utilization = val)"
-        @update-lease-length="(val:number) => (state.rentYear = val)"
+        :utilization="searchConfigStore.searchConfig.utilization"
+        :lease-length="searchConfigStore.searchConfig.leaseLength"
+        @update-utilization="handleUpdateUtilization"
+        @update-lease-length="handleUpdateLeaseLength"
       />
     </div>
     <!-- selected dashboard -->
     <div class="border-b mb-2 pb-2">
       <cost-table
-        :utilization="state.utilization"
-        :rent-year="state.rentYear"
+        :utilization="searchConfigStore.searchConfig.utilization"
+        :lease-length="searchConfigStore.searchConfig.leaseLength"
         :allow-select="false"
         :is-loading="false"
         :is-expended="true"
@@ -35,30 +35,30 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useDataTableItemStore } from "../stores";
+import { useDataTableItemStore, useSearchConfigStore } from "../stores";
 import { RouteQueryCompare } from "../types";
 import { NButton, useNotification } from "naive-ui";
 
 const dataTableItemStore = useDataTableItemStore();
+const searchConfigStore = useSearchConfigStore();
 const router = useRouter();
 onMounted(() => {
   const query: RouteQueryCompare = router.currentRoute.value.query;
-  useDataTableItemStore().loadCheckedDataRowByKey(
+  dataTableItemStore.loadCheckedDataRowByKey(
     query.instance?.split(",") as string[]
   );
 });
 
-interface LocalState {
-  utilization: number;
-  rentYear: number;
-}
-
-const state = reactive<LocalState>({
-  utilization: 1,
-  rentYear: 1,
-});
+const handleUpdateUtilization = (val: number) => {
+  searchConfigStore.searchConfig.utilization = val;
+  dataTableItemStore.refreshExpectedCost();
+};
+const handleUpdateLeaseLength = (val: number) => {
+  searchConfigStore.searchConfig.leaseLength = val;
+  dataTableItemStore.refreshExpectedCost();
+};
 
 const notification = useNotification();
 const copyURL = () => {
