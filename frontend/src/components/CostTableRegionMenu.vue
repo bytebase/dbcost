@@ -20,7 +20,7 @@
       <n-checkbox-group
         class="mt-2 flex flex-wrap justify-start"
         :value="(props.checkedRegionList as string[])"
-        @update-value="(val :string[]) => $emit('update-region', val)"
+        @update-value="(val:any) => $emit('update-region', val as string[])"
       >
         <div
           class="pr-6 w-80 pb-1 flex"
