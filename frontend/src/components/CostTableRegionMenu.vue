@@ -20,7 +20,7 @@
       <n-checkbox-group
         class="mt-2 flex flex-wrap justify-start"
         :value="(props.checkedRegionList as string[])"
-        @update-value="(val :string[]) => $emit('update-region', val)"
+        @update-value="(val:any) => $emit('update-region', val as string[])"
       >
         <div
           class="pr-6 w-80 pb-1 flex"
@@ -108,24 +108,23 @@ const routeParamProvide = computed(() =>
     ? new Set([router.currentRoute.value.params?.provider])
     : new Set(["GCP", "AWS"])
 );
-const activeAvailableRegionList = computed(
-  (): AvailableRegion[] | undefined => {
-    // all provider is included (AWS, GCP)
-    if (routeParamProvide.value.size === 2) {
-      return props.availableRegionList;
-    }
-    if (routeParamProvide.value.has("AWS")) {
-      return props.availableRegionList.filter((region) =>
-        region.providerCode.has("AWS")
-      );
-    }
-    if (routeParamProvide.value.has("GCP")) {
-      return props.availableRegionList.filter((region) =>
-        region.providerCode.has("GCP")
-      );
-    }
+const activeAvailableRegionList = computed((): AvailableRegion[] => {
+  // all provider is included (AWS, GCP)
+  if (routeParamProvide.value.size === 2) {
+    return props.availableRegionList;
   }
-);
+  if (routeParamProvide.value.has("AWS")) {
+    return props.availableRegionList.filter((region) =>
+      region.providerCode.has("AWS")
+    );
+  }
+  if (routeParamProvide.value.has("GCP")) {
+    return props.availableRegionList.filter((region) =>
+      region.providerCode.has("GCP")
+    );
+  }
+  return [];
+});
 
 // "Asia Pacific (Hong Kong)" --->  ["Asia Pacific (Hong Kong", ""] ---> ["Asia Pacific", "Hong Kong"]
 const getParentRegionName = (regionName: string) =>
