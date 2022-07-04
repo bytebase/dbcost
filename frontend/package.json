@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "sample": "nuxt dev --mode sample",
-    "dev": "nuxt dev --mode dev",
+    "sample": "sh ./start.sh sample",
+    "dev": "sh ./start.sh dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview"
   },

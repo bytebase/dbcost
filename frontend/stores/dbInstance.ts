@@ -70,8 +70,9 @@ export default defineStore("dbInstance", {
 
   actions: {
     async loadDBInstanceList() {
+      const config = useRuntimeConfig();
       let sourceFileName = "dbInstance.json";
-      if (import.meta.env.MODE === "sample") {
+      if (config.public.mode === "sample") {
         sourceFileName = "sample.json";
       }
 
