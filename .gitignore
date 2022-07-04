@@ -26,3 +26,11 @@ dist-ssr
 
 # unplugin by vite
 components.d.ts
+
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.env
+dist

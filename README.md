@@ -9,7 +9,7 @@ The market lacks a tool for developers to compare different database products be
 
 ### Used
 + **Golang**.
-+ **Vue** with **Vite**.
++ **Nuxt3** with **Vite**.
 + **ApexCharts** for visualization.
 + **Terraform** for infra management.
 + **Profilers** such as tpcc.
