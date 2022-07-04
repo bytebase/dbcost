@@ -144,20 +144,20 @@ const emit = defineEmits<{
 
 const ProviderIcon: any = {
   GCP: {
-    src: getIconPath("gcp"),
+    src: getIconPath("gcp.png"),
   },
   AWS: {
-    src: getIconPath("aws"),
+    src: getIconPath("aws.png"),
   },
 };
 
 const EngineIcon: any = {
   MYSQL: {
-    src: getIconPath("db-mysql"),
+    src: getIconPath("db-mysql.png"),
   },
 
   POSTGRES: {
-    src: getIconPath("db-postgres"),
+    src: getIconPath("db-postgres.png"),
   },
 };
 </script>

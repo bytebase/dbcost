@@ -40,7 +40,7 @@ const ProviderIconRender = {
   GCP: h(
     "img",
     {
-      src: getIconPath("gcp"),
+      src: getIconPath("gcp.png"),
       class: "mr-1 mb-0.5 inline h-2",
     },
     {}
@@ -48,7 +48,7 @@ const ProviderIconRender = {
   AWS: h(
     "img",
     {
-      src: getIconPath("aws"),
+      src: getIconPath("aws.png"),
       class: "mr-1 mb-0.5 inline h-2",
     },
     {}
@@ -59,7 +59,7 @@ const EngineIconRender = {
   MYSQL: h(
     "img",
     {
-      src: getIconPath("db-mysql"),
+      src: getIconPath("db-mysql.png"),
       class: "py-1 h-6",
     },
     {}
@@ -67,7 +67,7 @@ const EngineIconRender = {
   POSTGRES: h(
     "img",
     {
-      src: getIconPath("db-postgres"),
+      src: getIconPath("db-postgres.png"),
       class: "py-1 h-6",
     },
     {}

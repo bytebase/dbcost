@@ -148,14 +148,14 @@ const props = defineProps({
 const ProviderCheckbox = [
   {
     key: "AWS",
-    src: getIconPath("aws"),
+    src: getIconPath("aws.png"),
     width: 24,
     class: "pr-1 items-center",
     style: "transform:scale(1)",
   },
   {
     key: "GCP",
-    src: getIconPath("gcp"),
+    src: getIconPath("gcp.png"),
     width: 24,
     class: "items-center",
     style: "transform:scale(0.9)",
@@ -165,13 +165,13 @@ const ProviderCheckbox = [
 const EngineCheckbox = [
   {
     key: "MYSQL",
-    src: getIconPath("db-mysql"),
+    src: getIconPath("db-mysql.png"),
     width: 24,
     style: "transform:scale(0.75)",
   },
   {
     key: "POSTGRES",
-    src: getIconPath("db-postgres"),
+    src: getIconPath("db-postgres.png"),
     width: 24,
     style: "transform:scale(0.75)",
   },

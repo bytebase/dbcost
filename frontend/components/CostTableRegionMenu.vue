@@ -69,8 +69,8 @@ import { AvailableRegion } from "@/types";
 import { getIconPath } from "@/util";
 
 const ProviderIcon = {
-  GCP: getIconPath("gcp"),
-  AWS: getIconPath("aws"),
+  GCP: getIconPath("gcp.png"),
+  AWS: getIconPath("aws.png"),
 };
 
 const props = defineProps({
