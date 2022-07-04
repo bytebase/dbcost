@@ -16,4 +16,6 @@ fi
 
 echo "Building frontend"
 
-cd ./frontend && pnpm i && pnpm build
+# nuxt3 requries vue3/vue-router, pnpm i --shamefully-hoist would move this tow dependencies to the top level,
+# so that we can directly use this two packages in our code.
+cd ./frontend && pnpm i --shamefully-hoist && pnpm generate

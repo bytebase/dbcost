@@ -33,5 +33,6 @@
     "editor.formatOnSaveMode": "file"
   },
   "editor.formatOnSave": true,
-  "go.lintTool": "golint"
+  "go.lintTool": "golint",
+  "cSpell.words": ["Nuxt"]
 }
