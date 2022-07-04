@@ -31,12 +31,12 @@ The market lacks a tool for developers to compare different database products be
   * [x] Data Refinement Menu
   * [x] Table for checked Instance
   * [ ] RAM / CPU wise calculator special for GCP
-* [ ] Cost Charts (**Ongoing**) 
+* [x] Cost Charts
   * [x] Compare the difference in monthly price between different offers ( Line Chart )
   * [x] Compare the difference in total price between different offers ( Stacked Columns Chart )
   * [x] Compare the spec(cpu, ram) and cost of different instances ( Bubble Chart )
-  * [ ] Comparison page 
-* [ ] SEO (**Ongoing**) 
+  * [x] Comparison page 
+* [x] SEO with **Nuxt3**
 * [ ] Maintaining Relevant Services
   * [ ] Incorporate Terraform
   * [ ] Database Service Life Cycle Management
