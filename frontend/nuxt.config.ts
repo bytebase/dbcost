@@ -17,6 +17,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/css/tailwind.css", "~/assets/css/font.css"],
   modules: ["@pinia/nuxt", "unplugin-icons/nuxt", "lodash"],
+
   build: {
     transpile: [
       "naive-ui",
@@ -53,12 +54,10 @@ export default defineNuxtConfig({
     },
   },
 
-  googleAnalytics: {
-    id: "G-H772TGHHK7",
-  },
-
-  sitemap: {
-    hostname: "https://dbcost.com",
-    gzip: true,
-  },
+  // TODO: Not support Nuxt3 yet
+  // https://modules.nuxtjs.org
+  // sitemap: {
+  //   hostname: "https://dbcost.com",
+  //   gzip: true,
+  // },
 });
