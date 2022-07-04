@@ -64,7 +64,7 @@ go run ./seed/main/go
 
 ### Installing Frontend Dependencies
 ```
-cd ./frontend && pnpm i
+cd ./frontend && pnpm i --shamefully-hoist
 ```
 ### Starting the Frontend
 #### With sample data `./data/sample.json`
