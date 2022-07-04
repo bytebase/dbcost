@@ -6,12 +6,4 @@
 
 <script lang="ts" setup>
 import { NNotificationProvider } from "naive-ui";
-
-interface LocalState {
-  isCollapsed: boolean;
-}
-
-reactive<LocalState>({
-  isCollapsed: true,
-});
 </script>
