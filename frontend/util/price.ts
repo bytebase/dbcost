@@ -34,23 +34,27 @@ export const getDiff = (
   return (dataRow.expectedCost - baseCharge) / baseCharge;
 };
 
-// At least 2 digits of the decimal part would be display,
-// it it is still 0.00, show all the digits until first 0 occur.
+// At least N digits of the decimal part would be display.
+// If it is still 0.00, show all the digits until first 0 occur.
 // e.g.
-//    0.001 --> 0.001
+//    N = 2
+//    0.001 --> 0.00 --> 0.001
 //    0.011 --> 0.01
 //    123.011 --> 123.01
-export const getDigit = (val: number, leastDigitCnt: number): string => {
-  let res = val.toFixed(leastDigitCnt);
-  if (
-    res[res.length - 1] !== "0" ||
-    res[res.length - 2] !== "0" ||
-    Number(res) === val
-  ) {
+export const getDigit = (val: number, N: number): string => {
+  let res = val.toFixed(N);
+  // If val = 0, then it should always be 0.
+  if (Number(res) === val || N === 0) {
     return res;
   }
 
-  for (let i = leastDigitCnt + 1; ; i++) {
+  for (let i = 0; i < N; i++) {
+    if (res[res.length - i - 1] != "0") {
+      return res;
+    }
+  }
+
+  for (let i = N + 1; ; i++) {
     res = val.toFixed(i);
     if (Number(res) === val) {
       return res;
