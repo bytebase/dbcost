@@ -9,7 +9,7 @@
 </template>
 <script setup lang="ts">
 import { NDataTable, NTooltip } from "naive-ui";
-import { PropType, h, computed, VNode } from "vue";
+import { PropType, h, computed } from "vue";
 import { getDiff, getDigit, getIconPath } from "@/util";
 import { compareTableCostComparer, dashboardCostComparer } from "./util";
 
@@ -41,7 +41,7 @@ const ProviderIconRender = {
     "img",
     {
       src: getIconPath("gcp.png"),
-      class: "mr-1 h-2",
+      class: "mr-1 mb-0.5 inline h-2",
     },
     {}
   ),
@@ -49,7 +49,7 @@ const ProviderIconRender = {
     "img",
     {
       src: getIconPath("aws.png"),
-      class: "mr-1 h-2",
+      class: "mr-1 mb-0.5 inline h-2",
     },
     {}
   ),
