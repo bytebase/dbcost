@@ -9,7 +9,7 @@
 </template>
 <script setup lang="ts">
 import { NDataTable, NTooltip } from "naive-ui";
-import { PropType, h, computed } from "vue";
+import { PropType, h, computed, VNode } from "vue";
 import { getDiff, getDigit, getIconPath } from "@/util";
 import { compareTableCostComparer, dashboardCostComparer } from "./util";
 
@@ -41,7 +41,7 @@ const ProviderIconRender = {
     "img",
     {
       src: getIconPath("gcp.png"),
-      class: "mr-1 mb-0.5 inline h-2",
+      class: "mr-1 h-2",
     },
     {}
   ),
@@ -49,7 +49,7 @@ const ProviderIconRender = {
     "img",
     {
       src: getIconPath("aws.png"),
-      class: "mr-1 mb-0.5 inline h-2",
+      class: "mr-1 h-2",
     },
     {}
   ),
@@ -210,7 +210,6 @@ const columns: any = computed(() => {
           } else if (row.cloudProvider === "GCP") {
             return [ProviderIconRender.GCP, row.name];
           }
-
           return row.name;
         },
       },
@@ -243,15 +242,13 @@ const columns: any = computed(() => {
         title: "CPU",
         key: "cpu",
         align: "right",
+        width: 100,
         sorter: {
           compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
           multiple: 2,
         },
         rowSpan: (rowData: DataRow) => {
           return rowData.childCnt;
-        },
-        ellipsis: {
-          tooltip: false,
         },
         render(row: DataRow) {
           const cpuRender = h(
@@ -276,6 +273,7 @@ const columns: any = computed(() => {
         key: "memory",
         align: "right",
         defaultSortOrder: false,
+        width: 100,
         sorter: {
           compare: (row1: DataRow, row2: DataRow) =>
             Number(row1.memory) - Number(row2.memory),
