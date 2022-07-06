@@ -210,7 +210,6 @@ const columns: any = computed(() => {
           } else if (row.cloudProvider === "GCP") {
             return [ProviderIconRender.GCP, row.name];
           }
-
           return row.name;
         },
       },
@@ -243,15 +242,13 @@ const columns: any = computed(() => {
         title: "CPU",
         key: "cpu",
         align: "right",
+        width: 100,
         sorter: {
           compare: (row1: DataRow, row2: DataRow) => row1.cpu - row2.cpu,
           multiple: 2,
         },
         rowSpan: (rowData: DataRow) => {
           return rowData.childCnt;
-        },
-        ellipsis: {
-          tooltip: false,
         },
         render(row: DataRow) {
           const cpuRender = h(
@@ -276,6 +273,7 @@ const columns: any = computed(() => {
         key: "memory",
         align: "right",
         defaultSortOrder: false,
+        width: 100,
         sorter: {
           compare: (row1: DataRow, row2: DataRow) =>
             Number(row1.memory) - Number(row2.memory),

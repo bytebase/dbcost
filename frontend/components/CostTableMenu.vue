@@ -21,7 +21,7 @@
 
       <!-- Database Engine Type -->
       <n-checkbox-group
-        class="mr-2 pb-2"
+        class="mr-2 pb-1.5"
         :value="props.engineType"
         @update:value="handleUpdateEngineType"
       >
