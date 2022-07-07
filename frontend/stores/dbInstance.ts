@@ -70,11 +70,7 @@ export default defineStore("dbInstance", {
 
   actions: {
     async loadDBInstanceList() {
-      const config = useRuntimeConfig();
       let sourceFileName = "dbInstance.json";
-      if (config.public.mode === "sample") {
-        sourceFileName = "sample.json";
-      }
 
       const data = import.meta.glob(`../../data/*.json`);
       for (const path in data) {

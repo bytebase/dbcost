@@ -8,13 +8,6 @@ const r = (...args: string[]) => resolve(__dirname, ...args);
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  // https://v3.nuxtjs.org/migration/runtime-config
-  runtimeConfig: {
-    // Config within public will be also exposed to the client
-    public: {
-      mode: "",
-    },
-  },
   css: ["~/assets/css/tailwind.css", "~/assets/css/font.css"],
   modules: ["@pinia/nuxt", "unplugin-icons/nuxt", "lodash"],
 
