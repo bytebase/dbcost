@@ -5,17 +5,19 @@
 # example usages:
 # ./render.sh     this is how we seed our data, the api key is stored as a env variable on render
 
-echo "Seeding data"
+# echo "Seeding data"
 
-go run ./seed/main.go
+curl https://cloudbilling.googleapis.com/v1/services/9662-B51E-5089/skus?key=AIzaSyDYXaDfMiPRR8nRhCLQIuNyou0Vez12Zqs
 
-if [ $? -eq 1 ]; then
-    echo "Seeding data failed"
-    exit 1
-fi
+# go run ./seed/main.go
 
-echo "Building frontend"
+# if [ $? -eq 1 ]; then
+# echo "Seeding data failed"
+# exit 1
+# fi
+
+# echo "Building frontend"
 
 # nuxt3 requries vue3/vue-router, pnpm i --shamefully-hoist would move this tow dependencies to the top level,
 # so that we can directly use this two packages in our code.
-cd ./frontend && pnpm i --shamefully-hoist && pnpm generate
+# cd ./frontend && pnpm i --shamefully-hoist && pnpm generate
