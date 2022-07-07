@@ -108,7 +108,7 @@ func (c *Client) GetOffer() ([]*client.Offer, error) {
 		if err != nil {
 			return nil, err
 		}
-		rawOffer = append(p.OfferList)
+		rawOffer = append(rawOffer, p.OfferList...)
 		if p.NextPageToken == "" {
 			break
 		}
