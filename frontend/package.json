@@ -4,7 +4,7 @@
     "build": "nuxt build",
     "sample": "sh ./start.sh sample",
     "dev": "sh ./start.sh dev",
-    "generate": "nuxt generate",
+    "generate": "NODE_OPTIONS=--max_old_space_size=4096 nuxt generate",
     "preview": "nuxt preview"
   },
   "devDependencies": {
