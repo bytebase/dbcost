@@ -48,9 +48,9 @@ The market lacks a tool for developers to compare different database products be
 This project is under development and is very unstable. The way to start this project may improve as process goes on.
 
 ### Fetching Data
-Sample data is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/sample.json). You may start dbcost in sample mode without fetching the cloud provider's latest pricing data. If you decide to start with sample data, just skip this step.
+We maintain our data manually. The data on dbcost.com is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/dbInstance.json).
 
-Or, if you would like to fetch the newest data online, please apply for a [GCP API KEY](https://cloud.google.com/apigee/docs/api-platform/security/api-keys) with access to the [Cloud Billing API](https://cloud.google.com/billing/docs/reference/rest) yourself first. For AWS, the API is open to everyone, you do not need a API KEY to access relevant resource.
+If you would like to fetch the latest data, please apply for a [GCP API KEY](https://cloud.google.com/apigee/docs/api-platform/security/api-keys) with access to the [Cloud Billing API](https://cloud.google.com/billing/docs/reference/rest) first. For AWS, the API is open to everyone, you do not need a API KEY to access relevant resource.
 
 #### Set environment variable
 
@@ -67,12 +67,6 @@ go run ./seed/main/go
 cd ./frontend && pnpm i --shamefully-hoist
 ```
 ### Starting the Frontend
-#### With sample data `./data/sample.json`
-```
-pnpm sample
-```
-#### With latest data fetched `./data/dbInstance.json`
-Noted: If you skip the **Feching Data** step, `./data/dbInstance.json` shuold not exist.
 ```
 pnpm dev
 ```
