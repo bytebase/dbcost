@@ -225,9 +225,8 @@ func getCPUMemory(description string) (databaseEngine client.EngineType, CPU str
 		databaseEngine = client.EngineTypeMySQL
 	} else if match[1] == "PostgreSQL" {
 		databaseEngine = client.EngineTypePostgreSQL
-	} else {
-		return databaseEngine, match[2], match[3], nil
 	}
+
 	return databaseEngine, match[2], match[3], nil
 }
 

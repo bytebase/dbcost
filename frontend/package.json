@@ -2,9 +2,8 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "sample": "touch .env && echo NUXT_PUBLIC_MODE=sample >>.env && nuxt dev",
-    "dev": "touch .env && echo NUXT_PUBLIC_MODE=dev >>.env && nuxt dev",
-    "generate": "touch .env && echo NUXT_PUBLIC_MODE=prod >>.env && nuxt generate",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
     "preview": "nuxt preview"
   },
   "devDependencies": {
