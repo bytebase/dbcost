@@ -6,7 +6,6 @@ import (
 	"path"
 
 	"github.com/bytebase/dbcost/client"
-	"github.com/bytebase/dbcost/client/aws"
 	"github.com/bytebase/dbcost/client/gcp"
 	"github.com/bytebase/dbcost/store"
 )
@@ -26,7 +25,7 @@ func main() {
 
 	cloudProvider := map[store.CloudProvider]client.Client{
 		store.CloudProviderGCP: gcp.NewClient(apiKeyGCP),
-		store.CloudProviderAWS: aws.NewClient(),
+		// store.CloudProviderAWS: aws.NewClient(),
 	}
 
 	incrID := 0
@@ -35,7 +34,7 @@ func main() {
 		log.Printf("--------Fetching %s--------\n", provider)
 		offerList, err := client.GetOffer()
 		if err != nil {
-			log.Printf("Error occurred when fetching %s's entry.\n", provider)
+			log.Printf("Error occurred when fetching %s's entry, err: %s\n", provider, err)
 			continue
 		}
 		log.Printf("Fetched %d offer entry.\n", len(offerList))
