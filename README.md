@@ -48,7 +48,7 @@ The market lacks a tool for developers to compare different database products be
 This project is under development and is very unstable. The way to start this project may improve as process goes on.
 
 ### Fetching Data
-We maintain our data manually. The data on dbcost.com is provided at [here](https://github.com/bytebase/dbcost/blob/main/store/data/dbInstance.json).
+We maintain our data manually. The data on dbcost.com is provided at [here](https://github.com/bytebase/dbcost/blob/main/data/dbInstance.json).
 
 If you would like to fetch the latest data, please apply for a [GCP API KEY](https://cloud.google.com/apigee/docs/api-platform/security/api-keys) with access to the [Cloud Billing API](https://cloud.google.com/billing/docs/reference/rest) first. For AWS, the API is open to everyone, you do not need a API KEY to access relevant resource.
 
