@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/bytebase/dbcost/client"
 )
@@ -42,9 +41,7 @@ type DBInstance struct {
 	ID        int       `json:"id"`
 	RowStatus RowStatus `json:"rowStatus"`
 	CreatorID int       `json:"creatorId"`
-	CreatedTs int64     `json:"createdTs"`
 	UpdaterID int       `json:"updaterId"`
-	UpdatedTs int64     `json:"updatedTs"`
 
 	// Region-Price info
 	RegionList []*Region `json:"regionList"`
@@ -85,7 +82,6 @@ func Convert(offerList []*client.Offer, cloudProvider CloudProvider) ([]*DBInsta
 		termMap[offer.ID] = append(termMap[offer.ID], term)
 	}
 
-	now := time.Now().UTC()
 	incrID := 0
 	// dbInstanceMap is used to aggregate the instance by their type (e.g. db.m3.large).
 	dbInstanceMap := make(map[string]*DBInstance)
@@ -111,9 +107,7 @@ func Convert(offerList []*client.Offer, cloudProvider CloudProvider) ([]*DBInsta
 				ID:            incrID,
 				RowStatus:     RowStatusNormal,
 				CreatorID:     SYSTEM_BOT,
-				CreatedTs:     now.Unix(),
 				UpdaterID:     SYSTEM_BOT,
-				UpdatedTs:     now.Unix(),
 				CloudProvider: cloudProvider.String(),
 				Name:          instance.Type, // e.g. db.t4g.xlarge
 				CPU:           cpuInt,

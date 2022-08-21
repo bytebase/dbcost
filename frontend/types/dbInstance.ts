@@ -14,9 +14,7 @@ export type DBInstance = {
   externalId: ExternalId;
   rowStatus: RowStatus;
   creatorId: ContributorId;
-  createdTs: number;
   updaterId: ContributorId;
-  updatedTs: number;
 
   regionList: Region[];
 

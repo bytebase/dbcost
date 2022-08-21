@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"sort"
 
 	"github.com/bytebase/dbcost/client"
 	"github.com/bytebase/dbcost/client/aws"
@@ -18,29 +19,36 @@ const (
 	fileName     = "dbInstance.json"
 )
 
+type ProviderPair struct {
+	Provider store.CloudProvider
+	Client   client.Client
+}
+
 func main() {
 	apiKeyGCP := os.Getenv(renderEnvKey)
 	if apiKeyGCP == "" {
 		log.Fatalf("Env variable API_KEY_GCP not found, please set your API key in your environment first.\n")
 	}
 
-	cloudProvider := map[store.CloudProvider]client.Client{
-		store.CloudProviderGCP: gcp.NewClient(apiKeyGCP),
-		store.CloudProviderAWS: aws.NewClient(),
+	cloudProviderList := []ProviderPair{
+		{store.CloudProviderGCP, gcp.NewClient(apiKeyGCP)},
+		{store.CloudProviderAWS, aws.NewClient()},
 	}
 
 	incrID := 0
 	var dbInstanceList []*store.DBInstance
-	for provider, client := range cloudProvider {
-		log.Printf("--------Fetching %s--------\n", provider)
-		offerList, err := client.GetOffer()
+	for _, pair := range cloudProviderList {
+		log.Printf("--------Fetching %s--------\n", pair.Provider)
+		offerList, err := pair.Client.GetOffer()
+		// sort offerList to generate a stable output
+		sort.SliceStable(offerList, func(i, j int) bool { return offerList[i].TermCode < offerList[j].TermCode })
 		if err != nil {
-			log.Printf("Error occurred when fetching %s's entry.\n", provider)
+			log.Printf("Error occurred when fetching %s's entry.\n", pair.Provider)
 			continue
 		}
 		log.Printf("Fetched %d offer entry.\n", len(offerList))
 
-		providerDBInstanceList, err := store.Convert(offerList, provider)
+		providerDBInstanceList, err := store.Convert(offerList, pair.Provider)
 		if err != nil {
 			log.Fatalf("Fail to covert to dbInstance.\n")
 		}

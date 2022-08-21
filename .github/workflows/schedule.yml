@@ -2,8 +2,8 @@ name: schedule
 
 # for now we trigger this event manually
 on: workflow_dispatch
-#   schedule:
-#     - cron: "0 * * * *"
+  schedule:
+    - cron: "0 1 * * *"
 
 jobs:
   build:
@@ -22,14 +22,22 @@ jobs:
           go-version: 1.18
 
       - name: Fetch latest pricing data
-        run: go run main ./seed/main.go
-
-      - name: Push to the remote repo
         run: |
-          git config --local user.email "bot@bytebase.com"
-          git config --local user.name "bot"
-          git remote set-url origin https://${{ github.actor }}:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}
-          git pull --rebase
-          git add .
-          git commit -m "update by github action"
-          git push -f
+          export API_KEY_GCP=${{ secrets.API_KEY_GCP }}
+          go run seed/main.go
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: Update report
+          author: GitHub <noreply@github.com>
+          branch: update-pricing-data
+          delete-branch: true
+          title: "Update pricing data"
+          body: |
+            Update pricing data.
+          labels: |
+            data update
+            automated
+          reviewers: Megrax
+          draft: false
