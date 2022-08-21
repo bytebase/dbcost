@@ -1,10 +1,10 @@
 name: schedule
 
 # for now we trigger this event manually
-on: workflow_dispatch
+on:
+  workflow_dispatch:
   schedule:
     - cron: "0 1 * * *"
-
 jobs:
   build:
     runs-on: ubuntu-latest
