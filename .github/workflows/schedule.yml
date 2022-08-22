@@ -35,7 +35,7 @@ jobs:
           delete-branch: true
           title: "chore: update pricing data"
           body: |
-            This PR means that the our GitHub Action CronJob has detected an update to the pricing data.
+            This PR means that our GitHub Action CronJob has detected an update to the pricing data.
             This is a fairly rare event, so if anyone sees this PR, please check the results of the actions run first.
             Before merging this PR, make sure the actions logs are as expected.
           labels: |
