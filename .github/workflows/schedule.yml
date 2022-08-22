@@ -1,6 +1,6 @@
-name: schedule
+name: Update pricing data
 
-# for now we trigger this event manually
+# run this action every day
 on:
   workflow_dispatch:
   schedule:
@@ -29,13 +29,15 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v4
         with:
-          commit-message: Update report
+          commit-message: "chore: update pricing data"
           author: GitHub <noreply@github.com>
           branch: update-pricing-data
           delete-branch: true
-          title: "Update pricing data"
+          title: "chore: update pricing data"
           body: |
-            Update pricing data.
+            This PR means that our GitHub Action CronJob has detected an update to the pricing data.
+            This is a fairly rare event, so if anyone sees this PR, please check the results of the actions run first.
+            Before merging this PR, make sure the actions logs are as expected.
           labels: |
             data update
             automated
