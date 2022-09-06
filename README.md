@@ -11,7 +11,7 @@ The market lacks a tool for developers to compare different database products be
 ### Used
 
 - **Golang**.
-- **Nuxt3** with **Vite**.
+- **Next** with **React 18**.
 - **ApexCharts** for visualization.
 - **Terraform** for infra management.
 - **Profilers** such as tpcc.
@@ -40,7 +40,7 @@ The market lacks a tool for developers to compare different database products be
   - [x] Compare the difference in total price between different offers ( Stacked Columns Chart )
   - [x] Compare the spec(cpu, ram) and cost of different instances ( Bubble Chart )
   - [x] Comparison page
-- [x] SEO with **Nuxt3**
+- [ ] SEO with **Next**
 - [ ] Maintaining Relevant Services
   - [ ] Incorporate Terraform
   - [ ] Database Service Life Cycle Management
@@ -59,7 +59,7 @@ We maintain our data through a GitHub Actions CronJob. It runs every day to make
 ### Installing Frontend Dependencies
 
 ```
-cd ./frontend && pnpm i --shamefully-hoist
+cd ./frontend && pnpm i
 ```
 
 ### Starting the Frontend
