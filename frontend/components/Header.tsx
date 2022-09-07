@@ -10,7 +10,7 @@ const Header = () => {
       <div className="inline-flex flex-row items-center gap-4">
         <div className="h-8 relative flex ">
           <Image
-            src="/icons/dbcost-logo-full.png"
+            src="/icons/dbcost-logo-full.webp"
             width="100%"
             height="100%"
             objectFit="contain"
