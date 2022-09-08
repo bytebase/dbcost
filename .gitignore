@@ -34,3 +34,4 @@ components.d.ts
 .output
 .env
 dist
+.vercel
