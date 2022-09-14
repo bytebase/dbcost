@@ -8,15 +8,19 @@
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "^1.0.0",
+    "antd": "^4.23.0",
     "next": "latest",
     "nextjs-bundle-analysis": "^0.4.0",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "zustand": "^4.1.1"
   },
   "devDependencies": {
     "@types/node": "17.0.35",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
     "autoprefixer": "^10.4.7",
     "eslint": "8.23.0",
     "eslint-config-next": "12.2.5",
