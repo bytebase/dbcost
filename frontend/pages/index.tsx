@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Button } from "antd";
-import shallow from "zustand/shallow";
 import MainLayout from "@/layouts/main";
 import RegionMenu from "@/components/RegionMenu";
 import {
@@ -12,8 +11,7 @@ import {
 
 const Home: NextPage = () => {
   const loadDBInstanceList = useDBInstanceStore(
-    (state) => state.loadDBInstanceList,
-    shallow
+    (state) => state.loadDBInstanceList
   );
 
   useEffect(() => {
