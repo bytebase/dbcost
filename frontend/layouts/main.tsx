@@ -6,7 +6,7 @@ type Props = {
   title: string;
 };
 
-const main: React.FC<Props> = ({ children, title }) => {
+const Main: React.FC<Props> = ({ children, title }) => {
   return (
     <div className="flex flex-col h-screen">
       <Header />
@@ -21,4 +21,4 @@ const main: React.FC<Props> = ({ children, title }) => {
   );
 };
 
-export default main;
+export default Main;
