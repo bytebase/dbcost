@@ -2,7 +2,7 @@ import { useReducer, useEffect, useMemo } from "react";
 import { Checkbox } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { useSearchConfigStore } from "@/stores/searchConfig";
-import { AvailableRegion } from "@/types";
+import { AvailableRegion, SearchConfigDefault } from "@/types";
 
 interface Props {
   availableRegionList: AvailableRegion[];
@@ -16,7 +16,7 @@ interface LocalState {
 
 const initialState: LocalState = {
   regionMap: {},
-  parentRegionList: [],
+  parentRegionList: SearchConfigDefault.region.map(getParentRegionName),
   checkedParentRegionList: [],
 };
 
@@ -36,8 +36,9 @@ interface ReducerActions {
 const routeParamProvider = new Set(["GCP", "AWS"]);
 
 // "Asia Pacific (Hong Kong)" --->  ["Asia Pacific (Hong Kong", ""] ---> ["Asia Pacific", "Hong Kong"]
-const getParentRegionName = (regionName: string) =>
-  regionName.split(")")[0].split(" (")[0];
+function getParentRegionName(regionName: string) {
+  return regionName.split(")")[0].split(" (")[0];
+}
 
 const reducer = (state: LocalState, action: ReducerActions): LocalState => {
   const { type, payload } = action;
