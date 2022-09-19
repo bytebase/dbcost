@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@radix-ui/react-icons': ^1.1.1
   '@radix-ui/react-tooltip': ^1.0.0
   '@types/node': 17.0.35
   '@types/react': 18.0.9
@@ -22,6 +23,7 @@ specifiers:
   zustand: ^4.1.1
 
 dependencies:
+  '@radix-ui/react-icons': 1.1.1_react@18.1.0
   '@radix-ui/react-tooltip': 1.0.0_ohobp6rpsmerwlq5ipwfh5yigy
   antd: 4.23.1_ef5jwxihqo6n7gxfmzogljlgcm
   next: 12.3.0_ef5jwxihqo6n7gxfmzogljlgcm
@@ -367,6 +369,14 @@ packages:
       '@radix-ui/react-use-escape-keydown': 1.0.0_react@18.1.0
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
+    dev: false
+
+  /@radix-ui/react-icons/1.1.1_react@18.1.0:
+    resolution: {integrity: sha512-xc3wQC59rsFylVbSusQCrrM+6695ppF730Q6yqzhRdqDcRNWIm2R6ngpzBoSOQMcwnq4p805F+Gr7xo4fmtN1A==}
+    peerDependencies:
+      react: ^16.x || ^17.x || ^18.x
+    dependencies:
+      react: 18.1.0
     dev: false
 
   /@radix-ui/react-id/1.0.0_react@18.1.0:

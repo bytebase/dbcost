@@ -97,7 +97,7 @@ const reducer = (state: LocalState, action: ReducerActions): LocalState => {
 const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
   const [checkedRegionList, setRegion] = useSearchConfigStore((state) => [
     state.searchConfig.region,
-    state.setRegion,
+    (regionList: string[]) => void state.update("region", regionList),
   ]);
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -190,9 +190,7 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
 
   const handleChildRegionChange = (
     checkedChildRegionList: CheckboxValueType[]
-  ) => {
-    setRegion(checkedChildRegionList as string[]);
-  };
+  ) => void setRegion(checkedChildRegionList as string[]);
 
   // Initialize regionMap and parentRegionList.
   useEffect(() => {
@@ -226,10 +224,10 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
       type: ReducerActionsType.FILTER_CHECKED_PARENT_REGION_LIST,
       payload: { set },
     });
-  }, [checkedRegionList]);
+  }, [checkedRegionList, state.parentRegionList]);
 
   return (
-    <div className="flex w-full justify-start pb-4">
+    <div className="flex w-full justify-start pb-4 border-b">
       {/* parent region */}
       <div className="border-r flex-col mr-4 w-48">
         <Checkbox.Group
