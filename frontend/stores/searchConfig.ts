@@ -5,7 +5,10 @@ interface State {
   searchConfig: SearchConfig;
   reset: () => void;
   clear: () => void;
-  setRegion: (regionList: string[]) => void;
+  update: <K extends keyof SearchConfig>(
+    field: K,
+    value: SearchConfig[K]
+  ) => void;
 }
 
 export const useSearchConfigStore = create<State>()((set) => ({
@@ -29,12 +32,11 @@ export const useSearchConfigStore = create<State>()((set) => ({
     });
   },
   // actions
-  setRegion: (regionList: string[]) => {
+  update: <K extends keyof SearchConfig>(field: K, value: SearchConfig[K]) => {
     set((state) => ({
-      ...state,
       searchConfig: {
         ...state.searchConfig,
-        region: regionList,
+        [field]: value,
       },
     }));
   },
