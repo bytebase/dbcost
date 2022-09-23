@@ -112,7 +112,7 @@ const SearchMenu: React.FC = () => {
         </Checkbox.Group>
 
         {/* Min specification for Memory & CPU */}
-        <div className="flex !ml-2">
+        <div className="flex !ml-2 !mr-4">
           <div className="w-36">
             <InputNumber
               min={0}
