@@ -1,6 +1,6 @@
 import create from "zustand";
 import { AvailableRegion, DBInstance, DBInstanceId, Region } from "@/types";
-import { getRegionName } from "@/util";
+import { getRegionName } from "@/utils";
 
 interface State {
   dbInstanceList: DBInstance[];

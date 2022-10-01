@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-icons";
 import Tooltip from "@/components/primitives/Tooltip";
 import { useSearchConfigStore } from "@/stores/searchConfig";
-import { getIconPath } from "@/util";
+import { getIconPath } from "@/utils";
 import { CloudProvider, EngineType, ChargeType } from "@/types";
 
 const ProviderCheckbox = [

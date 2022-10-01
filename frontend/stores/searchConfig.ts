@@ -3,6 +3,7 @@ import { SearchConfig, SearchConfigDefault } from "@/types";
 
 interface State {
   searchConfig: SearchConfig;
+  isFiltering: () => boolean;
   reset: () => void;
   clear: () => void;
   update: <K extends keyof SearchConfig>(
@@ -11,8 +12,17 @@ interface State {
   ) => void;
 }
 
-export const useSearchConfigStore = create<State>()((set) => ({
+export const useSearchConfigStore = create<State>()((set, get) => ({
   searchConfig: { ...SearchConfigDefault },
+  isFiltering: () => {
+    const searchConfig = get().searchConfig;
+    return (
+      searchConfig.keyword.length > 0 ||
+      searchConfig.minCPU > 0 ||
+      searchConfig.minRAM > 0 ||
+      searchConfig.chargeType.length < 2
+    );
+  },
   reset: () => {
     set({ searchConfig: { ...SearchConfigDefault } });
   },
@@ -23,8 +33,8 @@ export const useSearchConfigStore = create<State>()((set) => ({
         cloudProvider: [],
         engineType: [],
         keyword: "",
-        minCPU: undefined,
-        minRAM: undefined,
+        minCPU: 0,
+        minRAM: 0,
         region: [],
         utilization: SearchConfigDefault.utilization,
         leaseLength: SearchConfigDefault.leaseLength,

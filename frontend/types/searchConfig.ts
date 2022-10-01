@@ -3,12 +3,12 @@ import { ChargeType } from "./term";
 
 export type SearchConfig = {
   cloudProvider?: CloudProvider[];
-  engineType?: EngineType[];
-  chargeType?: ChargeType[];
+  engineType: EngineType[];
+  chargeType: ChargeType[];
   region: string[];
-  minCPU?: number;
-  minRAM?: number;
-  keyword?: string;
+  minCPU: number;
+  minRAM: number;
+  keyword: string;
   utilization: number;
   leaseLength: number;
 };
@@ -18,7 +18,7 @@ export const SearchConfigDefault: SearchConfig = {
   engineType: ["MYSQL"],
   chargeType: ["OnDemand", "Reserved"],
   region: ["US East (N. Virginia)"],
-  keyword: undefined,
+  keyword: "",
   minCPU: 0,
   minRAM: 0,
   utilization: 1,

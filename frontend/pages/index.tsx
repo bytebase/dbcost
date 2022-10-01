@@ -5,10 +5,8 @@ import { Button } from "antd";
 import MainLayout from "@/layouts/main";
 import RegionMenu from "@/components/RegionMenu";
 import SearchMenu from "@/components/SearchMenu";
-import {
-  useDBInstanceStore,
-  useAvailableRegionList,
-} from "@/stores/dbInstance";
+import CompareTable from "@/components/CompareTable";
+import { useDBInstanceStore, useAvailableRegionList } from "@/stores";
 
 const Home: NextPage = () => {
   const loadDBInstanceList = useDBInstanceStore(
@@ -34,6 +32,7 @@ const Home: NextPage = () => {
         </div>
         <RegionMenu availableRegionList={availableRegionList} />
         <SearchMenu />
+        <CompareTable />
       </div>
     </MainLayout>
   );
