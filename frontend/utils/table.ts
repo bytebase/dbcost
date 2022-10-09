@@ -13,6 +13,14 @@ enum SorterColumn {
   EXPECTED_COST = "expectedCost",
 }
 
+type Comparer = {
+  [key in SorterColumn]: (
+    a: dataSource,
+    b: dataSource,
+    isAscending: boolean
+  ) => number;
+};
+
 export const getCellRowSpan = (
   dataSource: dataSource[],
   index: number,
@@ -93,13 +101,7 @@ export const dashboardCostComparer = (
   return 1;
 };
 
-export const comparer: {
-  [key in SorterColumn]: (
-    a: dataSource,
-    b: dataSource,
-    isAscending: boolean
-  ) => number;
-} = {
+export const comparer: Comparer = {
   region: (rowA: dataSource, rowB: dataSource, isAscending: boolean) => {
     // sort by the case-insensitive alphabetical order
     const a = rowA.region.toLocaleLowerCase();

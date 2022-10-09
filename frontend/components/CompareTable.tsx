@@ -131,6 +131,43 @@ const CompareTable: React.FC = () => {
     sortedInfo.order,
   ]);
 
+  const expectedCostTooltipContent = useCallback(
+    (expectedCost: number): string => {
+      const cost = getDigit(expectedCost, 2);
+      const utilization = (searchConfig.utilization * 100).toFixed(0);
+      const year = searchConfig.leaseLength;
+      const leaseLength = searchConfig.leaseLength > 1 ? "s" : "";
+      return `$${cost} is calculated based on utilization ${utilization}% for ${year} year${leaseLength} lease`;
+    },
+    [searchConfig.leaseLength, searchConfig.utilization]
+  );
+
+  const expectedCostCellContent = useCallback(
+    (expectedCost: number, record: dataSource): string => {
+      const cost = getDigit(expectedCost, 0);
+      const showPercentage =
+        record.leaseLength !== "N/A" && searchConfig.chargeType?.length === 2;
+
+      if (showPercentage) {
+        const diff = getDiff(
+          record,
+          searchConfig.utilization,
+          searchConfig.leaseLength
+        );
+        const percentageContent = ` (${(diff * 100).toFixed(0)}%)`;
+
+        return `$${cost}${percentageContent}`;
+      } else {
+        return `$${cost}`;
+      }
+    },
+    [
+      searchConfig.chargeType?.length,
+      searchConfig.leaseLength,
+      searchConfig.utilization,
+    ]
+  );
+
   // pricingContent is the col of the pricing, we need to dynamic render this section.
   // e.g. when user only select single engine, the engine icon is unnecessary
   const pricingContent = useDeferredValue({
@@ -188,30 +225,11 @@ const CompareTable: React.FC = () => {
       render: (expectedCost: number, record: dataSource) => (
         <Tooltip
           delayDuration={0}
-          content={`$${getDigit(
-            expectedCost,
-            2
-          )} is calculated based on utilization ${(
-            searchConfig.utilization * 100
-          ).toFixed(0)}% for ${searchConfig.leaseLength} year${
-            searchConfig.leaseLength > 1 ? "s" : ""
-          } lease`}
+          content={expectedCostTooltipContent(expectedCost)}
         >
-          <span className="font-mono">{`
-              $${getDigit(expectedCost, 0)}${
-            record.leaseLength !== "N/A" &&
-            searchConfig.chargeType?.length === 2
-              ? " (" +
-                (
-                  getDiff(
-                    record,
-                    searchConfig.utilization,
-                    searchConfig.leaseLength
-                  ) * 100
-                ).toFixed(0) +
-                "%)"
-              : ""
-          }`}</span>
+          <span className="font-mono">
+            {expectedCostCellContent(expectedCost, record)}
+          </span>
         </Tooltip>
       ),
     },
