@@ -71,8 +71,8 @@ export const getRegionName = (regionCode: string): string => {
 
 export const getRegionCode = (regionName: string): string[] => {
   const regionCode: string[] = [];
-  regionCodeMap.forEach((_regionName, code) => {
-    if (_regionName === regionName) {
+  regionCodeMap.forEach((name, code) => {
+    if (name === regionName) {
       regionCode.push(code);
     }
   });

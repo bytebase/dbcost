@@ -1,8 +1,9 @@
-import { DataRow } from "@/types";
+import { dataSource } from "@/types";
 
-const YearInHour = 365 * 24;
+export const YearInHour = 365 * 24;
+
 export const getPrice = (
-  dataRow: DataRow,
+  dataRow: dataSource,
   utilization: number,
   leaseLength: number
 ): number => {
@@ -25,7 +26,7 @@ export const getPrice = (
 };
 
 export const getDiff = (
-  dataRow: DataRow,
+  dataRow: dataSource,
   utilization: number,
   leaseLength: number
 ): number => {
@@ -34,8 +35,8 @@ export const getDiff = (
   return (dataRow.expectedCost - baseCharge) / baseCharge;
 };
 
-// At least N digits of the decimal part would be display.
-// If it is still 0.00, show all the digits until first 0 occur.
+// At least N digits of the decimal part would be displayed.
+// If it is still 0.00, show all the digits until first 0 occurs.
 // e.g.
 //    N = 2
 //    0.001 --> 0.00 --> 0.001

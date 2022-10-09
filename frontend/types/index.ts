@@ -3,4 +3,4 @@ export * from "./searchConfig";
 export * from "./region";
 export * from "./term";
 export * from "./common";
-export * from "./dataRow";
+export * from "./dataSource";
