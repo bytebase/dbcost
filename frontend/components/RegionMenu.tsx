@@ -1,4 +1,5 @@
 import { useReducer, useEffect, useMemo } from "react";
+import Image from "next/image";
 import { Checkbox } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { useSearchConfigStore } from "@/stores/searchConfig";
@@ -259,6 +260,26 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
           {activeAvailableRegionList.map((region) => (
             <div className="pr-6 w-80 h-7 pb-1 flex" key={region.name}>
               <Checkbox value={region.name}>{region.name}</Checkbox>
+              {region.providerCode.has("AWS") && (
+                <div className="relative top-1 w-5 h-4 mr-2">
+                  <Image
+                    src="/icons/provider-aws.png"
+                    alt="aws"
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+              )}
+              {region.providerCode.has("GCP") && (
+                <div className="relative top-1 w-4 h-4">
+                  <Image
+                    src="/icons/provider-gcp.png"
+                    alt="aws"
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+              )}
             </div>
           ))}
         </Checkbox.Group>
