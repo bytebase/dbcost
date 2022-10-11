@@ -1,17 +1,50 @@
-// Let's disable this rule for now. The next/image will bring some layout obtacles.
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import Tooltip from "@/components/primitives/Tooltip";
+import { useSearchConfigStore } from "@/stores";
 
 const cloudEmoji = "☁️";
 const moneyEmoji = "💸";
+const providerList = ["aws", "gcp"];
 
 const Header: React.FC = () => {
+  const resetSearchConfig = useSearchConfigStore((state) => state.reset);
+  const router = useRouter();
+  const { provider: providerInRoute } = router.query;
+
   return (
     <header className="flex justify-between items-center flex-grow-0 p-2 bg-slate-800 text-white">
       <div className="inline-flex flex-row items-center gap-4">
-        <img className="h-8" src="/icons/dbcost-logo-full.webp" alt="DB Cost" />
-        <span className="h-8 text-lg pt-0.5 text-white">AWS</span>
-        <span className="h-8 text-lg pt-0.5 text-white">GCP</span>
+        <Link href="/">
+          <a>
+            <div
+              className="relative w-32 h-8"
+              onClick={() => void resetSearchConfig()}
+            >
+              <Image
+                src="/icons/dbcost-logo-full.webp"
+                alt="DB Cost"
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
+          </a>
+        </Link>
+        {providerList.map((provider: string) => (
+          <Link href={`/provider/${provider}`} key={provider}>
+            <a>
+              <span
+                className={`${
+                  providerInRoute === provider ? "border-b" : ""
+                } h-8 text-lg pt-0.5 text-white`}
+                onClick={() => void resetSearchConfig()}
+              >
+                {provider.toUpperCase()}
+              </span>
+            </a>
+          </Link>
+        ))}
       </div>
 
       <div className="inline-flex flex-row items-center text-3xl">
@@ -34,14 +67,19 @@ const Header: React.FC = () => {
               delayDuration={0}
               content="Safe Database Schema Change and Version Control for Teams"
             >
-              <img
-                className="h-6 ml-2 cursor-pointer"
-                src="/icons/bytebase-logo-full-invert.svg"
-                alt="Bytebase"
+              <div
+                className="relative w-32 h-6 cursor-pointer"
                 onClick={() => {
                   window.open("https://bytebase.com?ref=dbcost", "_blank");
                 }}
-              />
+              >
+                <Image
+                  src="/icons/bytebase-logo-full-invert.svg"
+                  alt="Bytebase"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
             </Tooltip>
           </div>
         </div>

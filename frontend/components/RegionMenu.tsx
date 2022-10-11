@@ -1,5 +1,6 @@
-import { useReducer, useEffect, useMemo } from "react";
+import { useReducer, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { Checkbox } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { useSearchConfigStore } from "@/stores/searchConfig";
@@ -22,7 +23,7 @@ const initialState: LocalState = {
 };
 
 enum ReducerActionsType {
-  CLEAR_REGION_MAP = "CLEAR_REGION_MAP",
+  CLEAR_MAP = "CLEAR_MAP",
   UPDATE_REGION_MAP = "UPDATE_REGION_MAP",
   SORT_PARENT_REGION_LIST = "SORT_PARENT_REGION_LIST",
   FILTER_CHECKED_PARENT_REGION_LIST = "FILTER_CHECKED_PARENT_REGION_LIST",
@@ -33,9 +34,6 @@ interface ReducerActions {
   payload: any;
 }
 
-// TODO: Support specific providers (GCP / AWS)
-const routeParamProvider = new Set(["GCP", "AWS"]);
-
 // "Asia Pacific (Hong Kong)" --->  ["Asia Pacific (Hong Kong", ""] ---> ["Asia Pacific", "Hong Kong"]
 function getParentRegionName(regionName: string) {
   return regionName.split(")")[0].split(" (")[0];
@@ -44,10 +42,11 @@ function getParentRegionName(regionName: string) {
 const reducer = (state: LocalState, action: ReducerActions): LocalState => {
   const { type, payload } = action;
   switch (type) {
-    case ReducerActionsType.CLEAR_REGION_MAP:
+    case ReducerActionsType.CLEAR_MAP:
       return {
         ...state,
         regionMap: {},
+        parentRegionList: [],
       };
     case ReducerActionsType.UPDATE_REGION_MAP:
       const { parent, region } = payload;
@@ -101,7 +100,12 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
     state.searchConfig.region,
     (regionList: string[]) => void state.update("region", regionList),
   ]);
+  const router = useRouter();
+  const { provider } = router.query;
 
+  const [routeParamProvider, setRouteParamProvider] = useState<Set<string>>(
+    new Set(["GCP", "AWS"])
+  );
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const activeAvailableRegionList = useMemo(() => {
@@ -120,7 +124,7 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
       );
     }
     return [];
-  }, [availableRegionList]);
+  }, [availableRegionList, routeParamProvider]);
 
   const isIndeterminate = useMemo(
     () =>
@@ -194,11 +198,17 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
     checkedChildRegionList: CheckboxValueType[]
   ) => void setRegion(checkedChildRegionList as string[]);
 
+  useEffect(() => {
+    if (typeof provider === "string") {
+      setRouteParamProvider(new Set([provider.toUpperCase()]));
+    }
+  }, [provider]);
+
   // Initialize regionMap and parentRegionList.
   useEffect(() => {
     if (activeAvailableRegionList.length > 0) {
       dispatch({
-        type: ReducerActionsType.CLEAR_REGION_MAP,
+        type: ReducerActionsType.CLEAR_MAP,
         payload: null,
       });
 

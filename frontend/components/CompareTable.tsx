@@ -31,6 +31,10 @@ interface PaginationInfo {
   pageSize: number;
 }
 
+interface Props {
+  hideProviderIcon?: boolean;
+}
+
 enum SorterColumn {
   REGION = "region",
   CPU = "cpu",
@@ -40,7 +44,7 @@ enum SorterColumn {
 
 const tablePaginationConfig = { defaultPageSize: 100 };
 
-const CompareTable: React.FC = () => {
+const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
   const dbInstanceList = useDBInstanceStore((state) => state.dbInstanceList);
   const [searchConfig, isFiltering] = useSearchConfigStore((state) => [
     state.searchConfig,
@@ -251,11 +255,13 @@ const CompareTable: React.FC = () => {
           ) {
             return (
               <div className="flex items-center w-full">
-                <div className="relative !w-5 h-5 mr-2">
-                  <Icon
-                    name={`provider-${record.cloudProvider.toLowerCase()}`}
-                  />
-                </div>
+                {!hideProviderIcon && (
+                  <div className="relative !w-5 h-5 mr-2">
+                    <Icon
+                      name={`provider-${record.cloudProvider.toLowerCase()}`}
+                    />
+                  </div>
+                )}
                 {name}
               </div>
             );
@@ -322,6 +328,7 @@ const CompareTable: React.FC = () => {
     ],
     [
       dataSource,
+      hideProviderIcon,
       isFiltering,
       paginationInfo,
       pricingContent,

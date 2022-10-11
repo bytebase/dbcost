@@ -9,6 +9,10 @@ import { useSearchConfigStore } from "@/stores/searchConfig";
 import { getIconPath } from "@/utils";
 import { CloudProvider, EngineType, ChargeType } from "@/types";
 
+interface Props {
+  hideProviders?: boolean;
+}
+
 const ProviderCheckbox = [
   {
     key: "AWS",
@@ -39,7 +43,7 @@ const EngineCheckbox = [
   },
 ];
 
-const SearchMenu: React.FC = () => {
+const SearchMenu: React.FC<Props> = ({ hideProviders = false }) => {
   const [searchConfig, updateSearchConfig] = useSearchConfigStore((state) => [
     state.searchConfig,
     state.update,
@@ -49,33 +53,35 @@ const SearchMenu: React.FC = () => {
     <div className="flex justify-between pb-2 border-b">
       <div className="h-24 pt-2 flex flex-wrap items-center">
         {/* Cloud Providers */}
-        <Checkbox.Group
-          className="mr-2 !-mt-1"
-          value={searchConfig.cloudProvider}
-          onChange={(checkedValue) =>
-            void updateSearchConfig(
-              "cloudProvider",
-              checkedValue as CloudProvider[]
-            )
-          }
-        >
-          {ProviderCheckbox.map((provider) => (
-            <Checkbox
-              className={provider.className}
-              key={provider.key}
-              value={provider.key}
-            >
-              <div className="relative top-1 w-6 h-5" style={provider.style}>
-                <Image
-                  src={provider.src}
-                  alt="aws"
-                  layout="fill"
-                  objectFit="contain"
-                />
-              </div>
-            </Checkbox>
-          ))}
-        </Checkbox.Group>
+        {!hideProviders && (
+          <Checkbox.Group
+            className="mr-2 !-mt-1"
+            value={searchConfig.cloudProvider}
+            onChange={(checkedValue) =>
+              void updateSearchConfig(
+                "cloudProvider",
+                checkedValue as CloudProvider[]
+              )
+            }
+          >
+            {ProviderCheckbox.map((provider) => (
+              <Checkbox
+                className={provider.className}
+                key={provider.key}
+                value={provider.key}
+              >
+                <div className="relative top-1 w-6 h-5" style={provider.style}>
+                  <Image
+                    src={provider.src}
+                    alt="aws"
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+              </Checkbox>
+            ))}
+          </Checkbox.Group>
+        )}
 
         {/* Database Engine Types */}
         <Checkbox.Group
