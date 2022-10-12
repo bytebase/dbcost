@@ -15,11 +15,13 @@ const Main: React.FC<Props> = ({ children, title }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="flex-grow">
-        <h1 className="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800 space-x-2">
-          {title}
-        </h1>
-        {children}
+      <main className="flex flex-grow justify-center">
+        <div className="w-full 2xl:w-5/6 2xl:max-w-7xl">
+          <h1 className="flex flex-row justify-center mx-5 mt-4 text-4xl text-center text-slate-800 space-x-2">
+            {title}
+          </h1>
+          {children}
+        </div>
       </main>
       <Footer />
     </div>
