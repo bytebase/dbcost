@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   useCallback,
+  startTransition,
 } from "react";
 import { Table } from "antd";
 import { isEqual } from "lodash";
@@ -17,13 +18,12 @@ import {
   dashboardCostComparer,
   comparer,
   getPricingContent,
+  getPrice,
+  getRegionCode,
+  getRegionName,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
-import {
-  useDBInstanceStore,
-  useSearchConfigStore,
-  useTableDataStore,
-} from "@/stores";
+import { useDBInstanceContext, useSearchConfigStore } from "@/stores";
 import Icon from "@/components/Icon";
 
 interface PaginationInfo {
@@ -45,18 +45,35 @@ enum SorterColumn {
 const tablePaginationConfig = { defaultPageSize: 100 };
 
 const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
-  const dbInstanceList = useDBInstanceStore((state) => state.dbInstanceList);
+  const { dbInstanceList } = useDBInstanceContext();
   const [searchConfig, isFiltering] = useSearchConfigStore((state) => [
     state.searchConfig,
     state.isFiltering,
   ]);
-  const [dataSource, refresh, refreshExpectedCost, sort] = useTableDataStore(
-    (state) => [
-      state.dataSource,
-      state.refresh,
-      state.refreshExpectedCost,
-      state.sort,
-    ]
+
+  const [dataSource, setDataSource] = useState<dataSource[]>([]);
+
+  const refreshExpectedCost = useCallback(() => {
+    startTransition(() => {
+      setDataSource((state) => {
+        const { utilization, leaseLength } = searchConfig;
+        state.forEach((row) => {
+          row.expectedCost = getPrice(row, utilization, leaseLength);
+        });
+        return state;
+      });
+    });
+  }, [searchConfig]);
+
+  const sort = useCallback(
+    (sorter: (a: dataSource, b: dataSource) => number) => {
+      startTransition(() => {
+        setDataSource((state) => {
+          return [...state].sort(sorter);
+        });
+      });
+    },
+    []
   );
 
   const [loading, setLoading] = useState(false);
@@ -73,6 +90,155 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
     () => searchConfig.engineType && searchConfig.engineType.length > 1,
     [searchConfig]
   );
+
+  const generateDataSource = useCallback((): dataSource[] => {
+    let rowCount = 0;
+    const dataSource: dataSource[] = [];
+    const {
+      cloudProvider,
+      region,
+      engineType,
+      chargeType,
+      minCPU,
+      minRAM,
+      utilization,
+      leaseLength,
+      keyword,
+    } = useSearchConfigStore.getState().searchConfig;
+
+    // If any of these three below is empty, display no table row.
+    if (
+      region.length === 0 ||
+      engineType.length === 0 ||
+      chargeType.length === 0
+    ) {
+      return [];
+    }
+
+    const cloudProviderSet = new Set(cloudProvider);
+    const selectedRegionCodeSet = new Set(
+      region.map((region) => getRegionCode(region)).flat()
+    );
+    const engineSet = new Set(engineType);
+    const chargeTypeSet = new Set(chargeType);
+
+    // Process each db instance.
+    dbInstanceList.forEach((dbInstance) => {
+      if (
+        (minRAM !== undefined && Number(dbInstance.memory) < minRAM) ||
+        (minCPU !== undefined && Number(dbInstance.cpu) < minCPU)
+      ) {
+        return;
+      }
+
+      if (!cloudProviderSet.has(dbInstance.cloudProvider)) {
+        return;
+      }
+
+      const selectedRegionList = dbInstance.regionList.filter((region) =>
+        selectedRegionCodeSet.has(region.code)
+      );
+
+      if (selectedRegionList.length === 0) {
+        return;
+      }
+
+      const dataRowList: dataSource[] = [];
+      const dataRowMap: Map<string, dataSource[]> = new Map();
+
+      selectedRegionList.forEach((region) => {
+        const selectedTermList = region.termList.filter(
+          (term) =>
+            chargeTypeSet.has(term.type) && engineSet.has(term.databaseEngine)
+        );
+
+        let basePriceMap = new Map<string, number>();
+        selectedTermList.forEach((term) => {
+          if (term.type === "OnDemand") {
+            basePriceMap.set(term.databaseEngine, term.hourlyUSD);
+          }
+        });
+
+        const regionName = getRegionName(region.code);
+        selectedTermList.forEach((term) => {
+          const regionInstanceKey = `${dbInstance.name}::${region.code}::${term.databaseEngine}`;
+          const newRow: dataSource = {
+            // set this later
+            id: -1,
+            // We use :: for separation because AWS use . and GCP use - as separator.
+            key: `${dbInstance.name}::${region.code}::${term.code}`,
+            // set this later
+            childCnt: 0,
+            cloudProvider: dbInstance.cloudProvider,
+            name: dbInstance.name,
+            processor: dbInstance.processor,
+            cpu: dbInstance.cpu,
+            memory: dbInstance.memory,
+            engineType: term.databaseEngine,
+            commitment: { usd: term.commitmentUSD },
+            hourly: { usd: term.hourlyUSD },
+            leaseLength: term.payload?.leaseContractLength ?? "N/A",
+            // We store the region code for each provider, and show the user the actual region information.
+            // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
+            region: regionName,
+            baseHourly: basePriceMap.get(term.databaseEngine) as number,
+            // set this later
+            expectedCost: 0,
+          };
+          newRow.expectedCost = getPrice(newRow, utilization, leaseLength);
+
+          if (dataRowMap.has(regionInstanceKey)) {
+            const existedDataRowList = dataRowMap.get(
+              regionInstanceKey
+            ) as dataSource[];
+            newRow.id = existedDataRowList[0].id;
+            existedDataRowList.push(newRow);
+          } else {
+            rowCount++;
+            newRow.id = rowCount;
+            dataRowMap.set(regionInstanceKey, [newRow]);
+          }
+        });
+      });
+
+      dataRowMap.forEach((rows) => {
+        rows.sort((a, b) => {
+          // Sort rows according to the following criterion:
+          // 1. On demand price goes first.
+          // 2. Sort on expected cost.
+          if (a.leaseLength === "N/A") {
+            return -1;
+          } else if (b.leaseLength === "N/A") {
+            return 1;
+          }
+
+          return a.expectedCost - b.expectedCost;
+        });
+        rows.forEach((row) => {
+          row.childCnt = rows.length;
+        });
+        dataRowList.push(...rows);
+      });
+
+      const searchKey = keyword?.toLowerCase();
+      if (searchKey) {
+        // filter by keyword
+        const filteredDataRowList: dataSource[] = dataRowList.filter(
+          (row) =>
+            row.name.toLowerCase().includes(searchKey) ||
+            row.memory.toLowerCase().includes(searchKey) ||
+            row.processor.toLowerCase().includes(searchKey) ||
+            row.region.toLowerCase().includes(searchKey)
+        );
+        dataSource.push(...filteredDataRowList);
+        return;
+      }
+
+      dataSource.push(...dataRowList);
+    });
+
+    return dataSource;
+  }, [dbInstanceList]);
 
   const handleSort = useCallback(
     (field: string, isAscending: boolean) => {
@@ -96,8 +262,10 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
   );
 
   useEffect(() => {
-    refresh();
-  }, [dbInstanceList.length, refresh]);
+    startTransition(() => {
+      setDataSource(generateDataSource());
+    });
+  }, [dbInstanceList.length, generateDataSource]);
 
   useEffect(() => {
     if (shouldRefresh(lastConfig.current, searchConfig)) {
@@ -105,7 +273,10 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
       // refresh the entire table.
       setLoading(true);
       setTimeout(() => {
-        refresh();
+        startTransition(() => {
+          setDataSource(generateDataSource());
+        });
+
         if (["ascend", "descend"].includes(String(sortedInfo.order))) {
           handleSort(sortedInfo.field, sortedInfo.order === "ascend");
         }
@@ -121,16 +292,17 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
 
     // When the sort state is cancelled, refresh table.
     if (sortedInfo.order === undefined) {
-      refresh();
+      startTransition(() => {
+        setDataSource(generateDataSource());
+      });
     }
 
     lastConfig.current = searchConfig;
   }, [
+    generateDataSource,
     handleSort,
-    refresh,
     refreshExpectedCost,
     searchConfig,
-    sort,
     sortedInfo.field,
     sortedInfo.order,
   ]);

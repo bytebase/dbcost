@@ -5,18 +5,16 @@ import ButtonGroup from "@/components/ButtonGroup";
 import RegionMenu from "@/components/RegionMenu";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
-import { useDBInstanceStore, useAvailableRegionList } from "@/stores";
+import { useDBInstanceContext } from "@/stores";
 
 const Home: NextPage = () => {
-  const loadDBInstanceList = useDBInstanceStore(
-    (state) => state.loadDBInstanceList
-  );
+  const { loadDBInstanceList, getAvailableRegionList } = useDBInstanceContext();
 
   useEffect(() => {
     loadDBInstanceList();
   }, [loadDBInstanceList]);
 
-  const availableRegionList = useAvailableRegionList();
+  const availableRegionList = getAvailableRegionList();
 
   return (
     <MainLayout title="The Ultimate AWS RDS and Google Cloud SQL Instance Pricing Sheet">

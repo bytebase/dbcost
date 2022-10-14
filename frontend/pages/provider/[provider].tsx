@@ -6,26 +6,20 @@ import ButtonGroup from "@/components/ButtonGroup";
 import RegionMenu from "@/components/RegionMenu";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
-import {
-  useDBInstanceStore,
-  useAvailableRegionList,
-  useSearchConfigStore,
-} from "@/stores";
+import { useDBInstanceContext, useSearchConfigStore } from "@/stores";
 import type { CloudProvider } from "@/types";
 
 const Provider: NextPage = () => {
   const router = useRouter();
   const { provider } = router.query;
-  const loadDBInstanceList = useDBInstanceStore(
-    (state) => state.loadDBInstanceList
-  );
+  const { loadDBInstanceList, getAvailableRegionList } = useDBInstanceContext();
   const updateSearchConfig = useSearchConfigStore((state) => state.update);
 
   useEffect(() => {
     loadDBInstanceList();
   }, [loadDBInstanceList]);
 
-  const availableRegionList = useAvailableRegionList();
+  const availableRegionList = getAvailableRegionList();
 
   useEffect(() => {
     if (typeof provider === "string") {
