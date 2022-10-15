@@ -23,7 +23,7 @@ import {
   getRegionName,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
-import { useDBInstanceContext, useSearchConfigStore } from "@/stores";
+import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
 import Icon from "@/components/Icon";
 
 interface PaginationInfo {
@@ -42,14 +42,21 @@ enum SorterColumn {
   EXPECTED_COST = "expectedCost",
 }
 
-const tablePaginationConfig = { defaultPageSize: 100 };
+const tablePaginationConfig = { defaultPageSize: 50 };
+
+// Use a customized Cell component to avoid table's unnecessary on hover re-renders.
+const TdCell = (props: any) => {
+  // Ant Design tables listen to onMouseEnter and onMouseLeave events to implement row hover styles (with rowSpan).
+  // But reacting to too many onMouseEnter and onMouseLeave events will cause performance issues.
+  // We can sacrifice a bit of style on hover as a compromise for better performance.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { onMouseEnter, onMouseLeave, ...restProps } = props;
+  return <td {...restProps} />;
+};
 
 const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
   const { dbInstanceList } = useDBInstanceContext();
-  const [searchConfig, isFiltering] = useSearchConfigStore((state) => [
-    state.searchConfig,
-    state.isFiltering,
-  ]);
+  const { searchConfig, isFiltering } = useSearchConfigContext();
 
   const [dataSource, setDataSource] = useState<dataSource[]>([]);
 
@@ -104,7 +111,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
       utilization,
       leaseLength,
       keyword,
-    } = useSearchConfigStore.getState().searchConfig;
+    } = searchConfig;
 
     // If any of these three below is empty, display no table row.
     if (
@@ -238,7 +245,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
     });
 
     return dataSource;
-  }, [dbInstanceList]);
+  }, [dbInstanceList, searchConfig]);
 
   const handleSort = useCallback(
     (field: string, isAscending: boolean) => {
@@ -263,7 +270,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
 
   useEffect(() => {
     startTransition(() => {
-      setDataSource(generateDataSource());
+      setDataSource(() => generateDataSource());
     });
   }, [dbInstanceList.length, generateDataSource]);
 
@@ -529,6 +536,9 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
         const isAscending = (sorter as any).order === "ascend";
         // sort data source when users click on the sort icon
         handleSort((sorter as any).field, isAscending);
+      }}
+      components={{
+        body: { cell: TdCell },
       }}
     />
   );

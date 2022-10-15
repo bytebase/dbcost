@@ -2,14 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Tooltip from "@/components/primitives/Tooltip";
-import { useSearchConfigStore } from "@/stores";
+import { useSearchConfigContext } from "@/stores";
 
 const cloudEmoji = "☁️";
 const moneyEmoji = "💸";
 const providerList = ["aws", "gcp"];
 
 const Header: React.FC = () => {
-  const resetSearchConfig = useSearchConfigStore((state) => state.reset);
+  const { reset: resetSearchConfig } = useSearchConfigContext();
   const router = useRouter();
   const { provider: providerInRoute } = router.query;
 
