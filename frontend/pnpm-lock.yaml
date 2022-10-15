@@ -22,7 +22,6 @@ specifiers:
   react-dom: 18.1.0
   tailwindcss: ^3.1.2
   typescript: 4.7.2
-  zustand: ^4.1.1
 
 dependencies:
   '@radix-ui/react-icons': 1.1.1_react@18.1.0
@@ -33,7 +32,6 @@ dependencies:
   nextjs-bundle-analysis: 0.4.0
   react: 18.1.0
   react-dom: 18.1.0_react@18.1.0
-  zustand: 4.1.1_react@18.1.0
 
 devDependencies:
   '@types/lodash': 4.14.185
@@ -3572,19 +3570,3 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  /zustand/4.1.1_react@18.1.0:
-    resolution: {integrity: sha512-h4F3WMqsZgvvaE0n3lThx4MM81Ls9xebjvrABNzf5+jb3/03YjNTSgZXeyrvXDArMeV9untvWXRw1tY+ntPYbA==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      immer: '>=9.0'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      immer:
-        optional: true
-      react:
-        optional: true
-    dependencies:
-      react: 18.1.0
-      use-sync-external-store: 1.2.0_react@18.1.0
-    dev: false
