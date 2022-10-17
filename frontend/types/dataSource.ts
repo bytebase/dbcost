@@ -17,10 +17,6 @@ export interface dataSource {
 
   // childCnt is used as table row span length
   childCnt: number;
-  // childAfter is the count of row span length after this row
-  childAfter: number;
-  acsendChildIndex: number;
-  descendChildIndex: number;
   // baseHourly is the on demand hourly price of the instance in the same region
   baseHourly: number;
   // expectedCost is the expected cost with lease length and utilization

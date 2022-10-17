@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Checkbox } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import Icon from "@/components/Icon";
-import { useSearchConfigStore } from "@/stores/searchConfig";
+import { useSearchConfigContext } from "@/stores";
 import { AvailableRegion, SearchConfigDefault } from "@/types";
 
 interface Props {
@@ -96,10 +96,9 @@ const reducer = (state: LocalState, action: ReducerActions): LocalState => {
 };
 
 const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
-  const [checkedRegionList, setRegion] = useSearchConfigStore((state) => [
-    state.searchConfig.region,
-    (regionList: string[]) => void state.update("region", regionList),
-  ]);
+  const { searchConfig, update } = useSearchConfigContext();
+  const checkedRegionList = searchConfig.region;
+  const setRegion = (regionList: string[]) => update("region", regionList);
   const router = useRouter();
   const { provider } = router.query;
 

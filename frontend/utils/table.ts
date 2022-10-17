@@ -42,10 +42,10 @@ export const getCellRowSpan = (
     const pageCount = Math.ceil(dataSource.length / pageSize);
     if (pageCount <= pagination.current) {
       // If the page number of results is less than the old `paginationInfo.current`,
-      // the actural pagination current page will be the last page.
+      // the actual pagination current page will be the last page.
       current = pageCount;
     } else {
-      // Otherwise, the actural pagination current page will inherit the old `paginationInfo.current`.
+      // Otherwise, the actual pagination current page will inherit the old `paginationInfo.current`.
       current = pagination.current;
     }
   } else {

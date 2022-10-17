@@ -5,7 +5,7 @@ import {
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import Tooltip from "@/components/primitives/Tooltip";
-import { useSearchConfigStore } from "@/stores/searchConfig";
+import { useSearchConfigContext } from "@/stores";
 import { getIconPath } from "@/utils";
 import { CloudProvider, EngineType, ChargeType } from "@/types";
 
@@ -44,10 +44,7 @@ const EngineCheckbox = [
 ];
 
 const SearchMenu: React.FC<Props> = ({ hideProviders = false }) => {
-  const [searchConfig, updateSearchConfig] = useSearchConfigStore((state) => [
-    state.searchConfig,
-    state.update,
-  ]);
+  const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
   return (
     <div className="flex justify-between pb-2 border-b">

@@ -1,8 +1,8 @@
 import { Button } from "antd";
-import { useSearchConfigStore } from "@/stores";
+import { useSearchConfigContext } from "@/stores";
 
 const ButtonGroup: React.FC = () => {
-  const resetSearchConfig = useSearchConfigStore((state) => state.reset);
+  const { reset: resetSearchConfig } = useSearchConfigContext();
 
   return (
     <div className="flex flex-row justify-center my-4">

@@ -1,3 +1,2 @@
-export * from "@/stores/dbInstance";
-export * from "@/stores/searchConfig";
-export * from "@/stores/tableData";
+export * from "@/stores/dbInstanceContext";
+export * from "@/stores/searchConfigContext";
