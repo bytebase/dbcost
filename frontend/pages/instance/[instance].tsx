@@ -4,7 +4,7 @@ import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
-import RelationTable from "@/components/RelationTable";
+import RelationTable from "@/components/RelatedTable";
 import LineChart from "@/components/LineChart";
 import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
 import { getPrice, getRegionName } from "@/utils";
@@ -162,7 +162,7 @@ const InstanceDetail: NextPage<Props> = ({ name, provider, CPU, memory }) => {
       rows.sort((a, b) => {
         // Sort rows according to the following criterion:
         // 1. On demand price goes first.
-        // 2. Sort on expected cost.
+        // 2. Sort on expected cost in ascending order.
         if (a.leaseLength === "N/A") {
           return -1;
         } else if (b.leaseLength === "N/A") {
@@ -256,15 +256,11 @@ const InstanceDetail: NextPage<Props> = ({ name, provider, CPU, memory }) => {
   }, [updateSearchConfig]);
 
   return (
-    <MainLayout
-      title={`${name} - Specs and Pricing Sheet`}
-      headTitle={`${name} | Specs and Pricing`}
-    >
+    <MainLayout title={`${name} - Pricing`} headTitle={`${name} - Pricing`}>
       <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
         <ButtonGroup type="back" />
         <p>
-          The {name} instance has a CPU count of {CPU} and memory count of{" "}
-          {memory} from {provider}.
+          The {provider} {name} has {CPU} CPU and {memory} GB memory.
         </p>
         <SearchMenu type={SearchBarType.INSTANCE_DETAIL} />
         <CompareTable

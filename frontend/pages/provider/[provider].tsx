@@ -132,7 +132,7 @@ const Provider: NextPage = () => {
         rows.sort((a, b) => {
           // Sort rows according to the following criterion:
           // 1. On demand price goes first.
-          // 2. Sort on expected cost.
+          // 2. Sort on expected cost in ascending order.
           if (a.leaseLength === "N/A") {
             return -1;
           } else if (b.leaseLength === "N/A") {
