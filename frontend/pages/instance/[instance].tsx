@@ -256,7 +256,7 @@ const InstanceDetail: NextPage<Props> = ({ name, provider, CPU, memory }) => {
   }, [updateSearchConfig]);
 
   return (
-    <MainLayout title={`${name} - Pricing`} headTitle={`${name} - Pricing`}>
+    <MainLayout title={`${name} Pricing`} headTitle={`${name} Pricing`}>
       <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
         <ButtonGroup type="back" />
         <p>
