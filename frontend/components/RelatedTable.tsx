@@ -10,7 +10,7 @@ interface Props {
   dataSource: RelatedType[];
 }
 
-const RelationTable: React.FC<Props> = ({ title, instance, dataSource }) => {
+const RelatedTable: React.FC<Props> = ({ title, instance, dataSource }) => {
   const columns: ColumnsType<RelatedType> = [
     {
       title: "Name",
@@ -50,4 +50,4 @@ const RelationTable: React.FC<Props> = ({ title, instance, dataSource }) => {
   );
 };
 
-export default RelationTable;
+export default RelatedTable;

@@ -4,7 +4,7 @@ import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
-import RelationTable from "@/components/RelatedTable";
+import RelatedTable from "@/components/RelatedTable";
 import LineChart from "@/components/LineChart";
 import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
 import { getPrice, getRegionName } from "@/utils";
@@ -273,13 +273,13 @@ const InstanceDetail: NextPage<Props> = ({ name, provider, CPU, memory }) => {
           <LineChart dataSource={dataSource} />
         </div>
         <div className="w-full flex flex-row justify-between">
-          <RelationTable
+          <RelatedTable
             title="Instances in the same class"
             instance={name}
             dataSource={getSameClassList()}
           />
           {provider === "AWS" && (
-            <RelationTable
+            <RelatedTable
               title="Instances in the same family"
               instance={name}
               dataSource={getSameFamilyList()}
