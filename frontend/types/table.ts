@@ -1,6 +1,6 @@
-import { CloudProvider } from "./common";
+import { CloudProvider, EngineType } from "./common";
 
-export interface dataSource {
+export interface DataSource {
   id: number;
   key: string;
 
@@ -11,7 +11,7 @@ export interface dataSource {
   memory: string;
   leaseLength: string;
   region: string;
-  engineType: string;
+  engineType: EngineType;
   commitment: { usd: number };
   hourly: { usd: number };
 
@@ -21,4 +21,16 @@ export interface dataSource {
   baseHourly: number;
   // expectedCost is the expected cost with lease length and utilization
   expectedCost: number;
+}
+
+export enum TableType {
+  DASHBOARD = "dashboard",
+  INSTANCE_DETAIL = "instanceDetail",
+  REGION_DETAIL = "regionDetail",
+}
+
+export interface RelatedType {
+  name: string;
+  CPU: number;
+  memory: number;
 }

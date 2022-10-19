@@ -1,9 +1,9 @@
-import { dataSource } from "@/types";
+import { DataSource } from "@/types";
 
 export const YearInHour = 365 * 24;
 
 export const getPrice = (
-  dataRow: dataSource,
+  dataRow: DataSource,
   utilization: number,
   leaseLength: number
 ): number => {
@@ -26,7 +26,7 @@ export const getPrice = (
 };
 
 export const getDiff = (
-  dataRow: dataSource,
+  dataRow: DataSource,
   utilization: number,
   leaseLength: number
 ): number => {

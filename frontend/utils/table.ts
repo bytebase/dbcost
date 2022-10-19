@@ -1,4 +1,4 @@
-import { dataSource } from "@/types";
+import { DataSource } from "@/types";
 import { YearInHour } from "@/utils";
 
 interface PaginationInfo {
@@ -15,14 +15,14 @@ enum SorterColumn {
 
 type Comparer = {
   [key in SorterColumn]: (
-    a: dataSource,
-    b: dataSource,
+    a: DataSource,
+    b: DataSource,
     isAscending: boolean
   ) => number;
 };
 
 export const getCellRowSpan = (
-  dataSource: dataSource[],
+  dataSource: DataSource[],
   index: number,
   pagination: PaginationInfo,
   isFiltering: boolean
@@ -78,8 +78,8 @@ export const getCellRowSpan = (
 // dashboardCostComparer will sort the price col by the baseline(on demand) price
 // and keep the baseline row at the top
 export const dashboardCostComparer = (
-  rowA: dataSource,
-  rowB: dataSource,
+  rowA: DataSource,
+  rowB: DataSource,
   isAscending: boolean
 ): number => {
   if (rowA.id !== rowB.id) {
@@ -102,7 +102,7 @@ export const dashboardCostComparer = (
 };
 
 export const comparer: Comparer = {
-  region: (rowA: dataSource, rowB: dataSource, isAscending: boolean) => {
+  region: (rowA: DataSource, rowB: DataSource, isAscending: boolean) => {
     // sort by the case-insensitive alphabetical order
     const a = rowA.region.toLocaleLowerCase();
     const b = rowB.region.toLocaleLowerCase();
@@ -114,9 +114,9 @@ export const comparer: Comparer = {
     // if tow region are identical, sort them with id
     return isAscending ? rowA.id - rowB.id : rowB.id - rowA.id;
   },
-  cpu: (rowA: dataSource, rowB: dataSource, isAscending: boolean) =>
+  cpu: (rowA: DataSource, rowB: DataSource, isAscending: boolean) =>
     isAscending ? rowA.cpu - rowB.cpu : rowB.cpu - rowA.cpu,
-  memory: (rowA: dataSource, rowB: dataSource, isAscending: boolean) => {
+  memory: (rowA: DataSource, rowB: DataSource, isAscending: boolean) => {
     return isAscending
       ? Number(rowA.memory) - Number(rowB.memory)
       : Number(rowB.memory) - Number(rowA.memory);

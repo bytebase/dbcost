@@ -7,9 +7,10 @@ import {
 import Tooltip from "@/components/primitives/Tooltip";
 import { useSearchConfigContext } from "@/stores";
 import { getIconPath } from "@/utils";
-import { CloudProvider, EngineType, ChargeType } from "@/types";
+import { CloudProvider, EngineType, ChargeType, SearchBarType } from "@/types";
 
 interface Props {
+  type?: SearchBarType;
   hideProviders?: boolean;
 }
 
@@ -43,14 +44,17 @@ const EngineCheckbox = [
   },
 ];
 
-const SearchMenu: React.FC<Props> = ({ hideProviders = false }) => {
+const SearchMenu: React.FC<Props> = ({
+  type = SearchBarType.DASHBOARD,
+  hideProviders = false,
+}) => {
   const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
   return (
-    <div className="flex justify-between pb-2 border-b">
+    <div className="w-full flex justify-between pb-2 border-b">
       <div className="h-24 pt-2 flex flex-wrap items-center">
         {/* Cloud Providers */}
-        {!hideProviders && (
+        {!hideProviders && type === SearchBarType.DASHBOARD && (
           <Checkbox.Group
             className="mr-2 !-mt-1"
             value={searchConfig.cloudProvider}
@@ -104,39 +108,43 @@ const SearchMenu: React.FC<Props> = ({ hideProviders = false }) => {
 
         {/* Charge Types */}
         <Checkbox.Group
-          className="!ml-2 pb-2"
+          className="!ml-2 !mr-2 pb-2"
           value={searchConfig.chargeType}
           onChange={(checkedValue) =>
             void updateSearchConfig("chargeType", checkedValue as ChargeType[])
           }
         >
           <Checkbox value="OnDemand">On Demand</Checkbox>
-          <Checkbox value="Reserved">Reserved</Checkbox>
+          {type !== SearchBarType.INSTANCE_DETAIL && (
+            <Checkbox value="Reserved">Reserved</Checkbox>
+          )}
         </Checkbox.Group>
 
         {/* Min specification for Memory & CPU */}
-        <div className="flex !ml-2 !mr-4">
-          <div className="w-36">
-            <InputNumber
-              min={0}
-              max={999}
-              value={searchConfig.minCPU}
-              addonBefore="Min CPU"
-              keyboard={true}
-              onChange={(value) => void updateSearchConfig("minCPU", value)}
-            />
+        {type === SearchBarType.DASHBOARD && (
+          <div className="flex !mr-4">
+            <div className="w-36">
+              <InputNumber
+                min={0}
+                max={9999}
+                value={searchConfig.minCPU}
+                addonBefore="Min CPU"
+                keyboard={true}
+                onChange={(value) => void updateSearchConfig("minCPU", value)}
+              />
+            </div>
+            <div className="w-36 ml-4">
+              <InputNumber
+                min={0}
+                max={9999}
+                value={searchConfig.minRAM}
+                addonBefore="Min RAM"
+                keyboard={true}
+                onChange={(value) => void updateSearchConfig("minRAM", value)}
+              />
+            </div>
           </div>
-          <div className="w-36 ml-4">
-            <InputNumber
-              min={0}
-              max={999}
-              value={searchConfig.minRAM}
-              addonBefore="Min RAM"
-              keyboard={true}
-              onChange={(value) => void updateSearchConfig("minRAM", value)}
-            />
-          </div>
-        </div>
+        )}
 
         {/* Search Bar */}
         <div>
