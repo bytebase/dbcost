@@ -5,11 +5,12 @@ import {
   useRef,
   useState,
   useCallback,
-  startTransition,
+  useTransition,
 } from "react";
+import Link from "next/link";
 import { Table } from "antd";
 import { isEqual } from "lodash";
-import { dataSource } from "@/types";
+import { DataSource, TableType } from "@/types";
 import {
   getDiff,
   getDigit,
@@ -19,12 +20,11 @@ import {
   comparer,
   getPricingContent,
   getPrice,
-  getRegionCode,
-  getRegionName,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
-import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
+import { useSearchConfigContext } from "@/stores";
 import Icon from "@/components/Icon";
+import TdCell from "@/components/TdCell";
 
 interface PaginationInfo {
   current: number;
@@ -32,7 +32,11 @@ interface PaginationInfo {
 }
 
 interface Props {
+  type?: TableType;
   hideProviderIcon?: boolean;
+  dataSource: DataSource[];
+  setDataSource: React.Dispatch<React.SetStateAction<DataSource[]>>;
+  generateTableData: () => DataSource[];
 }
 
 enum SorterColumn {
@@ -42,23 +46,17 @@ enum SorterColumn {
   EXPECTED_COST = "expectedCost",
 }
 
-const tablePaginationConfig = { defaultPageSize: 50 };
+const tablePaginationConfig = { defaultPageSize: 50, hideOnSinglePage: true };
 
-// Use a customized Cell component to avoid table's unnecessary on hover re-renders.
-const TdCell = (props: any) => {
-  // Ant Design tables listen to onMouseEnter and onMouseLeave events to implement row hover styles (with rowSpan).
-  // But reacting to too many onMouseEnter and onMouseLeave events will cause performance issues.
-  // We can sacrifice a bit of style on hover as a compromise for better performance.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { onMouseEnter, onMouseLeave, ...restProps } = props;
-  return <td {...restProps} />;
-};
-
-const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
-  const { dbInstanceList } = useDBInstanceContext();
+const CompareTable: React.FC<Props> = ({
+  type = TableType.DASHBOARD,
+  hideProviderIcon = false,
+  dataSource,
+  setDataSource,
+  generateTableData,
+}) => {
+  const [isPending, startTransition] = useTransition();
   const { searchConfig, isFiltering } = useSearchConfigContext();
-
-  const [dataSource, setDataSource] = useState<dataSource[]>([]);
 
   const refreshExpectedCost = useCallback(() => {
     startTransition(() => {
@@ -70,20 +68,19 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
         return state;
       });
     });
-  }, [searchConfig]);
+  }, [searchConfig, setDataSource]);
 
   const sort = useCallback(
-    (sorter: (a: dataSource, b: dataSource) => number) => {
+    (sorter: (a: DataSource, b: DataSource) => number) => {
       startTransition(() => {
         setDataSource((state) => {
           return [...state].sort(sorter);
         });
       });
     },
-    []
+    [setDataSource]
   );
 
-  const [loading, setLoading] = useState(false);
   const [sortedInfo, setSortedInfo] = useState({
     order: null,
     field: "",
@@ -97,155 +94,6 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
     () => searchConfig.engineType && searchConfig.engineType.length > 1,
     [searchConfig]
   );
-
-  const generateDataSource = useCallback((): dataSource[] => {
-    let rowCount = 0;
-    const dataSource: dataSource[] = [];
-    const {
-      cloudProvider,
-      region,
-      engineType,
-      chargeType,
-      minCPU,
-      minRAM,
-      utilization,
-      leaseLength,
-      keyword,
-    } = searchConfig;
-
-    // If any of these three below is empty, display no table row.
-    if (
-      region.length === 0 ||
-      engineType.length === 0 ||
-      chargeType.length === 0
-    ) {
-      return [];
-    }
-
-    const cloudProviderSet = new Set(cloudProvider);
-    const selectedRegionCodeSet = new Set(
-      region.map((region) => getRegionCode(region)).flat()
-    );
-    const engineSet = new Set(engineType);
-    const chargeTypeSet = new Set(chargeType);
-
-    // Process each db instance.
-    dbInstanceList.forEach((dbInstance) => {
-      if (
-        (minRAM !== undefined && Number(dbInstance.memory) < minRAM) ||
-        (minCPU !== undefined && Number(dbInstance.cpu) < minCPU)
-      ) {
-        return;
-      }
-
-      if (!cloudProviderSet.has(dbInstance.cloudProvider)) {
-        return;
-      }
-
-      const selectedRegionList = dbInstance.regionList.filter((region) =>
-        selectedRegionCodeSet.has(region.code)
-      );
-
-      if (selectedRegionList.length === 0) {
-        return;
-      }
-
-      const dataRowList: dataSource[] = [];
-      const dataRowMap: Map<string, dataSource[]> = new Map();
-
-      selectedRegionList.forEach((region) => {
-        const selectedTermList = region.termList.filter(
-          (term) =>
-            chargeTypeSet.has(term.type) && engineSet.has(term.databaseEngine)
-        );
-
-        let basePriceMap = new Map<string, number>();
-        selectedTermList.forEach((term) => {
-          if (term.type === "OnDemand") {
-            basePriceMap.set(term.databaseEngine, term.hourlyUSD);
-          }
-        });
-
-        const regionName = getRegionName(region.code);
-        selectedTermList.forEach((term) => {
-          const regionInstanceKey = `${dbInstance.name}::${region.code}::${term.databaseEngine}`;
-          const newRow: dataSource = {
-            // set this later
-            id: -1,
-            // We use :: for separation because AWS use . and GCP use - as separator.
-            key: `${dbInstance.name}::${region.code}::${term.code}`,
-            // set this later
-            childCnt: 0,
-            cloudProvider: dbInstance.cloudProvider,
-            name: dbInstance.name,
-            processor: dbInstance.processor,
-            cpu: dbInstance.cpu,
-            memory: dbInstance.memory,
-            engineType: term.databaseEngine,
-            commitment: { usd: term.commitmentUSD },
-            hourly: { usd: term.hourlyUSD },
-            leaseLength: term.payload?.leaseContractLength ?? "N/A",
-            // We store the region code for each provider, and show the user the actual region information.
-            // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
-            region: regionName,
-            baseHourly: basePriceMap.get(term.databaseEngine) as number,
-            // set this later
-            expectedCost: 0,
-          };
-          newRow.expectedCost = getPrice(newRow, utilization, leaseLength);
-
-          if (dataRowMap.has(regionInstanceKey)) {
-            const existedDataRowList = dataRowMap.get(
-              regionInstanceKey
-            ) as dataSource[];
-            newRow.id = existedDataRowList[0].id;
-            existedDataRowList.push(newRow);
-          } else {
-            rowCount++;
-            newRow.id = rowCount;
-            dataRowMap.set(regionInstanceKey, [newRow]);
-          }
-        });
-      });
-
-      dataRowMap.forEach((rows) => {
-        rows.sort((a, b) => {
-          // Sort rows according to the following criterion:
-          // 1. On demand price goes first.
-          // 2. Sort on expected cost.
-          if (a.leaseLength === "N/A") {
-            return -1;
-          } else if (b.leaseLength === "N/A") {
-            return 1;
-          }
-
-          return a.expectedCost - b.expectedCost;
-        });
-        rows.forEach((row) => {
-          row.childCnt = rows.length;
-        });
-        dataRowList.push(...rows);
-      });
-
-      const searchKey = keyword?.toLowerCase();
-      if (searchKey) {
-        // filter by keyword
-        const filteredDataRowList: dataSource[] = dataRowList.filter(
-          (row) =>
-            row.name.toLowerCase().includes(searchKey) ||
-            row.memory.toLowerCase().includes(searchKey) ||
-            row.processor.toLowerCase().includes(searchKey) ||
-            row.region.toLowerCase().includes(searchKey)
-        );
-        dataSource.push(...filteredDataRowList);
-        return;
-      }
-
-      dataSource.push(...dataRowList);
-    });
-
-    return dataSource;
-  }, [dbInstanceList, searchConfig]);
 
   const handleSort = useCallback(
     (field: string, isAscending: boolean) => {
@@ -270,25 +118,21 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
 
   useEffect(() => {
     startTransition(() => {
-      setDataSource(() => generateDataSource());
+      setDataSource(generateTableData());
     });
-  }, [dbInstanceList.length, generateDataSource]);
+  }, [generateTableData, setDataSource]);
 
   useEffect(() => {
     if (shouldRefresh(lastConfig.current, searchConfig)) {
       // If any of the config except for utilization and leaseLength has changed,
       // refresh the entire table.
-      setLoading(true);
-      setTimeout(() => {
-        startTransition(() => {
-          setDataSource(generateDataSource());
-        });
+      startTransition(() => {
+        setDataSource(generateTableData());
+      });
 
-        if (["ascend", "descend"].includes(String(sortedInfo.order))) {
-          handleSort(sortedInfo.field, sortedInfo.order === "ascend");
-        }
-        setLoading(false);
-      }, 100);
+      if (["ascend", "descend"].includes(String(sortedInfo.order))) {
+        handleSort(sortedInfo.field, sortedInfo.order === "ascend");
+      }
     } else {
       // Otherwise, refresh the expected cost.
       refreshExpectedCost();
@@ -300,16 +144,17 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
     // When the sort state is cancelled, refresh table.
     if (sortedInfo.order === undefined) {
       startTransition(() => {
-        setDataSource(generateDataSource());
+        setDataSource(generateTableData());
       });
     }
 
     lastConfig.current = searchConfig;
   }, [
-    generateDataSource,
+    generateTableData,
     handleSort,
     refreshExpectedCost,
     searchConfig,
+    setDataSource,
     sortedInfo.field,
     sortedInfo.order,
   ]);
@@ -326,7 +171,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
   );
 
   const expectedCostCellContent = useCallback(
-    (expectedCost: number, record: dataSource): string => {
+    (expectedCost: number, record: DataSource): string => {
       const cost = getDigit(expectedCost, 0);
       const showPercentage =
         record.leaseLength !== "N/A" && searchConfig.chargeType?.length === 2;
@@ -359,7 +204,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
       dataIndex: "commitment",
       width: "12%",
       align: "right",
-      render: (commitment: { usd: number }, record: dataSource) => {
+      render: (commitment: { usd: number }, record: DataSource) => {
         return (
           <div className="flex justify-between">
             <div className="relative top-1 w-6 h-5">
@@ -405,7 +250,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
       // TODO: support compare page
       sorter: true,
       sortOrder: sortedInfo.field === "expectedCost" && sortedInfo.order,
-      render: (expectedCost: number, record: dataSource) => (
+      render: (expectedCost: number, record: DataSource) => (
         <Tooltip
           delayDuration={0}
           content={expectedCostTooltipContent(expectedCost)}
@@ -421,44 +266,54 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
   const columns = useMemo<any>(
     () => [
       // TODO: add selection column
-      {
-        title: "Name",
-        dataIndex: "name",
-        width: "20%",
-        onCell: (_: dataSource, index: number) =>
-          getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
-        render: (name: string, record: dataSource) => {
-          if (
-            record.cloudProvider === "AWS" ||
-            record.cloudProvider === "GCP"
-          ) {
-            return (
-              <div className="flex items-center w-full">
-                {!hideProviderIcon && (
-                  <div className="relative !w-5 h-5 mr-2">
-                    <Icon
-                      name={`provider-${record.cloudProvider.toLowerCase()}`}
-                    />
-                  </div>
-                )}
-                {name}
-              </div>
-            );
-          }
-          return name;
-        },
-        shouldCellUpdate: (record: dataSource, prevRecord: dataSource) =>
-          !isEqual(record, prevRecord),
-      },
+      ...(type === TableType.INSTANCE_DETAIL
+        ? []
+        : [
+            {
+              title: "Name",
+              dataIndex: "name",
+              width: "20%",
+              onCell: (_: DataSource, index: number) =>
+                getCellRowSpan(
+                  dataSource,
+                  index,
+                  paginationInfo,
+                  isFiltering()
+                ),
+              render: (name: string, record: DataSource) => {
+                if (
+                  record.cloudProvider === "AWS" ||
+                  record.cloudProvider === "GCP"
+                ) {
+                  return (
+                    <div className="flex items-center w-full">
+                      {!hideProviderIcon && (
+                        <div className="relative !w-5 h-5 mr-2">
+                          <Icon
+                            name={`provider-${record.cloudProvider.toLowerCase()}`}
+                          />
+                        </div>
+                      )}
+                      <Link href={`/instance/${name}`}>{name}</Link>
+                    </div>
+                  );
+                }
+                return name;
+              },
+              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
+                !isEqual(record, prevRecord),
+            },
+          ]),
       {
         title: "Region",
         dataIndex: "region",
         width: "14%",
-        onCell: (_: dataSource, index: number) =>
+        className: "whitespace-nowrap",
+        onCell: (_: DataSource, index: number) =>
           getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
         sorter: true,
         sortOrder: sortedInfo.field === "region" && sortedInfo.order,
-        shouldCellUpdate: (record: dataSource, prevRecord: dataSource) =>
+        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
           !isEqual(record, prevRecord),
       },
       {
@@ -466,11 +321,11 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
         dataIndex: "cpu",
         width: "10%",
         align: "right",
-        onCell: (_: dataSource, index: number) =>
+        onCell: (_: DataSource, index: number) =>
           getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
         sorter: true,
         sortOrder: sortedInfo.field === "cpu" && sortedInfo.order,
-        render: (cpu: number, record: dataSource) => (
+        render: (cpu: number, record: DataSource) => (
           <Tooltip
             content={
               record.processor === "" ? "N/A" : record.processor.split(" ")[1]
@@ -479,7 +334,7 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
             <span className="font-mono">{cpu}</span>
           </Tooltip>
         ),
-        shouldCellUpdate: (record: dataSource, prevRecord: dataSource) =>
+        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
           !isEqual(record, prevRecord),
       },
       {
@@ -487,12 +342,12 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
         dataIndex: "memory",
         width: "10%",
         align: "right",
-        onCell: (_: dataSource, index: number) =>
+        onCell: (_: DataSource, index: number) =>
           getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
         sorter: true,
         sortOrder: sortedInfo.field === "memory" && sortedInfo.order,
         render: (memory: number) => <span className="font-mono">{memory}</span>,
-        shouldCellUpdate: (record: dataSource, prevRecord: dataSource) =>
+        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
           !isEqual(record, prevRecord),
       },
       {
@@ -515,15 +370,17 @@ const CompareTable: React.FC<Props> = ({ hideProviderIcon = false }) => {
       showEngineType,
       sortedInfo.field,
       sortedInfo.order,
+      type,
     ]
   );
 
   return (
     <Table
+      style={{ width: "100%" }}
       columns={columns}
       dataSource={dataSource}
       pagination={tablePaginationConfig}
-      loading={loading}
+      loading={isPending}
       onChange={(pagination, _, sorter) => {
         setPaginationInfo({
           current: pagination.current as number,

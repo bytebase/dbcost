@@ -17,7 +17,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       <TooltipPrimitive.Root {...(delayDuration && { delayDuration })}>
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Content
-          className="px-2 py-1 rounded bg-black/75 text-white"
+          className="px-2 py-1 rounded bg-black/75 text-white z-10"
           {...props}
         >
           {content}

@@ -4,14 +4,17 @@ import Footer from "@/components/Footer";
 
 type Props = {
   children: React.ReactNode;
+  headTitle?: string;
   title: string;
 };
 
-const Main: React.FC<Props> = ({ children, title }) => {
+const Main: React.FC<Props> = ({ children, headTitle, title }) => {
   return (
     <div className="flex flex-col h-screen">
       <Head>
-        <title>DB Cost | RDS & Cloud SQL Instance Pricing Sheet</title>
+        <title>
+          {headTitle ?? "DB Cost | RDS & Cloud SQL Instance Pricing Sheet"}
+        </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
