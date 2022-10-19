@@ -34,6 +34,7 @@ const LineChart: React.FC<Props> = ({ dataSource }) => {
     if (searchConfig.leaseLength > 1) {
       length *= searchConfig.leaseLength;
     }
+    // Will generate [1, 2, 3, ..., length].
     const xGrid = Array.from({ length }, (_, i) => i + 1);
     const res = [];
     for (const row of dataSource) {
