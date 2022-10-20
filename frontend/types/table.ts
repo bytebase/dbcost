@@ -34,3 +34,8 @@ export interface RelatedType {
   CPU: number;
   memory: number;
 }
+
+export const tablePaginationConfig = {
+  defaultPageSize: 50,
+  hideOnSinglePage: true,
+};
