@@ -17,29 +17,33 @@ const Header: React.FC = () => {
     <header className="flex justify-center bg-slate-800">
       <div className="w-full 2xl:w-5/6 2xl:max-w-7xl flex justify-between items-center flex-grow-0 p-2 text-white">
         <div className="inline-flex flex-row items-center gap-4">
-          <Link href="/">
-            <div
-              className="relative w-32 h-8 cursor-pointer"
-              onClick={() => void resetSearchConfig()}
-            >
-              <Image
-                src="/icons/dbcost-logo-full.webp"
-                alt="DB Cost"
-                layout="fill"
-                objectFit="contain"
-              />
-            </div>
-          </Link>
-          {providerList.map((provider: string) => (
-            <Link href={`/provider/${provider}`} key={provider}>
-              <span
-                className={`${
-                  providerInRoute === provider ? "border-b" : ""
-                } h-8 text-lg pt-0.5 text-white cursor-pointer`}
+          <Link href="/" passHref>
+            <a>
+              <div
+                className="relative w-32 h-8 cursor-pointer"
                 onClick={() => void resetSearchConfig()}
               >
-                {provider.toUpperCase()}
-              </span>
+                <Image
+                  src="/icons/dbcost-logo-full.webp"
+                  alt="DB Cost"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </a>
+          </Link>
+          {providerList.map((provider: string) => (
+            <Link href={`/provider/${provider}`} key={provider} passHref>
+              <a>
+                <span
+                  className={`${
+                    providerInRoute === provider ? "border-b" : ""
+                  } h-8 text-lg pt-0.5 text-white cursor-pointer`}
+                  onClick={() => void resetSearchConfig()}
+                >
+                  {provider.toUpperCase()}
+                </span>
+              </a>
             </Link>
           ))}
         </div>

@@ -292,7 +292,9 @@ const CompareTable: React.FC<Props> = ({
                           />
                         </div>
                       )}
-                      <Link href={`/instance/${name}`}>{name}</Link>
+                      <Link href={`/instance/${name}`} passHref>
+                        <a>{name}</a>
+                      </Link>
                     </div>
                   );
                 }
