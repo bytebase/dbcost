@@ -16,8 +16,10 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
           Reset
         </Button>
       ) : (
-        <Link href="/">
-          <Button className="mr-2">Back to Dashboard</Button>
+        <Link href="/" passHref>
+          <a>
+            <Button className="mr-2">Back to Dashboard</Button>
+          </a>
         </Link>
       )}
       <Button>Copy URL</Button>
