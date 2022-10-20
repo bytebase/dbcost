@@ -237,7 +237,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     .default as DBInstance[];
   // For SEO, showing the first page is enough. So we only need to
   // pass the first page of data to the page. Passing the whole large
-  // `data` will make this page twice as large to reduce performance.
+  // `data` will make this page twice as large and reduce performance.
   const firstPageData = data
     .filter((instance) => instance.cloudProvider === providerName.toUpperCase())
     .slice(0, tablePaginationConfig.defaultPageSize);
