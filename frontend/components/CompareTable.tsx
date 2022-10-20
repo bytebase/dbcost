@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { Table } from "antd";
 import { isEqual } from "lodash";
-import { DataSource, TableType } from "@/types";
+import { DataSource, TableType, tablePaginationConfig } from "@/types";
 import {
   getDiff,
   getDigit,
@@ -45,8 +45,6 @@ enum SorterColumn {
   MEMORY = "memory",
   EXPECTED_COST = "expectedCost",
 }
-
-const tablePaginationConfig = { defaultPageSize: 50, hideOnSinglePage: true };
 
 const CompareTable: React.FC<Props> = ({
   type = TableType.DASHBOARD,
