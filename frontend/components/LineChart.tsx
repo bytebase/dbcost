@@ -82,7 +82,10 @@ const generateChartData = (
 };
 
 const getNearbyPoints = (data: ChartData[], x: number, serieId: string) => {
+  // Display at most five different values.
   const range = 5;
+  // For each different value, display at most two same values.
+  const sameValueLimit = 2;
   const higherPoints = [];
   const lowerPoints = [];
   let hasMoreHigherPoints: boolean = false,
@@ -101,26 +104,42 @@ const getNearbyPoints = (data: ChartData[], x: number, serieId: string) => {
   const currPointIndex = pointSlice.findIndex((d) => d.id === serieId);
 
   // At most five different y values higher than current point.
-  for (let i = currPointIndex - 1, r = range; i >= 0 && r > 0; i--) {
-    higherPoints.push(pointSlice[i]);
+  for (
+    let i = currPointIndex - 1, r = range, l = sameValueLimit;
+    i >= 0 && r > 0;
+    i--
+  ) {
     if (pointSlice[i].y !== pointSlice[i + 1].y) {
       r--;
       if (r === 0) {
         hasMoreHigherPoints = true;
       }
+      l = sameValueLimit - 1;
+      higherPoints.unshift(pointSlice[i]);
+    } else {
+      if (l > 0) {
+        higherPoints.unshift(pointSlice[i]);
+        l--;
+      }
     }
   }
   // At most five different y values lower than current point.
   for (
-    let i = currPointIndex + 1, r = range;
+    let i = currPointIndex + 1, r = range, l = sameValueLimit;
     i < pointSlice.length && r > 0;
     i++
   ) {
-    lowerPoints.push(pointSlice[i]);
     if (pointSlice[i].y !== pointSlice[i - 1].y) {
       r--;
       if (r === 0) {
         hasMoreLowerPoints = true;
+      }
+      l = sameValueLimit - 1;
+      lowerPoints.push(pointSlice[i]);
+    } else {
+      if (l > 0) {
+        lowerPoints.push(pointSlice[i]);
+        l--;
       }
     }
   }
