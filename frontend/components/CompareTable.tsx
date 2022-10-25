@@ -21,6 +21,7 @@ import {
   getPricingContent,
   getPrice,
   slugify,
+  withComma,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
 import { useSearchConfigContext } from "@/stores";
@@ -255,7 +256,7 @@ const CompareTable: React.FC<Props> = ({
           content={expectedCostTooltipContent(expectedCost)}
         >
           <span className="font-mono">
-            {expectedCostCellContent(expectedCost, record)}
+            {withComma(expectedCostCellContent(expectedCost, record))}
           </span>
         </Tooltip>
       ),

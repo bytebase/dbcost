@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Empty } from "antd";
 import { Line } from "@nivo/line";
 import { useSearchConfigContext } from "@/stores";
-import { getDigit } from "@/utils";
+import { getDigit, withComma } from "@/utils";
 import {
   DataSource,
   monthDays,
@@ -177,8 +177,9 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
       yFormat={(value) => `${value} $`}
       axisLeft={{
         legend: "Cost (USD)",
-        legendOffset: -66,
+        legendOffset: -76,
         legendPosition: "middle",
+        format: withComma,
       }}
       axisBottom={{
         legend: "Number of Months",
@@ -210,7 +211,7 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
                 <div className="flex items-center">
                   <span>{point.id}</span>
                 </div>
-                <b className="ml-2">{point.y} $</b>
+                <b className="ml-2">{withComma(point.y)} $</b>
               </div>
             ))}
             <div
@@ -226,14 +227,14 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
                 ></div>
                 <span>{point.serieId}</span>
               </div>
-              <b className="ml-2">{point.data.yFormatted}</b>
+              <b className="ml-2">{withComma(point.data.yFormatted)}</b>
             </div>
             {lowerPoints.map((point) => (
               <div key={point.id} className="flex justify-between items-center">
                 <div className="flex items-center">
                   <span>{point.id}</span>
                 </div>
-                <b className="ml-2">{point.y} $</b>
+                <b className="ml-2">{withComma(point.y)} $</b>
               </div>
             ))}
             {hasMoreLowerPoints && <div>...</div>}
