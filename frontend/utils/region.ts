@@ -103,9 +103,9 @@ export const getRegionListByPrefix = (prefix: string): string[] =>
 // "US East (N. Virginia)" -> "us-east-n-virginia"
 export const slugify = (regionName: string): string =>
   regionName
-    .replaceAll("(", "")
-    .replaceAll(")", "")
-    .replaceAll(".", "")
-    .replaceAll(" ", "-")
-    .replaceAll("é", "e") // Montréal -> Montreal
+    .replace(/\(/g, "")
+    .replace(/\)/g, "")
+    .replace(/\./g, "")
+    .replace(/\s/g, "-")
+    .replace(/é/g, "e") // Montréal -> Montreal
     .toLowerCase();
