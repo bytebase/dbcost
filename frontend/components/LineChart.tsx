@@ -3,9 +3,17 @@ import { Empty } from "antd";
 import { Line } from "@nivo/line";
 import { useSearchConfigContext } from "@/stores";
 import { getDigit } from "@/utils";
-import { DataSource, monthDays, commonProperties } from "@/types";
+import {
+  DataSource,
+  monthDays,
+  commonProperties,
+  EngineType,
+  ChartType,
+} from "@/types";
 
 interface Props {
+  // TODO: combine TableType and ChartType
+  type: ChartType;
   dataSource: DataSource[];
 }
 
@@ -25,7 +33,56 @@ const getHourCountByMonth = (month: number): number => {
   return res * 24;
 };
 
-const LineChart: React.FC<Props> = ({ dataSource }) => {
+const generateChartData = (
+  type: ChartType,
+  xLength: number,
+  dataSource: DataSource[],
+  utilization: number,
+  engineType: EngineType[]
+) => {
+  // Will generate [1, 2, 3, ..., xLength].
+  const xGrid = Array.from({ length: xLength }, (_, i) => i + 1);
+  const res = [];
+  for (const row of dataSource) {
+    // TODO: support reserved instances
+    // We now only support on demand instances.
+    if (row.leaseLength === "N/A") {
+      const fees = [];
+
+      for (const x of xGrid) {
+        const totalCost = getHourCountByMonth(x) * utilization * row.hourly.usd;
+        fees.push({
+          x,
+          y: getDigit(totalCost, 0),
+        });
+      }
+      switch (type) {
+        case ChartType.INSTANCE_DETAIL:
+          res.push({
+            id: `${row.region}${
+              engineType.length > 1 ? ` - ${row.engineType}` : ""
+            }${row.leaseLength === "N/A" ? "" : "-" + row.leaseLength}`,
+            data: fees,
+          });
+          break;
+        case ChartType.REGION_DETAIL:
+          res.push({
+            id: `${row.name}${
+              engineType.length > 1 ? ` - ${row.engineType}` : ""
+            }${row.leaseLength === "N/A" ? "" : "-" + row.leaseLength}`,
+            data: fees,
+          });
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
+  return res;
+};
+
+const LineChart: React.FC<Props> = ({ type, dataSource }) => {
   const [data, setData] = useState<ChartData[]>([]);
   const { searchConfig } = useSearchConfigContext();
 
@@ -34,37 +91,21 @@ const LineChart: React.FC<Props> = ({ dataSource }) => {
     if (searchConfig.leaseLength > 1) {
       length *= searchConfig.leaseLength;
     }
-    // Will generate [1, 2, 3, ..., length].
-    const xGrid = Array.from({ length }, (_, i) => i + 1);
-    const res = [];
-    for (const row of dataSource) {
-      // TODO: support reserved instances
-      // We now only support on demand instances.
-      if (row.leaseLength === "N/A") {
-        const fees = [];
-
-        for (const x of xGrid) {
-          const totalCost =
-            getHourCountByMonth(x) * searchConfig.utilization * row.hourly.usd;
-          fees.push({
-            x,
-            y: getDigit(totalCost, 0),
-          });
-        }
-        res.push({
-          id: `${row.region}${
-            searchConfig.engineType.length > 1 ? ` - ${row.engineType}` : ""
-          }${row.leaseLength === "N/A" ? "" : "-" + row.leaseLength}`,
-          data: fees,
-        });
-      }
-    }
+    const res = generateChartData(
+      type,
+      length,
+      dataSource,
+      searchConfig.utilization,
+      searchConfig.engineType
+    );
     setData(res);
   }, [
     dataSource,
     searchConfig.engineType.length,
     searchConfig.utilization,
     searchConfig.leaseLength,
+    searchConfig.engineType,
+    type,
   ]);
 
   // https://github.com/plouc/nivo/issues/1006#issuecomment-797091909

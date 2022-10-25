@@ -20,6 +20,7 @@ import {
   comparer,
   getPricingContent,
   getPrice,
+  slugify,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
 import { useSearchConfigContext } from "@/stores";
@@ -304,18 +305,32 @@ const CompareTable: React.FC<Props> = ({
                 !isEqual(record, prevRecord),
             },
           ]),
-      {
-        title: "Region",
-        dataIndex: "region",
-        width: "14%",
-        className: "whitespace-nowrap",
-        onCell: (_: DataSource, index: number) =>
-          getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
-        sorter: true,
-        sortOrder: sortedInfo.field === "region" && sortedInfo.order,
-        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-          !isEqual(record, prevRecord),
-      },
+      ...(type === TableType.REGION_DETAIL
+        ? []
+        : [
+            {
+              title: "Region",
+              dataIndex: "region",
+              width: "14%",
+              className: "whitespace-nowrap",
+              onCell: (_: DataSource, index: number) =>
+                getCellRowSpan(
+                  dataSource,
+                  index,
+                  paginationInfo,
+                  isFiltering()
+                ),
+              sorter: true,
+              sortOrder: sortedInfo.field === "region" && sortedInfo.order,
+              render: (region: string) => (
+                <Link href={`/region/${slugify(region)}`} passHref>
+                  <a>{region}</a>
+                </Link>
+              ),
+              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
+                !isEqual(record, prevRecord),
+            },
+          ]),
       {
         title: "CPU",
         dataIndex: "cpu",

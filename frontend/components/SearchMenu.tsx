@@ -54,7 +54,7 @@ const SearchMenu: React.FC<Props> = ({
     <div className="w-full flex justify-between pb-2 border-b">
       <div className="h-24 pt-2 flex flex-wrap items-center">
         {/* Cloud Providers */}
-        {!hideProviders && type === SearchBarType.DASHBOARD && (
+        {!hideProviders && type !== SearchBarType.INSTANCE_DETAIL && (
           <Checkbox.Group
             className="mr-2 !-mt-1"
             value={searchConfig.cloudProvider}
@@ -115,13 +115,13 @@ const SearchMenu: React.FC<Props> = ({
           }
         >
           <Checkbox value="OnDemand">On Demand</Checkbox>
-          {type !== SearchBarType.INSTANCE_DETAIL && (
+          {type === SearchBarType.DASHBOARD && (
             <Checkbox value="Reserved">Reserved</Checkbox>
           )}
         </Checkbox.Group>
 
         {/* Min specification for Memory & CPU */}
-        {type === SearchBarType.DASHBOARD && (
+        {type !== SearchBarType.INSTANCE_DETAIL && (
           <div className="flex !mr-4">
             <div className="w-36">
               <InputNumber

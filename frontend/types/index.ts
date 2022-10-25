@@ -4,3 +4,4 @@ export * from "./region";
 export * from "./term";
 export * from "./common";
 export * from "./table";
+export * from "./chart";
