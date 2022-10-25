@@ -268,7 +268,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const usedRegionCodeSet = new Set<string>();
   data.forEach((instance) => {
     instance.regionList.forEach((region) => {
-      usedRegionCodeSet.add(region.code);
+      // Only pre-generate regions listed in regionCodeNameSlugMap.
+      if (regionCodeNameSlugMap.some(([code]) => code === region.code)) {
+        usedRegionCodeSet.add(region.code);
+      }
     });
   });
 
