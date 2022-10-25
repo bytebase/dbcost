@@ -28,12 +28,16 @@ const RelatedTable: React.FC<Props> = ({ title, instance, dataSource }) => {
       title: "CPU",
       dataIndex: "CPU",
       align: "right",
+      render: (cpu: number) => <span className="font-mono">{cpu}</span>,
       shouldCellUpdate: () => false,
     },
     {
       title: "Memory",
       dataIndex: "memory",
       align: "right",
+      render: (memory: number) => (
+        <span className="font-mono">{memory} GB</span>
+      ),
       shouldCellUpdate: () => false,
     },
   ];

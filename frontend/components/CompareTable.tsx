@@ -362,7 +362,9 @@ const CompareTable: React.FC<Props> = ({
           getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
         sorter: true,
         sortOrder: sortedInfo.field === "memory" && sortedInfo.order,
-        render: (memory: number) => <span className="font-mono">{memory}</span>,
+        render: (memory: number) => (
+          <span className="font-mono">{memory} GB</span>
+        ),
         shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
           !isEqual(record, prevRecord),
       },
