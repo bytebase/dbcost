@@ -19,14 +19,13 @@ import {
 import {
   CloudProvider,
   DataSource,
-  TableType,
+  PageType,
   SearchBarType,
   DBInstance,
   SearchConfig,
   Region,
   AvailableRegion,
   SearchConfigDefault,
-  ChartType,
 } from "@/types";
 
 interface Params {
@@ -227,14 +226,14 @@ const Region: NextPage<Props> = ({
           hideProviders={providerList.length === 1}
         />
         <CompareTable
-          type={TableType.REGION_DETAIL}
+          type={PageType.REGION_DETAIL}
           hideProviderIcon={providerList.length === 1}
           dataSource={dataSource}
           setDataSource={setDataSource}
           generateTableData={memoizedGenerate}
         />
         <div className="flex justify-center items-center w-full h-full mt-6 mb-2 border">
-          <LineChart type={ChartType.REGION_DETAIL} dataSource={dataSource} />
+          <LineChart type={PageType.REGION_DETAIL} dataSource={dataSource} />
         </div>
         <div className="w-full flex flex-col mt-4">
           <h3 className="text-lg">

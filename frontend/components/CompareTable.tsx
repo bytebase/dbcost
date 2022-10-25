@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { Table } from "antd";
 import { isEqual } from "lodash";
-import { DataSource, TableType, tablePaginationConfig } from "@/types";
+import { DataSource, PageType, tablePaginationConfig } from "@/types";
 import {
   getDiff,
   getDigit,
@@ -33,7 +33,7 @@ interface PaginationInfo {
 }
 
 interface Props {
-  type?: TableType;
+  type?: PageType;
   hideProviderIcon?: boolean;
   dataSource: DataSource[];
   setDataSource: React.Dispatch<React.SetStateAction<DataSource[]>>;
@@ -48,7 +48,7 @@ enum SorterColumn {
 }
 
 const CompareTable: React.FC<Props> = ({
-  type = TableType.DASHBOARD,
+  type = PageType.DASHBOARD,
   hideProviderIcon = false,
   dataSource,
   setDataSource,
@@ -265,7 +265,7 @@ const CompareTable: React.FC<Props> = ({
   const columns = useMemo<any>(
     () => [
       // TODO: add selection column
-      ...(type === TableType.INSTANCE_DETAIL
+      ...(type === PageType.INSTANCE_DETAIL
         ? []
         : [
             {
@@ -305,7 +305,7 @@ const CompareTable: React.FC<Props> = ({
                 !isEqual(record, prevRecord),
             },
           ]),
-      ...(type === TableType.REGION_DETAIL
+      ...(type === PageType.REGION_DETAIL
         ? []
         : [
             {

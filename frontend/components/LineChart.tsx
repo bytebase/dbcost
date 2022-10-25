@@ -8,12 +8,11 @@ import {
   monthDays,
   commonProperties,
   EngineType,
-  ChartType,
+  PageType,
 } from "@/types";
 
 interface Props {
-  // TODO: combine TableType and ChartType
-  type: ChartType;
+  type: PageType;
   dataSource: DataSource[];
 }
 
@@ -34,7 +33,7 @@ const getHourCountByMonth = (month: number): number => {
 };
 
 const generateChartData = (
-  type: ChartType,
+  type: PageType,
   xLength: number,
   dataSource: DataSource[],
   utilization: number,
@@ -57,7 +56,7 @@ const generateChartData = (
         });
       }
       switch (type) {
-        case ChartType.INSTANCE_DETAIL:
+        case PageType.INSTANCE_DETAIL:
           res.push({
             id: `${row.region}${
               engineType.length > 1 ? ` - ${row.engineType}` : ""
@@ -65,7 +64,7 @@ const generateChartData = (
             data: fees,
           });
           break;
-        case ChartType.REGION_DETAIL:
+        case PageType.REGION_DETAIL:
           res.push({
             id: `${row.name}${
               engineType.length > 1 ? ` - ${row.engineType}` : ""
