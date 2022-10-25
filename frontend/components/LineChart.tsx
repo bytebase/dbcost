@@ -81,6 +81,58 @@ const generateChartData = (
   return res;
 };
 
+const getNearbyPoints = (data: ChartData[], x: number, serieId: string) => {
+  const range = 5;
+  const higherPoints = [];
+  const lowerPoints = [];
+  let hasMoreHigherPoints: boolean = false,
+    hasMoreLowerPoints: boolean = false;
+
+  const pointSlice = data
+    .map(({ id, data }) => {
+      const point = data.find((d) => d.x === x);
+      return {
+        id,
+        x,
+        y: Number(point?.y),
+      };
+    })
+    .sort((a, b) => b.y - a.y);
+  const currPointIndex = pointSlice.findIndex((d) => d.id === serieId);
+
+  // At most five different y values higher than current point.
+  for (let i = currPointIndex - 1, r = range; i >= 0 && r > 0; i--) {
+    higherPoints.push(pointSlice[i]);
+    if (pointSlice[i].y !== pointSlice[i + 1].y) {
+      r--;
+      if (r === 0) {
+        hasMoreHigherPoints = true;
+      }
+    }
+  }
+  // At most five different y values lower than current point.
+  for (
+    let i = currPointIndex + 1, r = range;
+    i < pointSlice.length && r > 0;
+    i++
+  ) {
+    lowerPoints.push(pointSlice[i]);
+    if (pointSlice[i].y !== pointSlice[i - 1].y) {
+      r--;
+      if (r === 0) {
+        hasMoreLowerPoints = true;
+      }
+    }
+  }
+
+  return {
+    higherPoints,
+    lowerPoints,
+    hasMoreHigherPoints,
+    hasMoreLowerPoints,
+  };
+};
+
 const LineChart: React.FC<Props> = ({ type, dataSource }) => {
   const [data, setData] = useState<ChartData[]>([]);
   const { searchConfig } = useSearchConfigContext();
@@ -134,8 +186,14 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
         legendPosition: "middle",
       }}
       useMesh={true}
-      enableSlices="x"
-      sliceTooltip={({ slice }) => {
+      enableSlices={false}
+      tooltip={({ point }) => {
+        const {
+          higherPoints,
+          lowerPoints,
+          hasMoreHigherPoints,
+          hasMoreLowerPoints,
+        } = getNearbyPoints(data, Number(point.data.x), String(point.serieId));
         return (
           <div
             className="bg-white p-3 border"
@@ -144,28 +202,41 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
             }}
           >
             <div className="mb-1 text-yellow-500">
-              Total cost of the first <b>{slice.points[0].data.xFormatted}</b>{" "}
-              month(s).
+              Total cost of the first <b>{point.data.xFormatted}</b> month(s).
             </div>
-            {slice.points
-              .sort((a, b) => Number(b.data.y) - Number(a.data.y))
-              .map((point) => (
-                <div
-                  key={point.id}
-                  className="flex justify-between items-center"
-                >
-                  <div className="flex items-center">
-                    <div
-                      className="w-2 h-2 mr-2"
-                      style={{
-                        backgroundColor: point.color,
-                      }}
-                    ></div>
-                    <span>{point.serieId}</span>
-                  </div>
-                  <b className="ml-2">{point.data.yFormatted}</b>
+            {hasMoreHigherPoints && <div>...</div>}
+            {higherPoints.map((point) => (
+              <div key={point.id} className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <span>{point.id}</span>
                 </div>
-              ))}
+                <b className="ml-2">{point.y} $</b>
+              </div>
+            ))}
+            <div
+              key={point.id}
+              className="flex justify-between items-center my-1"
+            >
+              <div className="flex items-center">
+                <div
+                  className="w-2 h-2 mr-2"
+                  style={{
+                    backgroundColor: point.color,
+                  }}
+                ></div>
+                <span>{point.serieId}</span>
+              </div>
+              <b className="ml-2">{point.data.yFormatted}</b>
+            </div>
+            {lowerPoints.map((point) => (
+              <div key={point.id} className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <span>{point.id}</span>
+                </div>
+                <b className="ml-2">{point.y} $</b>
+              </div>
+            ))}
+            {hasMoreLowerPoints && <div>...</div>}
           </div>
         );
       }}
