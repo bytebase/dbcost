@@ -323,11 +323,15 @@ const CompareTable: React.FC<Props> = ({
                 ),
               sorter: true,
               sortOrder: sortedInfo.field === "region" && sortedInfo.order,
-              render: (region: string) => (
-                <Link href={`/region/${slug(region)}`} passHref>
-                  <a>{region}</a>
-                </Link>
-              ),
+              render: (region: string) =>
+                // TODO: find a better way to handle other regions
+                region.startsWith("Other") ? (
+                  <span>{region}</span>
+                ) : (
+                  <Link href={`/region/${slug(region)}`} passHref>
+                    <a>{region}</a>
+                  </Link>
+                ),
               shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
                 !isEqual(record, prevRecord),
             },
