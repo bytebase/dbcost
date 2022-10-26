@@ -23,12 +23,6 @@ export interface DataSource {
   expectedCost: number;
 }
 
-export enum TableType {
-  DASHBOARD = "dashboard",
-  INSTANCE_DETAIL = "instanceDetail",
-  REGION_DETAIL = "regionDetail",
-}
-
 export interface RelatedType {
   name: string;
   CPU: number;

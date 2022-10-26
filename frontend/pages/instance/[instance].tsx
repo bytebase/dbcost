@@ -17,7 +17,7 @@ import {
 import {
   CloudProvider,
   DataSource,
-  TableType,
+  PageType,
   SearchBarType,
   DBInstance,
   RelatedType,
@@ -207,13 +207,13 @@ const InstanceDetail: NextPage<Props> = ({
         </p>
         <SearchMenu type={SearchBarType.INSTANCE_DETAIL} />
         <CompareTable
-          type={TableType.INSTANCE_DETAIL}
+          type={PageType.INSTANCE_DETAIL}
           dataSource={dataSource}
           setDataSource={setDataSource}
           generateTableData={memoizedGenerate}
         />
         <div className="flex justify-center items-center w-full h-full mt-6 mb-2 border">
-          <LineChart dataSource={dataSource} />
+          <LineChart type={PageType.INSTANCE_DETAIL} dataSource={dataSource} />
         </div>
         <div className="w-full flex flex-row justify-between">
           <RelatedTable
@@ -237,9 +237,7 @@ const InstanceDetail: NextPage<Props> = ({
 export default InstanceDetail;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
 
   return {
     paths: data.map((instance) => ({
@@ -251,9 +249,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { instance: instanceName } = context.params as unknown as Params;
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
   const instanceData = data.find((instance) => instance.name === instanceName);
 
   const getSameClassList = (): RelatedType[] => {

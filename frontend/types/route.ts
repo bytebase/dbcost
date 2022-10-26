@@ -32,3 +32,9 @@ export const RouteQueryDashBoardDefault: RouteQueryDashBoard = {
   engine: SearchConfigDefault.engineType?.join(","),
   charge: SearchConfigDefault.chargeType?.join(","),
 };
+
+export enum PageType {
+  DASHBOARD = "dashboard",
+  INSTANCE_DETAIL = "instanceDetail",
+  REGION_DETAIL = "regionDetail",
+}

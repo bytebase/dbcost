@@ -98,8 +98,7 @@ export const DBInstanceContextProvider: React.FC<ProviderProps> = ({
   }, [dbInstanceList]);
 
   const loadDBInstanceList = useCallback(async () => {
-    let sourceFileName = "dbInstance.json";
-    const { default: data } = await import(`../../data/${sourceFileName}`);
+    const data = (await import("@data")).default as DBInstance[];
     setDBInstanceList(data);
   }, []);
 

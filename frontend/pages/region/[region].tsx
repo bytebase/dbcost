@@ -1,33 +1,54 @@
-import { useState, useEffect, useCallback } from "react";
-import type { NextPage, GetStaticProps } from "next";
+import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
+import { Divider } from "antd";
+import slug from "slug";
 import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
-import RegionMenu from "@/components/RegionMenu";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
+import LineChart from "@/components/LineChart";
 import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
-import { getPrice, getRegionCode, getRegionName } from "@/utils";
 import {
+  getPrice,
+  getRegionName,
+  getRegionPrefix,
+  getRegionListByPrefix,
+  regionCodeNameSlugMap,
+} from "@/utils";
+import {
+  CloudProvider,
   DataSource,
+  PageType,
+  SearchBarType,
   DBInstance,
   SearchConfig,
+  Region,
+  AvailableRegion,
   SearchConfigDefault,
-  tablePaginationConfig,
 } from "@/types";
+
+interface Params {
+  region: string;
+}
 
 interface Props {
   serverSideCompareTableData: DataSource[];
+  codeList: string[];
+  name: string;
+  urlPattern: string;
+  providerList: CloudProvider[];
 }
 
 const generateTableData = (
   dbInstanceList: DBInstance[],
-  searchConfig: SearchConfig
+  searchConfig: SearchConfig,
+  codeList: string[]
 ): DataSource[] => {
   let rowCount = 0;
   const dataSource: DataSource[] = [];
   const {
     cloudProvider,
-    region,
     engineType,
     chargeType,
     minCPU,
@@ -37,19 +58,13 @@ const generateTableData = (
     keyword,
   } = searchConfig;
 
-  // If any of these three below is empty, display no table row.
-  if (
-    region.length === 0 ||
-    engineType.length === 0 ||
-    chargeType.length === 0
-  ) {
+  // If any of these below is empty, display no table row.
+  if (engineType.length === 0 || chargeType.length === 0) {
     return [];
   }
 
   const cloudProviderSet = new Set(cloudProvider);
-  const selectedRegionCodeSet = new Set(
-    region.map((region) => getRegionCode(region)).flat()
-  );
+  const selectedRegionCodeSet = new Set(codeList);
   const engineSet = new Set(engineType);
   const chargeTypeSet = new Set(chargeType);
 
@@ -171,56 +186,145 @@ const generateTableData = (
   return dataSource;
 };
 
-const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
+const Region: NextPage<Props> = ({
+  serverSideCompareTableData,
+  codeList,
+  name,
+  providerList,
+}) => {
   const [dataSource, setDataSource] = useState<DataSource[]>(
     serverSideCompareTableData
   );
-  const { dbInstanceList, loadDBInstanceList, getAvailableRegionList } =
-    useDBInstanceContext();
-  const { searchConfig } = useSearchConfigContext();
+  const { dbInstanceList, loadDBInstanceList } = useDBInstanceContext();
+  const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
   const memoizedGenerate = useCallback(
-    (): DataSource[] => generateTableData(dbInstanceList, searchConfig),
-    [dbInstanceList, searchConfig]
+    (): DataSource[] =>
+      generateTableData(dbInstanceList, searchConfig, codeList),
+    [codeList, dbInstanceList, searchConfig]
   );
+
+  useEffect(() => {
+    // Set default searchConfig in instance detail page.
+    updateSearchConfig("engineType", ["MYSQL", "POSTGRES"]);
+    updateSearchConfig("chargeType", ["OnDemand"]);
+  }, [updateSearchConfig]);
 
   useEffect(() => {
     loadDBInstanceList();
   }, [loadDBInstanceList]);
 
-  const availableRegionList = getAvailableRegionList();
-
   return (
-    <MainLayout title="The Ultimate AWS RDS and Google Cloud SQL Instance Pricing Sheet">
-      <div className="mx-5 mt-4 pb-2">
-        <ButtonGroup type="reset" />
-        <RegionMenu availableRegionList={availableRegionList} />
-        <SearchMenu />
+    <MainLayout
+      title={`${name} Cloud DB Instances`}
+      headTitle={`${name} Cloud DB Instances`}
+    >
+      <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
+        <ButtonGroup type="back" />
+        <SearchMenu
+          type={SearchBarType.REGION_DETAIL}
+          hideProviders={providerList.length === 1}
+        />
         <CompareTable
+          type={PageType.REGION_DETAIL}
+          hideProviderIcon={providerList.length === 1}
           dataSource={dataSource}
           setDataSource={setDataSource}
           generateTableData={memoizedGenerate}
         />
-      </div>
+        <div className="flex justify-center items-center w-full h-full mt-6 mb-2 border">
+          <LineChart type={PageType.REGION_DETAIL} dataSource={dataSource} />
+        </div>
+        <div className="w-full flex flex-col mt-4">
+          <h3 className="text-lg">
+            Regions available in {getRegionPrefix(name)}
+          </h3>
+          <section>
+            <span>{name}</span>
+            {getRegionListByPrefix(getRegionPrefix(name))
+              .filter((region) => region !== name)
+              .map((region) => (
+                <React.Fragment key={region}>
+                  <Divider type="vertical" />
+                  <Link href={`/region/${slug(region)}`} passHref>
+                    <a className="whitespace-nowrap leading-6">{region}</a>
+                  </Link>
+                </React.Fragment>
+              ))}
+          </section>
+        </div>
+      </main>
     </MainLayout>
   );
 };
 
-export default Home;
+export default Region;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const data = (await import("@data")).default as DBInstance[];
-  // For SEO, showing the first page is enough. So we only need to
-  // pass the first page of data to the page. Passing the whole large
-  // `data` will make this page twice as large to reduce performance.
-  const firstPageData = data.slice(0, tablePaginationConfig.defaultPageSize);
+
+  const usedRegionCodeSet = new Set<string>();
+  data.forEach((instance) => {
+    instance.regionList.forEach((region) => {
+      // Only pre-generate regions listed in regionCodeNameSlugMap.
+      if (regionCodeNameSlugMap.some(([code]) => code === region.code)) {
+        usedRegionCodeSet.add(region.code);
+      }
+    });
+  });
+
+  return {
+    paths: Array.from(usedRegionCodeSet).map((regionCode) => ({
+      params: {
+        region: slug(getRegionName(regionCode)),
+      },
+    })),
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { region: regionSlug } = context.params as unknown as Params;
+  const data = (await import("@data")).default as DBInstance[];
+
+  const regionList = regionCodeNameSlugMap.filter(
+    ([, , slug]) => slug === regionSlug
+  );
+  const name = regionList[0][1];
+
+  const regionMap = new Map<string, Map<string, string>>();
+  data.forEach((db) => {
+    db.regionList.forEach((region: Region) => {
+      const regionName = getRegionName(region.code);
+      if (!regionMap.has(regionName)) {
+        const newMap = new Map<string, string>();
+        regionMap.set(regionName, newMap);
+      }
+
+      regionMap.get(regionName)?.set(db.cloudProvider, region.code);
+    });
+  });
+
+  const availableRegionList: AvailableRegion[] = [];
+  regionMap.forEach((providerCode, regionName) => {
+    availableRegionList.push({
+      name: regionName,
+      providerCode: providerCode,
+    });
+  });
+
+  const region = availableRegionList.find((region) => region.name === name);
 
   return {
     props: {
       serverSideCompareTableData: generateTableData(
-        firstPageData,
-        SearchConfigDefault
+        data,
+        SearchConfigDefault,
+        Array.from(region?.providerCode.values() || [])
       ),
+      codeList: Array.from(region?.providerCode.values() || []),
+      name: region?.name,
+      providerList: Array.from(region?.providerCode.keys() || []),
     },
   };
 };

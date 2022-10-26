@@ -10,7 +10,8 @@ import {
 import Link from "next/link";
 import { Table } from "antd";
 import { isEqual } from "lodash";
-import { DataSource, TableType, tablePaginationConfig } from "@/types";
+import slug from "slug";
+import { DataSource, PageType, tablePaginationConfig } from "@/types";
 import {
   getDiff,
   getDigit,
@@ -20,6 +21,7 @@ import {
   comparer,
   getPricingContent,
   getPrice,
+  withComma,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
 import { useSearchConfigContext } from "@/stores";
@@ -32,7 +34,7 @@ interface PaginationInfo {
 }
 
 interface Props {
-  type?: TableType;
+  type?: PageType;
   hideProviderIcon?: boolean;
   dataSource: DataSource[];
   setDataSource: React.Dispatch<React.SetStateAction<DataSource[]>>;
@@ -47,7 +49,7 @@ enum SorterColumn {
 }
 
 const CompareTable: React.FC<Props> = ({
-  type = TableType.DASHBOARD,
+  type = PageType.DASHBOARD,
   hideProviderIcon = false,
   dataSource,
   setDataSource,
@@ -254,7 +256,7 @@ const CompareTable: React.FC<Props> = ({
           content={expectedCostTooltipContent(expectedCost)}
         >
           <span className="font-mono">
-            {expectedCostCellContent(expectedCost, record)}
+            {withComma(expectedCostCellContent(expectedCost, record))}
           </span>
         </Tooltip>
       ),
@@ -264,7 +266,7 @@ const CompareTable: React.FC<Props> = ({
   const columns = useMemo<any>(
     () => [
       // TODO: add selection column
-      ...(type === TableType.INSTANCE_DETAIL
+      ...(type === PageType.INSTANCE_DETAIL
         ? []
         : [
             {
@@ -304,18 +306,36 @@ const CompareTable: React.FC<Props> = ({
                 !isEqual(record, prevRecord),
             },
           ]),
-      {
-        title: "Region",
-        dataIndex: "region",
-        width: "14%",
-        className: "whitespace-nowrap",
-        onCell: (_: DataSource, index: number) =>
-          getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
-        sorter: true,
-        sortOrder: sortedInfo.field === "region" && sortedInfo.order,
-        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-          !isEqual(record, prevRecord),
-      },
+      ...(type === PageType.REGION_DETAIL
+        ? []
+        : [
+            {
+              title: "Region",
+              dataIndex: "region",
+              width: "14%",
+              className: "whitespace-nowrap",
+              onCell: (_: DataSource, index: number) =>
+                getCellRowSpan(
+                  dataSource,
+                  index,
+                  paginationInfo,
+                  isFiltering()
+                ),
+              sorter: true,
+              sortOrder: sortedInfo.field === "region" && sortedInfo.order,
+              render: (region: string) =>
+                // TODO: find a better way to handle other regions
+                region.startsWith("Other") ? (
+                  <span>{region}</span>
+                ) : (
+                  <Link href={`/region/${slug(region)}`} passHref>
+                    <a>{region}</a>
+                  </Link>
+                ),
+              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
+                !isEqual(record, prevRecord),
+            },
+          ]),
       {
         title: "CPU",
         dataIndex: "cpu",
@@ -346,7 +366,9 @@ const CompareTable: React.FC<Props> = ({
           getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
         sorter: true,
         sortOrder: sortedInfo.field === "memory" && sortedInfo.order,
-        render: (memory: number) => <span className="font-mono">{memory}</span>,
+        render: (memory: number) => (
+          <span className="font-mono">{memory} GB</span>
+        ),
         shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
           !isEqual(record, prevRecord),
       },

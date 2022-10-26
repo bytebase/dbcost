@@ -12,3 +12,8 @@ export const isEmptyArray = (arr: any[] | undefined) => {
 
   return false;
 };
+
+// 10000 -> 10,000
+export const withComma = (value: number | string) => {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
