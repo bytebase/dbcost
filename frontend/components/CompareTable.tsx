@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { Table } from "antd";
 import { isEqual } from "lodash";
+import slug from "slug";
 import { DataSource, PageType, tablePaginationConfig } from "@/types";
 import {
   getDiff,
@@ -20,7 +21,6 @@ import {
   comparer,
   getPricingContent,
   getPrice,
-  slugify,
   withComma,
 } from "@/utils";
 import Tooltip from "@/components/primitives/Tooltip";
@@ -324,7 +324,7 @@ const CompareTable: React.FC<Props> = ({
               sorter: true,
               sortOrder: sortedInfo.field === "region" && sortedInfo.order,
               render: (region: string) => (
-                <Link href={`/region/${slugify(region)}`} passHref>
+                <Link href={`/region/${slug(region)}`} passHref>
                   <a>{region}</a>
                 </Link>
               ),

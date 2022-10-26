@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import { Divider } from "antd";
+import slug from "slug";
 import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
 import SearchMenu from "@/components/SearchMenu";
@@ -14,7 +15,6 @@ import {
   getRegionPrefix,
   getRegionListByPrefix,
   regionCodeNameSlugMap,
-  slugify,
 } from "@/utils";
 import {
   CloudProvider,
@@ -246,7 +246,7 @@ const Region: NextPage<Props> = ({
               .map((region) => (
                 <React.Fragment key={region}>
                   <Divider type="vertical" />
-                  <Link href={`/region/${slugify(region)}`} passHref>
+                  <Link href={`/region/${slug(region)}`} passHref>
                     <a className="whitespace-nowrap leading-6">{region}</a>
                   </Link>
                 </React.Fragment>
@@ -276,7 +276,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: Array.from(usedRegionCodeSet).map((regionCode) => ({
       params: {
-        region: slugify(getRegionName(regionCode)),
+        region: slug(getRegionName(regionCode)),
       },
     })),
     fallback: false,

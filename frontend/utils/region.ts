@@ -1,3 +1,5 @@
+import slug from "slug";
+
 export const regionCodeNameSlugMap: [string, string, string][] = [
   // AWS
   ["us-gov-east-1", "AWS GovCloud (US-East)", "aws-govcloud-us-east"],
@@ -70,7 +72,7 @@ export const getRegionName = (regionCode: string): string => {
     regionCodeNameSlugMap.push([
       regionCode,
       `Other (${regionCode})`,
-      slugify(`Other (${regionCode})`),
+      slug(`Other (${regionCode})`),
     ]);
   }
   return regionCodeNameSlugMap.find(([code]) => code === regionCode)![1];
@@ -99,13 +101,3 @@ export const getRegionListByPrefix = (prefix: string): string[] =>
         .map((pair) => pair[1])
     )
   );
-
-// "US East (N. Virginia)" -> "us-east-n-virginia"
-export const slugify = (regionName: string): string =>
-  regionName
-    .replace(/\(/g, "")
-    .replace(/\)/g, "")
-    .replace(/\./g, "")
-    .replace(/\s/g, "-")
-    .replace(/é/g, "e") // Montréal -> Montreal
-    .toLowerCase();
