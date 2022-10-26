@@ -26,6 +26,7 @@ import {
   Region,
   AvailableRegion,
   SearchConfigDefault,
+  tablePaginationConfig,
 } from "@/types";
 
 interface Params {
@@ -287,6 +288,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { region: regionSlug } = context.params as unknown as Params;
   const data = (await import("@data")).default as DBInstance[];
 
+  // Only pass the first page of data on SSG to reduce page size.
+  const firstPageData = data.slice(0, tablePaginationConfig.defaultPageSize);
   const regionList = regionCodeNameSlugMap.filter(
     ([, , slug]) => slug === regionSlug
   );
@@ -318,7 +321,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       serverSideCompareTableData: generateTableData(
-        data,
+        firstPageData,
         SearchConfigDefault,
         Array.from(region?.providerCode.values() || [])
       ),
