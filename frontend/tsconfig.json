@@ -16,7 +16,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@data": ["../data/dbInstance.json"]
     },
     "downlevelIteration": true
   },

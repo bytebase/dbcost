@@ -209,9 +209,7 @@ const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
   // For SEO, showing the first page is enough. So we only need to
   // pass the first page of data to the page. Passing the whole large
   // `data` will make this page twice as large to reduce performance.

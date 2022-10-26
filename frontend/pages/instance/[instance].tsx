@@ -237,9 +237,7 @@ const InstanceDetail: NextPage<Props> = ({
 export default InstanceDetail;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
 
   return {
     paths: data.map((instance) => ({
@@ -251,9 +249,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { instance: instanceName } = context.params as unknown as Params;
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
   const instanceData = data.find((instance) => instance.name === instanceName);
 
   const getSameClassList = (): RelatedType[] => {

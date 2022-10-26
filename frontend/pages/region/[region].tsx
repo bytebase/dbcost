@@ -261,9 +261,7 @@ const Region: NextPage<Props> = ({
 export default Region;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
 
   const usedRegionCodeSet = new Set<string>();
   data.forEach((instance) => {
@@ -287,9 +285,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { region: regionSlug } = context.params as unknown as Params;
-  const sourceFileName = "dbInstance.json";
-  const data = (await import(`../../../data/${sourceFileName}`))
-    .default as DBInstance[];
+  const data = (await import("@data")).default as DBInstance[];
 
   const regionList = regionCodeNameSlugMap.filter(
     ([, , slug]) => slug === regionSlug
