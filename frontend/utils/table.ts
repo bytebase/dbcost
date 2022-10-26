@@ -87,7 +87,7 @@ export const dashboardCostComparer = (
       ? rowA.baseHourly * YearInHour - rowB.baseHourly * YearInHour
       : rowB.baseHourly * YearInHour - rowA.baseHourly * YearInHour;
   }
-  if (rowA.leaseLength !== "N/A" && rowB.leaseLength !== "N/A") {
+  if (rowA.leaseLength !== "On Demand" && rowB.leaseLength !== "On Demand") {
     if (rowA.expectedCost - rowB.expectedCost >= 0) {
       return isAscending ? 1 : -1;
     } else {
@@ -95,7 +95,7 @@ export const dashboardCostComparer = (
     }
   }
   // Make sure to put the baseline row at top.
-  if (rowA.leaseLength === "N/A") {
+  if (rowA.leaseLength === "On Demand") {
     return -1;
   }
   return 1;

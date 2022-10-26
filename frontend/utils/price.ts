@@ -8,7 +8,7 @@ export const getPrice = (
   leaseLength: number
 ): number => {
   // charged on demand.
-  if (dataRow.leaseLength === "N/A") {
+  if (dataRow.leaseLength === "On Demand") {
     return leaseLength * YearInHour * dataRow.hourly.usd * utilization;
   }
 

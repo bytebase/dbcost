@@ -174,7 +174,8 @@ const CompareTable: React.FC<Props> = ({
     (expectedCost: number, record: DataSource): string => {
       const cost = getDigit(expectedCost, 0);
       const showPercentage =
-        record.leaseLength !== "N/A" && searchConfig.chargeType?.length === 2;
+        record.leaseLength !== "On Demand" &&
+        searchConfig.chargeType?.length === 2;
 
       if (showPercentage) {
         const diff = getDiff(
