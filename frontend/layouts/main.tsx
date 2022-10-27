@@ -10,7 +10,7 @@ type Props = {
 
 const Main: React.FC<Props> = ({ children, headTitle, title }) => {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen min-w-fit">
       <Head>
         <title>
           {headTitle ?? "DB Cost | RDS & Cloud SQL Instance Pricing Sheet"}

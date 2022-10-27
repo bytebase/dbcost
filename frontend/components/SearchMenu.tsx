@@ -51,8 +51,8 @@ const SearchMenu: React.FC<Props> = ({
   const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
   return (
-    <div className="w-full flex justify-between pb-2 border-b">
-      <div className="h-24 pt-2 flex flex-wrap items-center">
+    <div className="w-full flex flex-col md:flex-row justify-center md:justify-between pb-2 border-b">
+      <div className="pt-6 pb-4 flex flex-wrap gap-2 justify-start items-center">
         {/* Cloud Providers */}
         {!hideProviders && type !== SearchBarType.INSTANCE_DETAIL && (
           <Checkbox.Group

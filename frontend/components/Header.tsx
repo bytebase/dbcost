@@ -16,7 +16,8 @@ const Header: React.FC = () => {
   return (
     <header className="flex justify-center bg-slate-800">
       <div className="w-full 2xl:w-5/6 2xl:max-w-7xl flex justify-between items-center flex-grow-0 p-2 text-white">
-        <div className="inline-flex flex-row items-center gap-4">
+        {/* logo and provider entries */}
+        <div className="flex flex-row items-center gap-4">
           <Link href="/" passHref>
             <a>
               <div
@@ -48,11 +49,13 @@ const Header: React.FC = () => {
           ))}
         </div>
 
-        <div className="inline-flex flex-row items-center text-3xl">
+        {/* emoji group */}
+        <div className="flex flex-row items-center text-3xl whitespace-nowrap">
           {`${cloudEmoji} ${moneyEmoji} ${cloudEmoji} ${moneyEmoji} ${cloudEmoji}`}
         </div>
 
-        <div className="inline-flex float-right items-center space-x-2">
+        {/* star and sponsor */}
+        <div className="flex float-right items-center space-x-2">
           <iframe
             src="https://ghbtns.com/github-btn.html?user=bytebase&repo=dbcost&type=star"
             frameBorder="0"
