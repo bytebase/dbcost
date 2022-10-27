@@ -108,7 +108,7 @@ const generateTableData = (
           engineType: term.databaseEngine,
           commitment: { usd: term.commitmentUSD },
           hourly: { usd: term.hourlyUSD },
-          leaseLength: term.payload?.leaseContractLength ?? "N/A",
+          leaseLength: term.payload?.leaseContractLength ?? "On Demand",
           // We store the region code for each provider, and show the user the actual region information.
           // e.g. AWS's us-east-1 and GCP's us-east-4 are refer to the same region (N. Virginia)
           region: regionName,
@@ -137,9 +137,9 @@ const generateTableData = (
         // Sort rows according to the following criterion:
         // 1. On demand price goes first.
         // 2. Sort on expected cost in ascending order.
-        if (a.leaseLength === "N/A") {
+        if (a.leaseLength === "On Demand") {
           return -1;
-        } else if (b.leaseLength === "N/A") {
+        } else if (b.leaseLength === "On Demand") {
           return 1;
         }
 

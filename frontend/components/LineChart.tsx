@@ -45,7 +45,7 @@ const generateChartData = (
   for (const row of dataSource) {
     // TODO: support reserved instances
     // We now only support on demand instances.
-    if (row.leaseLength === "N/A") {
+    if (row.leaseLength === "On Demand") {
       const fees = [];
 
       for (const x of xGrid) {
@@ -60,7 +60,7 @@ const generateChartData = (
           res.push({
             id: `${row.region}${
               engineType.length > 1 ? ` - ${row.engineType}` : ""
-            }${row.leaseLength === "N/A" ? "" : "-" + row.leaseLength}`,
+            }${row.leaseLength === "On Demand" ? "" : "-" + row.leaseLength}`,
             data: fees,
           });
           break;
@@ -68,7 +68,7 @@ const generateChartData = (
           res.push({
             id: `${row.name}${
               engineType.length > 1 ? ` - ${row.engineType}` : ""
-            }${row.leaseLength === "N/A" ? "" : "-" + row.leaseLength}`,
+            }${row.leaseLength === "On Demand" ? "" : "-" + row.leaseLength}`,
             data: fees,
           });
           break;
