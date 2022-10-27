@@ -20,7 +20,7 @@ export type SearchConfig = {
 };
 
 export const SearchConfigDefault: SearchConfig = {
-  cloudProvider: ["AWS", "GCP"],
+  cloudProvider: ["AWS"],
   engineType: ["MYSQL"],
   chargeType: ["OnDemand", "Reserved"],
   region: ["US East (N. Virginia)"],
