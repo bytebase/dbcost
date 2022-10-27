@@ -10,7 +10,6 @@ import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
 import {
   getPrice,
   getRegionName,
-  getInstanceClass,
   getInstanceFamily,
   getInstanceSize,
 } from "@/utils";
@@ -35,8 +34,8 @@ interface Props {
   CPU: number;
   memory: number;
   dataSource: DataSource[];
-  sameClassList: RelatedType[];
   sameFamilyList: RelatedType[];
+  sameSizeList: RelatedType[];
 }
 
 const generateTableData = (
@@ -174,8 +173,8 @@ const InstanceDetail: NextPage<Props> = ({
   provider,
   CPU,
   memory,
-  sameClassList,
   sameFamilyList,
+  sameSizeList,
 }) => {
   const [dataSource, setDataSource] = useState<DataSource[]>(
     serverSideCompareTableData
@@ -216,15 +215,24 @@ const InstanceDetail: NextPage<Props> = ({
         </div>
         <div className="w-full flex flex-row justify-between">
           <RelatedTable
-            title="Instances in the same class"
+            title={
+              <>
+                Instances in the{" "}
+                <i>{getInstanceFamily(name, provider, true)}</i> family
+              </>
+            }
             instance={name}
-            dataSource={sameClassList}
+            dataSource={sameFamilyList}
           />
           {provider === "AWS" && (
             <RelatedTable
-              title="Instances in the same family"
+              title={
+                <>
+                  Instances of the <i>{getInstanceSize(name, provider)}</i> size
+                </>
+              }
               instance={name}
-              dataSource={sameFamilyList}
+              dataSource={sameSizeList}
             />
           )}
         </div>
@@ -252,7 +260,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const instanceData = data.find((instance) => instance.name === instanceName);
 
   const getSameClassList = (): RelatedType[] => {
-    const currClass = getInstanceClass(
+    const currClass = getInstanceFamily(
       instanceName,
       instanceData?.cloudProvider as CloudProvider
     );
@@ -276,24 +284,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
       });
   };
 
-  const getSameFamilyList = (): RelatedType[] => {
-    const currFamily = getInstanceFamily(
-      instanceName,
-      instanceData?.cloudProvider as CloudProvider
-    );
+  const getSameSizeList = (): RelatedType[] => {
     const currSize = getInstanceSize(
       instanceName,
       instanceData?.cloudProvider as CloudProvider
     );
-    if (!currFamily || !currSize) {
+    if (!currSize) {
       return [];
     }
     return data
-      .filter(
-        (instance) =>
-          instance.name.startsWith(`db.${currFamily}`) &&
-          instance.name.endsWith(`.${currSize}`)
-      )
+      .filter((instance) => instance.name.endsWith(`.${currSize}`))
       .map((instance) => ({
         name: instance.name,
         CPU: instance.cpu,
@@ -326,8 +326,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
       provider: instanceData?.cloudProvider,
       CPU: instanceData?.cpu,
       memory: instanceData?.memory,
-      sameClassList: getSameClassList(),
-      sameFamilyList: getSameFamilyList(),
+      sameFamilyList: getSameClassList(),
+      sameSizeList: getSameSizeList(),
     },
   };
 };
