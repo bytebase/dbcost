@@ -5,7 +5,7 @@ import TdCell from "@/components/TdCell";
 import type { RelatedType } from "@/types/table";
 
 interface Props {
-  title: string;
+  title: string | React.ReactNode;
   instance: string;
   dataSource: RelatedType[];
 }
