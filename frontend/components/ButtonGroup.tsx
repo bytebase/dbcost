@@ -6,6 +6,10 @@ interface Props {
   type: "reset" | "back";
 }
 
+const copyURL= () => {
+  navigator.clipboard.writeText(document.location.href)
+}
+
 const ButtonGroup: React.FC<Props> = ({ type }) => {
   const { reset: resetSearchConfig } = useSearchConfigContext();
 
@@ -26,9 +30,5 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
     </div>
   );
 };
-
-const copyURL= () => {
-  navigator.clipboard.writeText(document.location.href)
-}
 
 export default ButtonGroup;
