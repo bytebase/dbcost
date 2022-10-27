@@ -194,7 +194,6 @@ const InstanceDetail: NextPage<Props> = ({
 
   useEffect(() => {
     // Set default searchConfig in instance detail page.
-    updateSearchConfig("engineType", ["MYSQL", "POSTGRES"]);
     updateSearchConfig("chargeType", ["OnDemand"]);
   }, [updateSearchConfig]);
 
