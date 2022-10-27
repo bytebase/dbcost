@@ -22,9 +22,13 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
           </a>
         </Link>
       )}
-      <Button>Copy URL</Button>
+      <Button onClick={copyURL}>Copy URL</Button>
     </div>
   );
 };
+
+const copyURL= () => {
+  navigator.clipboard.writeText(document.location.href)
+}
 
 export default ButtonGroup;
