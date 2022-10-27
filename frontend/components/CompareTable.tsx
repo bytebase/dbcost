@@ -82,8 +82,8 @@ const CompareTable: React.FC<Props> = ({
   );
 
   const [sortedInfo, setSortedInfo] = useState({
-    order: null,
-    field: "",
+    order: "ascend",
+    field: SorterColumn.EXPECTED_COST,
   });
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     current: 1,
