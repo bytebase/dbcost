@@ -1,8 +1,12 @@
 import { Table } from "antd";
 import Link from "next/link";
 import type { ColumnsType } from "antd/es/table";
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import Tooltip from "@/components/primitives/Tooltip";
 import TdCell from "@/components/TdCell";
-import type { RelatedType } from "@/types/table";
+import { useSearchConfigContext } from "@/stores";
+import { getDigit, YearInHour, withComma } from "@/utils";
+import { RelatedType } from "@/types";
 
 interface Props {
   title: string | React.ReactNode;
@@ -11,6 +15,7 @@ interface Props {
 }
 
 const RelatedTable: React.FC<Props> = ({ title, instance, dataSource }) => {
+  const { searchConfig } = useSearchConfigContext();
   const columns: ColumnsType<RelatedType> = [
     {
       title: "Name",
@@ -39,6 +44,35 @@ const RelatedTable: React.FC<Props> = ({ title, instance, dataSource }) => {
         <span className="font-mono">{memory} GB</span>
       ),
       shouldCellUpdate: () => false,
+    },
+    {
+      title: () => (
+        <h3 className="flex items-center justify-end m-0">
+          Cost
+          <Tooltip
+            delayDuration={0}
+            content="Cost of MySQL instance in US East (N. Virginia)."
+          >
+            <QuestionMarkCircledIcon className="ml-1 cursor-pointer" />
+          </Tooltip>
+        </h3>
+      ),
+      dataIndex: "hourlyUSD",
+      align: "right",
+      render: (hourlyUSD: number | undefined) => {
+        if (hourlyUSD) {
+          const cost =
+            searchConfig.utilization *
+            YearInHour *
+            hourlyUSD *
+            searchConfig.leaseLength;
+          return (
+            <span className="font-mono">${withComma(getDigit(cost, 0))}</span>
+          );
+        } else {
+          return <span className="font-mono">Unavailable</span>;
+        }
+      },
     },
   ];
   return (

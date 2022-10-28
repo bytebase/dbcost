@@ -269,11 +269,27 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
     return data
       .filter((instance) => instance.name.startsWith(currClass))
-      .map((instance) => ({
-        name: instance.name,
-        CPU: instance.cpu,
-        memory: Number(instance.memory),
-      }))
+      .map((instance) => {
+        let virginiaTermHourlyUSD: number | undefined;
+        const virginia = instance.regionList.find((region) =>
+          instance.cloudProvider === "AWS"
+            ? region.code === "us-east-1"
+            : region.code === "us-east4"
+        );
+        if (virginia) {
+          virginiaTermHourlyUSD = virginia?.termList.find(
+            (term) =>
+              term.databaseEngine === "MYSQL" && term.type === "OnDemand"
+          )?.hourlyUSD;
+        }
+
+        return {
+          name: instance.name,
+          CPU: instance.cpu,
+          memory: Number(instance.memory),
+          hourlyUSD: virginiaTermHourlyUSD,
+        };
+      })
       .sort((a, b) => {
         // Sort ascend by CPU first, then memory.
         const difference = a.CPU - b.CPU;
@@ -294,11 +310,26 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
     return data
       .filter((instance) => instance.name.endsWith(`.${currSize}`))
-      .map((instance) => ({
-        name: instance.name,
-        CPU: instance.cpu,
-        memory: Number(instance.memory),
-      }))
+      .map((instance) => {
+        let virginiaTermHourlyUSD: number | undefined;
+        const virginiaTerm = instance.regionList.find((region) =>
+          instance.cloudProvider === "AWS"
+            ? region.code === "us-east-1"
+            : region.code === "us-east4"
+        );
+        if (virginiaTerm) {
+          virginiaTermHourlyUSD = virginiaTerm?.termList.find(
+            (term) => term.type === "OnDemand"
+          )?.hourlyUSD;
+        }
+
+        return {
+          name: instance.name,
+          CPU: instance.cpu,
+          memory: Number(instance.memory),
+          hourlyUSD: virginiaTermHourlyUSD,
+        };
+      })
       .sort((a, b) => {
         // Sort ascend by CPU first, then memory.
         const difference = a.CPU - b.CPU;
