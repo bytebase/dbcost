@@ -30,7 +30,7 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
           </a>
         </Link>
       )}
-      <Button type={isCopied && "dashed"} onClick={handleCopy}>
+      <Button type={isCopied ? "dashed" : "default"} onClick={handleCopy}>
         {isCopied ? (
           <div className="flex justify-center items-center">
             Copied <CheckIcon className="ml-1" />
