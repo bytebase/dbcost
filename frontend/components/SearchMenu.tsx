@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Checkbox, Input, InputNumber, Slider } from "antd";
+import { Checkbox, Input, InputNumber, Slider, Divider } from "antd";
 import {
   QuestionMarkCircledIcon,
   MagnifyingGlassIcon,
@@ -81,6 +81,7 @@ const SearchMenu: React.FC<Props> = ({
                 </div>
               </Checkbox>
             ))}
+            <Divider type="vertical" />
           </Checkbox.Group>
         )}
 
@@ -104,6 +105,7 @@ const SearchMenu: React.FC<Props> = ({
               </div>
             </Checkbox>
           ))}
+          <Divider type="vertical" />
         </Checkbox.Group>
 
         {/* Charge Types */}
@@ -133,12 +135,12 @@ const SearchMenu: React.FC<Props> = ({
                 onChange={(value) => void updateSearchConfig("minCPU", value)}
               />
             </div>
-            <div className="w-36 ml-4">
+            <div className="w-48 ml-4">
               <InputNumber
                 min={0}
                 max={9999}
                 value={searchConfig.minRAM}
-                addonBefore="Min RAM"
+                addonBefore="Min RAM (GB)"
                 keyboard={true}
                 onChange={(value) => void updateSearchConfig("minRAM", value)}
               />
