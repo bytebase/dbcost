@@ -10,14 +10,13 @@ The market lacks a tool for developers to compare different database products be
 
 ### Used
 
+<img src="https://user-images.githubusercontent.com/56376387/198507390-358bf549-cc8f-4c57-946d-1ba38ea79fdc.svg" width="400" align="right"></img>
+
 - **Golang**.
-- **Next** with **React 18**.
-- **ApexCharts** for visualization.
-- **Terraform** for infra management.
-- **Profilers** such as tpcc.
-- **Docker** for image packaging (Backend, Terraform, profilers).
-- **Cron** task by **Render**.
-- **JSON-Schema** for schema （ideally, the whole project's data would be stored as json files）
+- **Next.js** with **React 18**.
+- **Ant Design** as component library.
+- **Nivo** for chart visualization.
+- **Cron** task by **GitHub Actions**.
 
 ### Requirement
 
@@ -33,14 +32,15 @@ The market lacks a tool for developers to compare different database products be
 - [ ] Cost Table
   - [x] Basic Table
   - [x] Data Refinement Menu
-  - [x] Table for checked Instance
+  - [ ] Table for checked Instance
   - [ ] RAM / CPU wise calculator special for GCP
-- [x] Cost Charts
+- [ ] Cost Charts
   - [x] Compare the difference in monthly price between different offers ( Line Chart )
-  - [x] Compare the difference in total price between different offers ( Stacked Columns Chart )
-  - [x] Compare the spec(cpu, ram) and cost of different instances ( Bubble Chart )
-  - [x] Comparison page
+  - [ ] Compare the difference in total price between different offers ( Stacked Columns Chart )
+  - [ ] Comparison page
 - [ ] SEO with **Next**
+  - [x] Semantic URLs
+  - [x] Related instances/regions references
 - [ ] Maintaining Relevant Services
   - [ ] Incorporate Terraform
   - [ ] Database Service Life Cycle Management
@@ -59,7 +59,7 @@ We maintain our data through a GitHub Actions CronJob. It runs every day to make
 ### Installing Frontend Dependencies
 
 ```
-cd ./frontend && pnpm i
+cd ./frontend && pnpm install
 ```
 
 ### Starting the Frontend
