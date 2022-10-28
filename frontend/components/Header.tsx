@@ -71,7 +71,7 @@ const Header: React.FC = () => {
                   }}
                 >
                   <Image
-                    src="/icons/bytebase-cncf.png"
+                    src="/icons/bytebase-cncf.svg"
                     alt="Bytebase"
                     layout="fill"
                     objectFit="contain"
