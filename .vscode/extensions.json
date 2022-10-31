@@ -1,10 +1,9 @@
 {
   "recommendations": [
-    "johnsoncodehk.volar",
     "dbaeumer.vscode-eslint",
     "antfu.iconify",
     "esbenp.prettier-vscode",
     "bradlc.vscode-tailwindcss",
-    "eamodio.gitlens"
+    "streetsidesoftware.code-spell-checker"
   ]
 }
