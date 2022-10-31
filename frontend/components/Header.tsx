@@ -15,9 +15,9 @@ const Header: React.FC = () => {
 
   return (
     <header className="flex justify-center bg-slate-800">
-      <div className="w-full 2xl:w-5/6 2xl:max-w-7xl flex justify-between items-center flex-grow-0 p-2 text-white">
+      <div className="w-full 2xl:w-5/6 2xl:max-w-7xl flex justify-between items-center p-2 text-white">
         {/* logo and provider entries */}
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-4 flex-grow shrink-0 basis-0">
           <Link href="/" passHref>
             <a>
               <div
@@ -50,16 +50,23 @@ const Header: React.FC = () => {
         </div>
 
         {/* emoji group */}
-        <div className="flex flex-row items-center text-3xl whitespace-nowrap">
+        <div className="flex flex-row justify-center items-center text-3xl whitespace-nowrap flex-grow shrink-0 basis-0">
           {`${cloudEmoji} ${moneyEmoji} ${cloudEmoji} ${moneyEmoji} ${cloudEmoji}`}
         </div>
 
         {/* star and sponsor */}
-        <div className="flex float-right items-center space-x-2">
-          <iframe src="https://ghbtns.com/github-btn.html?user=bytebase&repo=dbcost&type=star&count=true" frameBorder="0" scrolling="0" width="82" height="20" title="GitHub"></iframe>
+        <div className="flex justify-end items-center space-x-2  flex-grow shrink-0 basis-0">
+          <iframe
+            src="https://ghbtns.com/github-btn.html?user=bytebase&repo=dbcost&type=star&count=true"
+            frameBorder="0"
+            scrolling="0"
+            width="82"
+            height="20"
+            title="GitHub"
+          ></iframe>
           <div className="flex items-center">
             <span>by</span>
-            <div className="flex flex-row space-x-1">
+            <div className="flex flex-row space-x-1 ml-1">
               <Tooltip
                 delayDuration={0}
                 content="Database CI/CD and DevOps for Developers and DBAs"
