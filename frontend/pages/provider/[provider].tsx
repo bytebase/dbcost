@@ -203,7 +203,7 @@ const Provider: NextPage<Props> = ({ serverSideCompareTableData, name }) => {
 
   return (
     <MainLayout
-      title={`The Ultimate ${
+      title={`The Simple ${
         name === "aws" ? "AWS RDS" : "Google Cloud SQL"
       } Instance Pricing Sheet`}
     >

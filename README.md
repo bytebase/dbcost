@@ -1,6 +1,6 @@
 # DB Cost
 
-[dbcost.com](https://dbcost.com) the Ultimate AWS RDS and Google Cloud SQL instance pricing comparison sheet.
+[dbcost.com](https://dbcost.com) the Simple AWS RDS and Google Cloud SQL instance pricing comparison sheet.
 
 ## Background
 
