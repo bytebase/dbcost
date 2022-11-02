@@ -2,7 +2,6 @@
 
 [dbcost.com](https://dbcost.com) the simple pricing calculator and comparison tool for the Cloud databases.
 
-
 ## Roadmap
 
 - [ ] Supported Cloud Vendors

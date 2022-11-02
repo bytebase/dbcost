@@ -191,7 +191,7 @@ const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
   const availableRegionList = getAvailableRegionList();
 
   return (
-    <MainLayout title="The Ultimate AWS RDS and Google Cloud SQL Instance Pricing Sheet">
+    <MainLayout title="The Simple AWS RDS and Google Cloud SQL Instance Pricing Sheet">
       <div className="mx-5 mt-4 pb-2">
         <ButtonGroup type="reset" />
         <RegionMenu availableRegionList={availableRegionList} />
