@@ -1,34 +1,14 @@
 # DB Cost
 
-[dbcost.com](https://dbcost.com) the Simple AWS RDS and Google Cloud SQL instance pricing comparison sheet.
+[dbcost.com](https://dbcost.com) the simple pricing calculator and comparison tool for the Cloud databases.
 
-## Background
+## Roadmap
 
-The market lacks a tool for developers to compare different database products before making a final decision. A site, where all available RDS's performance and cost can be demonstrated, is highly wanted.
-
-## Tech Stack (at least this is expected)
-
-### Used
-
-<img src="https://user-images.githubusercontent.com/56376387/198507390-358bf549-cc8f-4c57-946d-1ba38ea79fdc.svg" width="400" align="right"></img>
-
-- **Golang**.
-- **Next.js** with **React 18**.
-- **Ant Design** as component library.
-- **Nivo** for chart visualization.
-- **Cron** task by **GitHub Actions**.
-
-### Requirement
-
-- [Go v1.7](https://go.dev/dl/)
-- [pnpm](https://pnpm.io) for package management
-
-## Road Map
-
-- [ ] Data collector
-  - [x] AWS
-  - [x] GCP
-  - [ ] ALIYUN ( Low priority )
+- [ ] Supported Cloud Vendors
+  - [x] AWS RDS
+  - [x] GCP Cloud SQL
+  - [ ] Azure
+  - [ ] AliCloud
 - [ ] Cost Table
   - [x] Basic Table
   - [x] Data Refinement Menu
@@ -47,6 +27,27 @@ The market lacks a tool for developers to compare different database products be
 - [ ] Database Benchmark
   - [ ] Benchmark Test Scheduling / Result Storage
   - [ ] Benchmark Dashboard
+
+## Background
+
+The market lacks a tool for developers to compare different database products before making a final decision. A site, where all available cloud providers' database performance and cost can be demonstrated, is desired.
+
+## Tech Stack (at least this is expected)
+
+### Used
+
+<img src="https://user-images.githubusercontent.com/56376387/198507390-358bf549-cc8f-4c57-946d-1ba38ea79fdc.svg" width="400" align="right"></img>
+
+- **Golang**.
+- **Next.js** with **React 18**.
+- **Ant Design** as component library.
+- **Nivo** for chart visualization.
+- **Cron** task by **GitHub Actions**.
+
+### Requirement
+
+- [Go v1.7](https://go.dev/dl/)
+- [pnpm](https://pnpm.io) for package management
 
 ## How to start?
 
