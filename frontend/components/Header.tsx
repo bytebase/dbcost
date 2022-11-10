@@ -19,32 +19,28 @@ const Header: React.FC = () => {
         {/* logo and provider entries */}
         <div className="flex flex-row items-center gap-4 flex-grow shrink-0 basis-0">
           <Link href="/" passHref>
-            <a>
-              <div
-                className="relative w-32 h-8 cursor-pointer"
-                onClick={() => void resetSearchConfig()}
-              >
-                <Image
-                  src="/icons/dbcost-logo-full.webp"
-                  alt="DB Cost"
-                  layout="fill"
-                  objectFit="contain"
-                />
-              </div>
-            </a>
+            <div
+              className="relative w-32 h-8 cursor-pointer"
+              onClick={() => void resetSearchConfig()}
+            >
+              <Image
+                src="/icons/dbcost-logo-full.webp"
+                alt="DB Cost"
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
           </Link>
           {providerList.map((provider: string) => (
             <Link href={`/provider/${provider}`} key={provider} passHref>
-              <a>
-                <span
-                  className={`${
-                    providerInRoute === provider ? "border-b" : ""
-                  } h-8 text-lg pt-0.5 text-white cursor-pointer`}
-                  onClick={() => void resetSearchConfig()}
-                >
-                  {provider.toUpperCase()}
-                </span>
-              </a>
+              <span
+                className={`${
+                  providerInRoute === provider ? "border-b" : ""
+                } h-8 text-lg pt-0.5 text-white cursor-pointer`}
+                onClick={() => void resetSearchConfig()}
+              >
+                {provider.toUpperCase()}
+              </span>
             </Link>
           ))}
         </div>

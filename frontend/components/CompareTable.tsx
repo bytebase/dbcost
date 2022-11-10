@@ -296,7 +296,7 @@ const CompareTable: React.FC<Props> = ({
                         </div>
                       )}
                       <Link href={`/instance/${name}`} passHref>
-                        <a>{name}</a>
+                        {name}
                       </Link>
                     </div>
                   );
@@ -330,7 +330,7 @@ const CompareTable: React.FC<Props> = ({
                   <span>{region}</span>
                 ) : (
                   <Link href={`/region/${slug(region)}`} passHref>
-                    <a>{region}</a>
+                    {region}
                   </Link>
                 ),
               shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>

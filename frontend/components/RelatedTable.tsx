@@ -25,7 +25,7 @@ const RelatedTable: React.FC<Props> = ({ title, instance, dataSource }) => {
           name
         ) : (
           <Link href={`/instance/${name}`} passHref>
-            <a>{name}</a>
+            {name}
           </Link>
         ),
     },
