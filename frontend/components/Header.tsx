@@ -26,8 +26,8 @@ const Header: React.FC = () => {
               <Image
                 src="/icons/dbcost-logo-full.webp"
                 alt="DB Cost"
-                layout="fill"
-                objectFit="contain"
+                fill
+                style={{ objectFit: "contain" }}
               />
             </div>
           </Link>
@@ -76,8 +76,8 @@ const Header: React.FC = () => {
                   <Image
                     src="/icons/bytebase-cncf.svg"
                     alt="Bytebase"
-                    layout="fill"
-                    objectFit="contain"
+                    fill
+                    style={{ objectFit: "contain" }}
                   />
                 </div>
               </Tooltip>

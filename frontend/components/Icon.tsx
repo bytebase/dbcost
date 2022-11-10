@@ -12,8 +12,8 @@ const Icon: React.FC<Props> = ({ name }) => {
     <Image
       src={getIconPath(`${name}.png`)}
       alt={name}
-      layout="fill"
-      objectFit="contain"
+      fill
+      style={{ objectFit: "contain" }}
     />
   );
 };
