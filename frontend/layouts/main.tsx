@@ -16,11 +16,6 @@ const Main: React.FC<Props> = ({ children, headTitle, title }) => {
           {headTitle ?? "DB Cost | RDS & Cloud SQL Instance Pricing Sheet"}
         </title>
         <link rel="icon" href="/favicon.ico" />
-        <script
-          defer
-          data-domain="dbcost.com"
-          src="https://plausible.io/js/script.js"
-        ></script>
       </Head>
       <Header />
       <main className="flex flex-grow justify-center">

@@ -246,8 +246,12 @@ const Region: NextPage<Props> = ({
               .map((region) => (
                 <React.Fragment key={region}>
                   <Divider type="vertical" />
-                  <Link href={`/region/${slug(region)}`} passHref>
-                    <a className="whitespace-nowrap leading-6">{region}</a>
+                  <Link
+                    href={`/region/${slug(region)}`}
+                    passHref
+                    className="whitespace-nowrap leading-6"
+                  >
+                    {region}
                   </Link>
                 </React.Fragment>
               ))}

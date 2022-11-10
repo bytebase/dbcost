@@ -75,8 +75,8 @@ const SearchMenu: React.FC<Props> = ({
                   <Image
                     src={provider.src}
                     alt="aws"
-                    layout="fill"
-                    objectFit="contain"
+                    fill
+                    style={{ objectFit: "contain" }}
                   />
                 </div>
               </Checkbox>
@@ -99,8 +99,8 @@ const SearchMenu: React.FC<Props> = ({
                 <Image
                   src={engine.src}
                   alt="aws"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                 />
               </div>
             </Checkbox>

@@ -25,9 +25,7 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
         </Button>
       ) : (
         <Link href="/" passHref>
-          <a>
-            <Button className="mr-2">Back to Dashboard</Button>
-          </a>
+          <Button className="mr-2">Back to Dashboard</Button>
         </Link>
       )}
       <Button type={isCopied ? "dashed" : "default"} onClick={handleCopy}>
