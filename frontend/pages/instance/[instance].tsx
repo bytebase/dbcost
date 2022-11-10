@@ -259,7 +259,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const data = (await import("@data")).default as DBInstance[];
   const instanceData = data.find((instance) => instance.name === instanceName);
 
-  const getSameClassList = (): RelatedType[] => {
+  const getSameFamilyList = (): RelatedType[] => {
     const currClass = getInstanceFamily(
       instanceName,
       instanceData?.cloudProvider as CloudProvider
@@ -270,17 +270,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return data
       .filter((instance) => instance.name.startsWith(currClass))
       .map((instance) => {
-        let virginiaTermHourlyUSD: number | undefined;
+        let virginiaTermHourlyUSD: number | null = null;
         const virginia = instance.regionList.find((region) =>
           instance.cloudProvider === "AWS"
             ? region.code === "us-east-1"
             : region.code === "us-east4"
         );
         if (virginia) {
-          virginiaTermHourlyUSD = virginia?.termList.find(
-            (term) =>
-              term.databaseEngine === "MYSQL" && term.type === "OnDemand"
-          )?.hourlyUSD;
+          virginiaTermHourlyUSD =
+            virginia?.termList.find(
+              (term) =>
+                term.databaseEngine === "MYSQL" && term.type === "OnDemand"
+            )?.hourlyUSD ?? null;
         }
 
         return {
@@ -311,16 +312,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return data
       .filter((instance) => instance.name.endsWith(`.${currSize}`))
       .map((instance) => {
-        let virginiaTermHourlyUSD: number | undefined;
+        let virginiaTermHourlyUSD: number | null = null;
         const virginiaTerm = instance.regionList.find((region) =>
           instance.cloudProvider === "AWS"
             ? region.code === "us-east-1"
             : region.code === "us-east4"
         );
         if (virginiaTerm) {
-          virginiaTermHourlyUSD = virginiaTerm?.termList.find(
-            (term) => term.type === "OnDemand"
-          )?.hourlyUSD;
+          virginiaTermHourlyUSD =
+            virginiaTerm?.termList.find((term) => term.type === "OnDemand")
+              ?.hourlyUSD ?? null;
         }
 
         return {
@@ -357,7 +358,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       provider: instanceData?.cloudProvider,
       CPU: instanceData?.cpu,
       memory: instanceData?.memory,
-      sameFamilyList: getSameClassList(),
+      sameFamilyList: getSameFamilyList(),
       sameSizeList: getSameSizeList(),
     },
   };
