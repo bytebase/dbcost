@@ -27,7 +27,7 @@ export interface RelatedType {
   name: string;
   CPU: number;
   memory: number;
-  hourlyUSD: number | undefined;
+  hourlyUSD: number | null;
 }
 
 export const tablePaginationConfig = {
