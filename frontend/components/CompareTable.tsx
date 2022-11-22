@@ -240,7 +240,7 @@ const CompareTable: React.FC<Props> = ({
       width: "11%",
       align: "right",
       render: (hourly: { usd: number }) => (
-        <span className="font-mono">{`$${getDigit(hourly.usd, 2)}`}</span>
+        <span className="font-mono">{`$${getDigit(hourly.usd, 3)}`}</span>
       ),
     },
     expectedCost: {
