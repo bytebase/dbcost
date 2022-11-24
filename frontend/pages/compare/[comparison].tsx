@@ -328,11 +328,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
           );
           return {
             region: getRegionName(region.code),
-            hourlyUSD: term?.hourlyUSD as number,
+            hourlyUSD: term?.hourlyUSD ?? null,
           };
         })
         // First sort on cost ASC, then sort on region name ASC.
         .sort((a, b) => {
+          if (!a.hourlyUSD) {
+            return 1;
+          }
+          if (!b.hourlyUSD) {
+            return -1;
+          }
           if (a.hourlyUSD === b.hourlyUSD) {
             return a.region.localeCompare(b.region);
           }
