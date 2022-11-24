@@ -337,42 +337,62 @@ const CompareTable: React.FC<Props> = ({
                 !isEqual(record, prevRecord),
             },
           ]),
-      {
-        title: "CPU",
-        dataIndex: "cpu",
-        width: "10%",
-        align: "right",
-        onCell: (_: DataSource, index: number) =>
-          getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
-        sorter: true,
-        sortOrder: sortedInfo.field === "cpu" && sortedInfo.order,
-        render: (cpu: number, record: DataSource) => (
-          <Tooltip
-            content={
-              record.processor === "" ? "N/A" : record.processor.split(" ")[1]
-            }
-          >
-            <span className="font-mono">{cpu}</span>
-          </Tooltip>
-        ),
-        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-          !isEqual(record, prevRecord),
-      },
-      {
-        title: "Memory",
-        dataIndex: "memory",
-        width: "10%",
-        align: "right",
-        onCell: (_: DataSource, index: number) =>
-          getCellRowSpan(dataSource, index, paginationInfo, isFiltering()),
-        sorter: true,
-        sortOrder: sortedInfo.field === "memory" && sortedInfo.order,
-        render: (memory: number) => (
-          <span className="font-mono">{memory} GB</span>
-        ),
-        shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-          !isEqual(record, prevRecord),
-      },
+      ...(type === PageType.INSTANCE_COMPARISON
+        ? []
+        : [
+            {
+              title: "CPU",
+              dataIndex: "cpu",
+              width: "10%",
+              align: "right",
+              onCell: (_: DataSource, index: number) =>
+                getCellRowSpan(
+                  dataSource,
+                  index,
+                  paginationInfo,
+                  isFiltering()
+                ),
+              sorter: true,
+              sortOrder: sortedInfo.field === "cpu" && sortedInfo.order,
+              render: (cpu: number, record: DataSource) => (
+                <Tooltip
+                  content={
+                    record.processor === ""
+                      ? "N/A"
+                      : record.processor.split(" ")[1]
+                  }
+                >
+                  <span className="font-mono">{cpu}</span>
+                </Tooltip>
+              ),
+              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
+                !isEqual(record, prevRecord),
+            },
+          ]),
+      ...(type === PageType.INSTANCE_COMPARISON
+        ? []
+        : [
+            {
+              title: "Memory",
+              dataIndex: "memory",
+              width: "10%",
+              align: "right",
+              onCell: (_: DataSource, index: number) =>
+                getCellRowSpan(
+                  dataSource,
+                  index,
+                  paginationInfo,
+                  isFiltering()
+                ),
+              sorter: true,
+              sortOrder: sortedInfo.field === "memory" && sortedInfo.order,
+              render: (memory: number) => (
+                <span className="font-mono">{memory} GB</span>
+              ),
+              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
+                !isEqual(record, prevRecord),
+            },
+          ]),
       {
         title: "Pricing",
         key: "pricing",

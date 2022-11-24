@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Empty } from "antd";
 import { Line } from "@nivo/line";
 import { useSearchConfigContext } from "@/stores";
-import { getDigit, withComma } from "@/utils";
+import { getDigit, withComma, filterNaN, getPrice } from "@/utils";
 import {
   DataSource,
   monthDays,
@@ -42,12 +42,12 @@ const generateChartData = (
   // Will generate [1, 2, 3, ..., xLength].
   const xGrid = Array.from({ length: xLength }, (_, i) => i + 1);
   const res = [];
-  for (const row of dataSource) {
-    // TODO: support reserved instances
-    // We now only support on demand instances.
-    if (row.leaseLength === "On Demand") {
-      const fees = [];
 
+  for (const row of dataSource) {
+    const fees = [];
+
+    // Deal with on demand instances.
+    if (row.leaseLength === "On Demand") {
       for (const x of xGrid) {
         const totalCost = getHourCountByMonth(x) * utilization * row.hourly.usd;
         fees.push({
@@ -72,10 +72,52 @@ const generateChartData = (
             data: fees,
           });
           break;
+        case PageType.INSTANCE_COMPARISON:
+          res.push({
+            id: `${row.name}${
+              engineType.length > 1 ? ` - ${row.engineType}` : ""
+            }-${row.leaseLength}`,
+            data: fees,
+          });
+          break;
 
         default:
           break;
       }
+    } else {
+      // Deal with reserved instances.
+      // Reserved plans' line starts from (1, 0).
+      fees.push({
+        x: 1,
+        y: "0",
+      });
+      switch (row.leaseLength) {
+        case "1yr":
+          for (let i = 1; i <= 3; i++) {
+            const totalCost = getPrice(row, 1, i);
+            fees.push({
+              x: i * 12,
+              y: getDigit(totalCost, 0),
+            });
+          }
+          break;
+        case "3yr":
+          const totalCost = getPrice(row, 1, 3);
+          fees.push({
+            x: 3 * 12,
+            y: getDigit(totalCost, 0),
+          });
+          break;
+
+        default:
+          break;
+      }
+      res.push({
+        id: `${row.name}${
+          engineType.length > 1 ? ` - ${row.engineType}` : ""
+        }-${row.leaseLength}-commitment-$${row.commitment.usd}`,
+        data: fees,
+      });
     }
   }
   return res;
@@ -161,6 +203,10 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
     if (searchConfig.leaseLength > 1) {
       length *= searchConfig.leaseLength;
     }
+    // In comparison pages, we compare between 3-year-plans.
+    if (type === PageType.INSTANCE_COMPARISON) {
+      length = 36;
+    }
     const res = generateChartData(
       type,
       length,
@@ -230,7 +276,7 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
                 <div className="flex items-center">
                   <span>{point.id}</span>
                 </div>
-                <b className="ml-2">{withComma(point.y)} $</b>
+                <b className="ml-2">{filterNaN(withComma(point.y))} $</b>
               </div>
             ))}
             <div
@@ -246,14 +292,16 @@ const LineChart: React.FC<Props> = ({ type, dataSource }) => {
                 ></div>
                 <span>{point.serieId}</span>
               </div>
-              <b className="ml-2">{withComma(point.data.yFormatted)}</b>
+              <b className="ml-2">
+                {filterNaN(withComma(point.data.yFormatted))}
+              </b>
             </div>
             {lowerPoints.map((point) => (
               <div key={point.id} className="flex justify-between items-center">
                 <div className="flex items-center">
                   <span>{point.id}</span>
                 </div>
-                <b className="ml-2">{withComma(point.y)} $</b>
+                <b className="ml-2">{filterNaN(withComma(point.y))} $</b>
               </div>
             ))}
             {hasMoreLowerPoints && <div>...</div>}
