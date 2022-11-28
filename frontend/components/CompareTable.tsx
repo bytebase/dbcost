@@ -419,6 +419,7 @@ const CompareTable: React.FC<Props> = ({
 
   return (
     <Table
+      className="border-t"
       style={{ width: "100%" }}
       columns={columns}
       dataSource={dataSource}
