@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
+import CompareBadgeGroup, { BadgeRow } from "@/components/CompareBadgeGroup";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
 import RegionPricingTable from "@/components/RegionPricingTable";
@@ -27,6 +28,7 @@ interface Props {
   comparerB: string;
   regionPricingDataOfA: RegionPricingType[];
   regionPricingDataOfB: RegionPricingType[];
+  specsComparisonData: BadgeRow[];
 }
 
 const virginiaCode = "us-east-1";
@@ -217,6 +219,7 @@ const InstanceComparison: NextPage<Props> = ({
   comparerB,
   regionPricingDataOfA,
   regionPricingDataOfB,
+  specsComparisonData,
 }) => {
   const [dataSource, setDataSource] = useState<DataSource[]>(
     serverSideCompareTableData
@@ -246,6 +249,7 @@ const InstanceComparison: NextPage<Props> = ({
     >
       <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
         <ButtonGroup type="back" />
+        <CompareBadgeGroup dataSource={specsComparisonData} />
         <SearchMenu type={SearchBarType.INSTANCE_COMPARISON} />
         <CompareTable
           type={PageType.INSTANCE_COMPARISON}
@@ -347,6 +351,29 @@ export const getStaticProps: GetStaticProps = async (context) => {
     );
   };
 
+  const getSpecsComparison = () => {
+    const dataSource: BadgeRow[] = [];
+    // Find current two comparing instances.
+    const instanceA = data.find((instance) => instance.name === comparerA)!;
+    const instanceB = data.find((instance) => instance.name === comparerB)!;
+
+    [instanceA, instanceB].forEach((instance) => {
+      const term = instance.regionList[0].termList.find(
+        (term) => term.type === "OnDemand" && term.databaseEngine === "MYSQL"
+      );
+      dataSource.push({
+        instanceName: instance.name,
+        cpu: instance.cpu,
+        memory: Number(instance.memory),
+        processor: instance.processor.split(" ")[1] ?? null,
+        regionCount: instance.regionList.length,
+        hourly: String(term?.hourlyUSD as number),
+      });
+    });
+
+    return dataSource;
+  };
+
   return {
     props: {
       serverSideCompareTableData: generateTableData(
@@ -364,6 +391,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       comparerB,
       regionPricingDataOfA: getRegionPricing(comparerA),
       regionPricingDataOfB: getRegionPricing(comparerB),
+      specsComparisonData: getSpecsComparison(),
     },
   };
 };

@@ -6,7 +6,12 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        // equivalent to grid-cols-[auto,auto,auto,auto,auto,auto,auto]
+        "7-auto": "repeat(7, auto)",
+      },
+    },
   },
   plugins: [],
 };
