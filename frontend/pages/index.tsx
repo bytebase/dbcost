@@ -3,6 +3,7 @@ import type { NextPage, GetStaticProps } from "next";
 import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
 import RegionMenu from "@/components/RegionMenu";
+import CompareMenu from "@/components/CompareMenu";
 import SearchMenu from "@/components/SearchMenu";
 import CompareTable from "@/components/CompareTable";
 import { useDBInstanceContext, useSearchConfigContext } from "@/stores";
@@ -196,6 +197,7 @@ const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
         <ButtonGroup type="reset" />
         <RegionMenu availableRegionList={availableRegionList} />
         <SearchMenu />
+        <CompareMenu />
         <CompareTable
           dataSource={dataSource}
           setDataSource={setDataSource}
