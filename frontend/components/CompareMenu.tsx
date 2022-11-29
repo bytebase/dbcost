@@ -29,6 +29,13 @@ const CompareMenu: React.FC = () => {
           showSearch
           placeholder="Instance type"
           value={comparer.first?.value}
+          filterOption={(inputValue, option) => {
+            if (option?.label) {
+              const { label } = option;
+              return label.includes(inputValue);
+            }
+            return false;
+          }}
           onSelect={(index: any): void => {
             setComparer({
               first: { value: instanceTypeList[index].label, index },
@@ -43,6 +50,13 @@ const CompareMenu: React.FC = () => {
           className="w-48 !ml-2 !mr-4"
           showSearch
           placeholder="Instance type"
+          filterOption={(inputValue, option) => {
+            if (option?.label) {
+              const { label } = option;
+              return label.includes(inputValue);
+            }
+            return false;
+          }}
           value={comparer.second?.value}
           onSelect={(index: any): void =>
             void setComparer({
