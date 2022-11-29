@@ -1,4 +1,5 @@
 import { Divider } from "antd";
+import { getDigit } from "@/utils";
 
 enum BadgeTypes {
   TEXT = "TEXT",
@@ -73,7 +74,7 @@ const CompareBadgeGroup: React.FC<BadgeGroupProps> = ({ dataSource }) => {
               />
               <CompareBadge
                 type={BadgeTypes.TEXT}
-                text={`$${hourly}`}
+                text={`$${getDigit(Number(hourly), 3)}`}
                 description="On Demand Hourly Price"
               />
             </>
