@@ -37,4 +37,5 @@ export enum PageType {
   DASHBOARD = "dashboard",
   INSTANCE_DETAIL = "instanceDetail",
   REGION_DETAIL = "regionDetail",
+  INSTANCE_COMPARISON = "instanceComparison",
 }

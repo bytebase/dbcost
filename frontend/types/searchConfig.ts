@@ -5,6 +5,7 @@ export enum SearchBarType {
   DASHBOARD = "dashboard",
   INSTANCE_DETAIL = "instanceDetail",
   REGION_DETAIL = "regionDetail",
+  INSTANCE_COMPARISON = "instanceComparison",
 }
 
 export type SearchConfig = {

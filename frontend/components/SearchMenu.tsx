@@ -51,39 +51,44 @@ const SearchMenu: React.FC<Props> = ({
   const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
   return (
-    <div className="w-full flex flex-col md:flex-row justify-center md:justify-between pb-2 border-b">
+    <div className="w-full flex flex-col md:flex-row justify-center md:justify-between pb-2">
       <div className="pt-6 pb-4 flex flex-wrap gap-2 justify-start items-center">
         {/* Cloud Providers */}
-        {!hideProviders && type !== SearchBarType.INSTANCE_DETAIL && (
-          <Checkbox.Group
-            className="mr-2 !-mt-1"
-            value={searchConfig.cloudProvider}
-            onChange={(checkedValue) =>
-              void updateSearchConfig(
-                "cloudProvider",
-                checkedValue as CloudProvider[]
-              )
-            }
-          >
-            {ProviderCheckbox.map((provider) => (
-              <Checkbox
-                className={provider.className}
-                key={provider.key}
-                value={provider.key}
-              >
-                <div className="relative top-1 w-6 h-5" style={provider.style}>
-                  <Image
-                    src={provider.src}
-                    alt="aws"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              </Checkbox>
-            ))}
-            <Divider type="vertical" />
-          </Checkbox.Group>
-        )}
+        {!hideProviders &&
+          type !== SearchBarType.INSTANCE_DETAIL &&
+          type !== SearchBarType.INSTANCE_COMPARISON && (
+            <Checkbox.Group
+              className="mr-2 !-mt-1"
+              value={searchConfig.cloudProvider}
+              onChange={(checkedValue) =>
+                void updateSearchConfig(
+                  "cloudProvider",
+                  checkedValue as CloudProvider[]
+                )
+              }
+            >
+              {ProviderCheckbox.map((provider) => (
+                <Checkbox
+                  className={provider.className}
+                  key={provider.key}
+                  value={provider.key}
+                >
+                  <div
+                    className="relative top-1 w-6 h-5"
+                    style={provider.style}
+                  >
+                    <Image
+                      src={provider.src}
+                      alt="aws"
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                </Checkbox>
+              ))}
+              <Divider type="vertical" />
+            </Checkbox.Group>
+          )}
 
         {/* Database Engine Types */}
         <Checkbox.Group
@@ -117,36 +122,38 @@ const SearchMenu: React.FC<Props> = ({
           }
         >
           <Checkbox value="OnDemand">On Demand</Checkbox>
-          {type === SearchBarType.DASHBOARD && (
+          {(type === SearchBarType.DASHBOARD ||
+            type === SearchBarType.INSTANCE_COMPARISON) && (
             <Checkbox value="Reserved">Reserved</Checkbox>
           )}
         </Checkbox.Group>
 
         {/* Min specification for Memory & CPU */}
-        {type !== SearchBarType.INSTANCE_DETAIL && (
-          <div className="flex !mr-4">
-            <div className="w-36">
-              <InputNumber
-                min={0}
-                max={9999}
-                value={searchConfig.minCPU}
-                addonBefore="Min CPU"
-                keyboard={true}
-                onChange={(value) => void updateSearchConfig("minCPU", value)}
-              />
+        {type !== SearchBarType.INSTANCE_DETAIL &&
+          type !== SearchBarType.INSTANCE_COMPARISON && (
+            <div className="flex !mr-4">
+              <div className="w-36">
+                <InputNumber
+                  min={0}
+                  max={9999}
+                  value={searchConfig.minCPU}
+                  addonBefore="Min CPU"
+                  keyboard={true}
+                  onChange={(value) => void updateSearchConfig("minCPU", value)}
+                />
+              </div>
+              <div className="w-48 ml-4">
+                <InputNumber
+                  min={0}
+                  max={9999}
+                  value={searchConfig.minRAM}
+                  addonBefore="Min RAM (GB)"
+                  keyboard={true}
+                  onChange={(value) => void updateSearchConfig("minRAM", value)}
+                />
+              </div>
             </div>
-            <div className="w-48 ml-4">
-              <InputNumber
-                min={0}
-                max={9999}
-                value={searchConfig.minRAM}
-                addonBefore="Min RAM (GB)"
-                keyboard={true}
-                onChange={(value) => void updateSearchConfig("minRAM", value)}
-              />
-            </div>
-          </div>
-        )}
+          )}
 
         {/* Search Bar */}
         <div>

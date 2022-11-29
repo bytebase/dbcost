@@ -34,3 +34,8 @@ export const tablePaginationConfig = {
   defaultPageSize: 50,
   hideOnSinglePage: true,
 };
+
+export interface RegionPricingType {
+  region: string;
+  hourlyUSD: number | null;
+}
