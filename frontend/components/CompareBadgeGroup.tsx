@@ -1,3 +1,4 @@
+import React from "react";
 import { Divider } from "antd";
 import { getDigit } from "@/utils";
 
@@ -47,7 +48,7 @@ const CompareBadgeGroup: React.FC<BadgeGroupProps> = ({ dataSource }) => {
       <div className="grid grid-cols-7-auto justify-items-center items-center">
         {dataSource.map(
           ({ instanceName, cpu, memory, processor, regionCount, hourly }) => (
-            <>
+            <React.Fragment key={instanceName}>
               <div className="whitespace-nowrap font-semibold justify-self-start">
                 {instanceName}
               </div>
@@ -77,7 +78,7 @@ const CompareBadgeGroup: React.FC<BadgeGroupProps> = ({ dataSource }) => {
                 text={`$${getDigit(Number(hourly), 3)}`}
                 description="On Demand Hourly Price"
               />
-            </>
+            </React.Fragment>
           )
         )}
       </div>
