@@ -206,6 +206,20 @@ const Provider: NextPage<Props> = ({ serverSideCompareTableData, name }) => {
       title={`The Simple ${
         name === "aws" ? "AWS RDS" : "Google Cloud SQL"
       } Instance Pricing Sheet`}
+      metaTagList={[
+        {
+          name: "description",
+          content: `A specs sheet and pricing calculator for ${
+            name === "aws" ? "AWS RDS" : "Google Cloud SQL"
+          } instances.`,
+        },
+        {
+          name: "keywords",
+          content: `${
+            name === "aws" ? "AWS RDS" : "Google Cloud SQL"
+          } pricing, price calculator, Cloud DB Instances, MySQL instance pricing, Postgres instance pricing`,
+        },
+      ]}
     >
       <div className="mx-5 mt-4 pb-2">
         <ButtonGroup type="reset" />

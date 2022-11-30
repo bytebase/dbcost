@@ -192,7 +192,21 @@ const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
   const availableRegionList = getAvailableRegionList();
 
   return (
-    <MainLayout title="The Simple AWS RDS and Google Cloud SQL Instance Pricing Sheet">
+    <MainLayout
+      title="The Simple AWS RDS and Google Cloud SQL Instance Pricing Sheet"
+      metaTagList={[
+        {
+          name: "description",
+          content:
+            "DB Cost is a specs sheet and pricing calculator for AWS RDS and Google Cloud SQL instances.",
+        },
+        {
+          name: "keywords",
+          content:
+            "AWS RDS, Google Cloud SQL, Cloud DB Instances, rds pricing, price calculator, MySQL instance pricing, Postgres instance pricing",
+        },
+      ]}
+    >
       <div className="mx-5 mt-4 pb-2">
         <ButtonGroup type="reset" />
         <RegionMenu availableRegionList={availableRegionList} />
