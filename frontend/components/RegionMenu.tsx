@@ -271,12 +271,12 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
               <Checkbox value={region.name}>{region.name}</Checkbox>
               {region.providerCode.has("AWS") && (
                 <div className="relative top-1 w-5 h-4 mr-2">
-                  <Icon name="provider-aws" />
+                  <Icon name="provider-aws" sizes="1.25rem" />
                 </div>
               )}
               {region.providerCode.has("GCP") && (
                 <div className="relative top-1 w-4 h-4">
-                  <Icon name="provider-gcp" />
+                  <Icon name="provider-gcp" sizes="1rem" />
                 </div>
               )}
             </div>

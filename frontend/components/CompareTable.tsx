@@ -209,7 +209,10 @@ const CompareTable: React.FC<Props> = ({
         return (
           <div className="flex justify-between">
             <div className="relative top-1 w-6 h-5">
-              <Icon name={`db-${record.engineType.toLowerCase()}`} />
+              <Icon
+                name={`db-${record.engineType.toLowerCase()}`}
+                sizes="1.5rem"
+              />
             </div>
             <span className="font-mono">{`$${commitment.usd}`}</span>
           </div>
@@ -292,6 +295,7 @@ const CompareTable: React.FC<Props> = ({
                         <div className="relative !w-5 h-5 mr-2">
                           <Icon
                             name={`provider-${record.cloudProvider.toLowerCase()}`}
+                            sizes="1.25rem"
                           />
                         </div>
                       )}

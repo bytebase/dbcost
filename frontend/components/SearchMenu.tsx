@@ -81,6 +81,7 @@ const SearchMenu: React.FC<Props> = ({
                       src={provider.src}
                       alt="aws"
                       fill
+                      sizes="1.5rem"
                       style={{ objectFit: "contain" }}
                     />
                   </div>
@@ -105,6 +106,7 @@ const SearchMenu: React.FC<Props> = ({
                   src={engine.src}
                   alt="aws"
                   fill
+                  sizes="1.5rem"
                   style={{ objectFit: "contain" }}
                 />
               </div>
