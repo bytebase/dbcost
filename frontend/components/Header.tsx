@@ -27,6 +27,7 @@ const Header: React.FC = () => {
                 src="/icons/dbcost-logo-full.webp"
                 alt="DB Cost"
                 fill
+                sizes="8rem"
                 style={{ objectFit: "contain" }}
               />
             </div>
@@ -77,6 +78,7 @@ const Header: React.FC = () => {
                     src="/icons/bytebase-cncf.svg"
                     alt="Bytebase"
                     fill
+                    sizes="16rem"
                     style={{ objectFit: "contain" }}
                   />
                 </div>

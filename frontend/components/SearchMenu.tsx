@@ -79,8 +79,9 @@ const SearchMenu: React.FC<Props> = ({
                   >
                     <Image
                       src={provider.src}
-                      alt="aws"
+                      alt={provider.key}
                       fill
+                      sizes="1.5rem"
                       style={{ objectFit: "contain" }}
                     />
                   </div>
@@ -103,8 +104,9 @@ const SearchMenu: React.FC<Props> = ({
               <div className="relative top-1 w-6 h-5">
                 <Image
                   src={engine.src}
-                  alt="aws"
+                  alt={engine.key}
                   fill
+                  sizes="1.5rem"
                   style={{ objectFit: "contain" }}
                 />
               </div>
