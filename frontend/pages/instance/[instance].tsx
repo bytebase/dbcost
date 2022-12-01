@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import MainLayout from "@/layouts/main";
 import ButtonGroup from "@/components/ButtonGroup";
@@ -29,10 +29,23 @@ interface Params {
 
 interface Props {
   serverSideCompareTableData: DataSource[];
-  name: string;
-  provider: CloudProvider;
-  CPU: number;
-  memory: number;
+  basicInfo: {
+    name: string;
+    provider: CloudProvider;
+    CPU: number;
+    memory: number;
+    regionCount: number;
+    pricing: {
+      min: {
+        hourly: string;
+        expectedCost: string;
+      };
+      max: {
+        hourly: string;
+        expectedCost: string;
+      };
+    };
+  };
   dataSource: DataSource[];
   sameFamilyList: RelatedType[];
   sameSizeList: RelatedType[];
@@ -169,13 +182,12 @@ const generateTableData = (
 
 const InstanceDetail: NextPage<Props> = ({
   serverSideCompareTableData,
-  name,
-  provider,
-  CPU,
-  memory,
+  basicInfo,
   sameFamilyList,
   sameSizeList,
 }) => {
+  const { name, provider, CPU, memory } = basicInfo;
+
   const [dataSource, setDataSource] = useState<DataSource[]>(
     serverSideCompareTableData
   );
@@ -185,6 +197,15 @@ const InstanceDetail: NextPage<Props> = ({
   const memoizedGenerate = useCallback(
     (): DataSource[] => generateTableData(dbInstanceList, searchConfig, name),
     [dbInstanceList, name, searchConfig]
+  );
+
+  const pageDescription = useMemo(
+    () =>
+      `The ${basicInfo.provider} ${basicInfo.name} has ${basicInfo.CPU} CPUs and ${basicInfo.memory} GB memory, ` +
+      `and is available in ${basicInfo.regionCount} regions. ` +
+      `On-demand hourly prices range from ${basicInfo.pricing.min.hourly} to ${basicInfo.pricing.max.hourly} for different regions. ` +
+      `The on-demand annual price for full usage ranges from ${basicInfo.pricing.min.expectedCost} to ${basicInfo.pricing.max.expectedCost}.`,
+    [basicInfo]
   );
 
   useEffect(() => {
@@ -197,7 +218,17 @@ const InstanceDetail: NextPage<Props> = ({
   }, [updateSearchConfig]);
 
   return (
-    <MainLayout title={`${name} Pricing`} headTitle={`${name} Pricing`}>
+    <MainLayout
+      title={`${name} Pricing`}
+      headTitle={`${name} Pricing`}
+      metaTagList={[
+        { name: "description", content: pageDescription },
+        {
+          name: "keywords",
+          content: `${name}, Cloud DB Instances, rds pricing, price calculator`,
+        },
+      ]}
+    >
       <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
         <ButtonGroup type="back" />
         <p>
@@ -258,6 +289,30 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { instance: instanceName } = context.params as unknown as Params;
   const data = (await import("@data")).default as DBInstance[];
   const instanceData = data.find((instance) => instance.name === instanceName);
+
+  const serverSideCompareTableData = generateTableData(
+    data,
+    {
+      engineType: ["MYSQL", "POSTGRES"],
+      chargeType: ["OnDemand"],
+      utilization: 1,
+      leaseLength: 1,
+      keyword: "",
+    } as SearchConfig,
+    instanceName
+  );
+  const minHourlyPrice = Math.min(
+    ...serverSideCompareTableData.map((row) => row.hourly.usd)
+  );
+  const minYearlyExpectedCost = Math.min(
+    ...serverSideCompareTableData.map((row) => row.expectedCost)
+  );
+  const maxHourlyPrice = Math.max(
+    ...serverSideCompareTableData.map((row) => row.hourly.usd)
+  );
+  const maxYearlyExpectedCost = Math.max(
+    ...serverSideCompareTableData.map((row) => row.expectedCost)
+  );
 
   const getSameFamilyList = (): RelatedType[] => {
     const currClass = getInstanceFamily(
@@ -343,21 +398,24 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: {
-      serverSideCompareTableData: generateTableData(
-        data,
-        {
-          engineType: ["MYSQL", "POSTGRES"],
-          chargeType: ["OnDemand"],
-          utilization: 1,
-          leaseLength: 1,
-          keyword: "",
-        } as SearchConfig,
-        instanceName
-      ),
-      name: instanceName,
-      provider: instanceData?.cloudProvider,
-      CPU: instanceData?.cpu,
-      memory: instanceData?.memory,
+      serverSideCompareTableData,
+      basicInfo: {
+        name: instanceName,
+        provider: instanceData?.cloudProvider,
+        CPU: instanceData?.cpu,
+        memory: instanceData?.memory.trim(),
+        regionCount: instanceData?.regionList.length,
+        pricing: {
+          min: {
+            hourly: `$${minHourlyPrice}`,
+            expectedCost: `$${minYearlyExpectedCost}`,
+          },
+          max: {
+            hourly: `$${maxHourlyPrice}`,
+            expectedCost: `$${maxYearlyExpectedCost}`,
+          },
+        },
+      },
       sameFamilyList: getSameFamilyList(),
       sameSizeList: getSameSizeList(),
     },

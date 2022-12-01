@@ -246,6 +246,16 @@ const InstanceComparison: NextPage<Props> = ({
     <MainLayout
       title={`${comparerA} vs ${comparerB}`}
       headTitle={`${comparerA} vs ${comparerB}`}
+      metaTagList={[
+        {
+          name: "description",
+          content: `This comparison between ${comparerA} vs ${comparerB} covers their specs and prices around all regions.`,
+        },
+        {
+          name: "keywords",
+          content: `${comparerA} vs ${comparerB}, compare, specs, AWS RDS, Google Cloud SQL, Cloud DB Instances, rds pricing, price calculator, MySQL instance pricing, Postgres instance pricing`,
+        },
+      ]}
     >
       <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
         <ButtonGroup type="back" />

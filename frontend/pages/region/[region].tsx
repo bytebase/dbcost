@@ -218,6 +218,16 @@ const Region: NextPage<Props> = ({
     <MainLayout
       title={`${name} Cloud DB Instances`}
       headTitle={`${name} Cloud DB Instances`}
+      metaTagList={[
+        {
+          name: "description",
+          content: `A complete list and handy pricing comparing tool for AWS RDS and Google Cloud SQL instances located in ${name}.`,
+        },
+        {
+          name: "keywords",
+          content: `${name}, AWS RDS, Google Cloud SQL, Cloud DB Instances, pricing`,
+        },
+      ]}
     >
       <main className="flex flex-col justify-center items-center mx-5 mt-4 pb-2">
         <ButtonGroup type="back" />
