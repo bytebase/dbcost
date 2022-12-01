@@ -20,6 +20,18 @@ export type SearchConfig = {
   leaseLength: number;
 };
 
+export const SearchConfigEmpty: SearchConfig = {
+  cloudProvider: [],
+  engineType: [],
+  chargeType: [],
+  region: [],
+  keyword: "",
+  minCPU: 0,
+  minRAM: 0,
+  utilization: 1,
+  leaseLength: 1,
+};
+
 export const SearchConfigDefault: SearchConfig = {
   cloudProvider: ["AWS"],
   engineType: ["MYSQL"],

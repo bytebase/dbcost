@@ -1,11 +1,15 @@
 import {
   useState,
+  useEffect,
   createContext,
   useContext,
   useMemo,
   useCallback,
 } from "react";
-import { SearchConfig, SearchConfigDefault } from "@/types";
+import { useRouter } from "next/router";
+import isEmpty from "lodash/isEmpty";
+import { processParsedUrlQuery } from "@/utils";
+import { SearchConfig, SearchConfigDefault, SearchConfigEmpty } from "@/types";
 
 const SearchConfigContext = createContext<ContextStore>({
   searchConfig: SearchConfigDefault,
@@ -30,11 +34,30 @@ interface ContextStore {
   ) => void;
 }
 
+// For now, we only enable query binding at the main dashboard.
+const enableQueryBinding = (pathname: string): boolean => pathname === "/";
+
 export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
   children,
 }) => {
+  const router = useRouter();
   const [searchConfig, setSearchConfig] =
     useState<SearchConfig>(SearchConfigDefault);
+
+  useEffect(() => {
+    if (enableQueryBinding(router.pathname) && router.query) {
+      if (isEmpty(router.query)) {
+        // If no query specified, use default search config.
+        setSearchConfig(SearchConfigDefault);
+      } else {
+        // Else, use as query specified.
+        setSearchConfig({
+          ...SearchConfigEmpty,
+          ...processParsedUrlQuery(router.query),
+        });
+      }
+    }
+  }, [router.pathname, router.query]);
 
   const { Provider } = SearchConfigContext;
 
@@ -53,8 +76,13 @@ export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
   );
 
   const reset = useCallback(() => {
+    if (enableQueryBinding(router.pathname)) {
+      router.push({ pathname: router.pathname, query: {} }, undefined, {
+        shallow: true,
+      });
+    }
     setSearchConfig({ ...SearchConfigDefault });
-  }, []);
+  }, [router]);
 
   const clear = useCallback(() => {
     setSearchConfig({
@@ -72,12 +100,29 @@ export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
 
   const update = useCallback(
     <K extends keyof SearchConfig>(field: K, value: SearchConfig[K]) => {
-      setSearchConfig((state) => ({
-        ...state,
-        [field]: value,
-      }));
+      setSearchConfig((state) => {
+        const newState = {
+          ...state,
+          [field]: value,
+        };
+
+        if (enableQueryBinding(router.pathname)) {
+          // update URL query string after search config change
+          router.push(
+            {
+              pathname: router.pathname,
+              query: newState,
+            },
+            undefined,
+            // use shallow-routing to avoid page reload
+            { shallow: true }
+          );
+        }
+
+        return newState;
+      });
     },
-    []
+    [router]
   );
 
   const searchConfigContextStore: ContextStore = useMemo(
