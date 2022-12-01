@@ -34,6 +34,9 @@ interface ContextStore {
   ) => void;
 }
 
+// For now, we only enable query binding at the main dashboard.
+const enableQueryBinding = (pathname: string): boolean => pathname === "/";
+
 export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
   children,
 }) => {
@@ -42,7 +45,7 @@ export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
     useState<SearchConfig>(SearchConfigDefault);
 
   useEffect(() => {
-    if (router.query) {
+    if (enableQueryBinding(router.pathname) && router.query) {
       if (isEmpty(router.query)) {
         // If no query specified, use default search config.
         setSearchConfig(SearchConfigDefault);
@@ -54,7 +57,7 @@ export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
         });
       }
     }
-  }, [router.query]);
+  }, [router.pathname, router.query]);
 
   const { Provider } = SearchConfigContext;
 
@@ -73,9 +76,12 @@ export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
   );
 
   const reset = useCallback(() => {
-    router.push({ pathname: router.pathname, query: {} }, undefined, {
-      shallow: true,
-    });
+    if (enableQueryBinding(router.pathname)) {
+      router.push({ pathname: router.pathname, query: {} }, undefined, {
+        shallow: true,
+      });
+    }
+    setSearchConfig({ ...SearchConfigDefault });
   }, [router]);
 
   const clear = useCallback(() => {
@@ -100,16 +106,18 @@ export const SearchConfigContextProvider: React.FC<ProviderProps> = ({
           [field]: value,
         };
 
-        // update URL query string after search config change
-        router.push(
-          {
-            pathname: router.pathname,
-            query: newState,
-          },
-          undefined,
-          // use shallow-routing to avoid page reload
-          { shallow: true }
-        );
+        if (enableQueryBinding(router.pathname)) {
+          // update URL query string after search config change
+          router.push(
+            {
+              pathname: router.pathname,
+              query: newState,
+            },
+            undefined,
+            // use shallow-routing to avoid page reload
+            { shallow: true }
+          );
+        }
 
         return newState;
       });
