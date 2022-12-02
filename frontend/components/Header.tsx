@@ -7,11 +7,13 @@ import { useSearchConfigContext } from "@/stores";
 const cloudEmoji = "☁️";
 const moneyEmoji = "💸";
 const providerList = ["aws", "gcp"];
+const engineList = ["mysql", "postgres"];
+const providerPagePathname = "/provider/[provider]";
 
 const Header: React.FC = () => {
   const { reset: resetSearchConfig } = useSearchConfigContext();
   const router = useRouter();
-  const { provider: providerInRoute } = router.query;
+  const { provider: providerInRoute, engine: engineInRouter } = router.query;
 
   return (
     <header className="flex justify-center bg-slate-800">
@@ -32,18 +34,36 @@ const Header: React.FC = () => {
               />
             </div>
           </Link>
-          {providerList.map((provider: string) => (
-            <Link href={`/provider/${provider}`} key={provider} passHref>
-              <span
-                className={`${
-                  providerInRoute === provider ? "border-b" : ""
-                } h-8 text-lg pt-0.5 text-white cursor-pointer`}
-                onClick={() => void resetSearchConfig()}
+          {!router.pathname.startsWith(providerPagePathname) &&
+            providerList.map((provider: string) => (
+              <Link href={`/provider/${provider}`} key={provider} passHref>
+                <span
+                  className={`${
+                    providerInRoute === provider ? "border-b" : ""
+                  } h-8 text-lg pt-0.5 text-white cursor-pointer`}
+                  onClick={() => void resetSearchConfig()}
+                >
+                  {provider.toUpperCase()}
+                </span>
+              </Link>
+            ))}
+          {router.pathname.startsWith(providerPagePathname) &&
+            engineList.map((engine: string) => (
+              <Link
+                href={`/provider/${providerInRoute}/engine/${engine}`}
+                key={engine}
+                passHref
               >
-                {provider.toUpperCase()}
-              </span>
-            </Link>
-          ))}
+                <span
+                  className={`${
+                    engineInRouter === engine ? "border-b" : ""
+                  } h-8 text-lg pt-0.5 text-white cursor-pointer`}
+                  onClick={() => void resetSearchConfig()}
+                >
+                  {engine.toUpperCase()}
+                </span>
+              </Link>
+            ))}
         </div>
 
         {/* emoji group */}

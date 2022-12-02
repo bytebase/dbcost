@@ -13,6 +13,7 @@ interface Props {
   type?: SearchBarType;
   hideProviders?: boolean;
   hideReservedChargePlan?: boolean;
+  hideEngineType?: boolean;
 }
 
 const ProviderCheckbox = [
@@ -49,6 +50,7 @@ const SearchMenu: React.FC<Props> = ({
   type = SearchBarType.DASHBOARD,
   hideProviders = false,
   hideReservedChargePlan = false,
+  hideEngineType = false,
 }) => {
   const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
@@ -94,28 +96,33 @@ const SearchMenu: React.FC<Props> = ({
           )}
 
         {/* Database Engine Types */}
-        <Checkbox.Group
-          className="!ml-2 !-mt-1"
-          value={searchConfig.engineType}
-          onChange={(checkedValue) =>
-            void updateSearchConfig("engineType", checkedValue as EngineType[])
-          }
-        >
-          {EngineCheckbox.map((engine) => (
-            <Checkbox key={engine.key} value={engine.key}>
-              <div className="relative top-1 w-6 h-5">
-                <Image
-                  src={engine.src}
-                  alt={engine.key}
-                  fill
-                  sizes="1.5rem"
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            </Checkbox>
-          ))}
-          <Divider type="vertical" />
-        </Checkbox.Group>
+        {!hideEngineType && (
+          <Checkbox.Group
+            className="!ml-2 !-mt-1"
+            value={searchConfig.engineType}
+            onChange={(checkedValue) =>
+              void updateSearchConfig(
+                "engineType",
+                checkedValue as EngineType[]
+              )
+            }
+          >
+            {EngineCheckbox.map((engine) => (
+              <Checkbox key={engine.key} value={engine.key}>
+                <div className="relative top-1 w-6 h-5">
+                  <Image
+                    src={engine.src}
+                    alt={engine.key}
+                    fill
+                    sizes="1.5rem"
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              </Checkbox>
+            ))}
+            <Divider type="vertical" />
+          </Checkbox.Group>
+        )}
 
         {/* Charge Types */}
         <Checkbox.Group
