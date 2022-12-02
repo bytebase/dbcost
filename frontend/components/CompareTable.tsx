@@ -307,8 +307,6 @@ const CompareTable: React.FC<Props> = ({
                 }
                 return name;
               },
-              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-                !isEqual(record, prevRecord),
             },
           ]),
       ...(type === PageType.REGION_DETAIL
@@ -337,8 +335,6 @@ const CompareTable: React.FC<Props> = ({
                     {region}
                   </Link>
                 ),
-              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-                !isEqual(record, prevRecord),
             },
           ]),
       ...(type === PageType.INSTANCE_COMPARISON
@@ -369,8 +365,6 @@ const CompareTable: React.FC<Props> = ({
                   <span className="font-mono">{cpu}</span>
                 </Tooltip>
               ),
-              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-                !isEqual(record, prevRecord),
             },
           ]),
       ...(type === PageType.INSTANCE_COMPARISON
@@ -393,8 +387,6 @@ const CompareTable: React.FC<Props> = ({
               render: (memory: number) => (
                 <span className="font-mono">{memory} GB</span>
               ),
-              shouldCellUpdate: (record: DataSource, prevRecord: DataSource) =>
-                !isEqual(record, prevRecord),
             },
           ]),
       {
