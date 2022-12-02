@@ -216,7 +216,7 @@ const Provider: NextPage<Props> = ({
     <MainLayout
       title={`The Simple ${
         provider === "aws" ? "AWS RDS" : "Google Cloud SQL"
-      } Instance Pricing Sheet`}
+      } ${engine === "mysql" ? "MySQL" : "PostgreSQL"} Instance Pricing Sheet`}
       metaTagList={[
         {
           name: "description",
