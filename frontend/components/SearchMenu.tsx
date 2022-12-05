@@ -12,6 +12,7 @@ import { CloudProvider, EngineType, ChargeType, SearchBarType } from "@/types";
 interface Props {
   type?: SearchBarType;
   hideProviders?: boolean;
+  hideReservedChargePlan?: boolean;
 }
 
 const ProviderCheckbox = [
@@ -47,6 +48,7 @@ const EngineCheckbox = [
 const SearchMenu: React.FC<Props> = ({
   type = SearchBarType.DASHBOARD,
   hideProviders = false,
+  hideReservedChargePlan = false,
 }) => {
   const { searchConfig, update: updateSearchConfig } = useSearchConfigContext();
 
@@ -125,9 +127,10 @@ const SearchMenu: React.FC<Props> = ({
         >
           <Checkbox value="OnDemand">On Demand</Checkbox>
           {(type === SearchBarType.DASHBOARD ||
-            type === SearchBarType.INSTANCE_COMPARISON) && (
-            <Checkbox value="Reserved">Reserved</Checkbox>
-          )}
+            type === SearchBarType.INSTANCE_COMPARISON) &&
+            !hideReservedChargePlan && (
+              <Checkbox value="Reserved">Reserved</Checkbox>
+            )}
         </Checkbox.Group>
 
         {/* Min specification for Memory & CPU */}

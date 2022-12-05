@@ -199,6 +199,7 @@ const Provider: NextPage<Props> = ({ serverSideCompareTableData, name }) => {
   useEffect(() => {
     // Remove provider selector since the provider is determined.
     updateSearchConfig("cloudProvider", [name.toUpperCase() as CloudProvider]);
+    updateSearchConfig("chargeType", ["OnDemand"]);
   }, [name, updateSearchConfig]);
 
   return (
@@ -224,7 +225,7 @@ const Provider: NextPage<Props> = ({ serverSideCompareTableData, name }) => {
       <div className="mx-5 mt-4 pb-2">
         <ButtonGroup type="reset" />
         <RegionMenu availableRegionList={availableRegionList} />
-        <SearchMenu hideProviders={true} />
+        <SearchMenu hideProviders={true} hideReservedChargePlan={true} />
 
         <CompareTable
           dataSource={dataSource}
