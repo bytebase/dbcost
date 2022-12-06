@@ -368,7 +368,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const instanceB = data.find((instance) => instance.name === comparerB)!;
 
     [instanceA, instanceB].forEach((instance) => {
-      const term = instance.regionList[0].termList.find(
+      const term = (
+        instance.regionList.find((region) => region.code === virginiaCode) ||
+        instance.regionList[0]
+      ).termList.find(
         (term) => term.type === "OnDemand" && term.databaseEngine === "MYSQL"
       );
       dataSource.push({
