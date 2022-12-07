@@ -1,14 +1,16 @@
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "antd";
+import { Button, Divider } from "antd";
 import { CheckIcon } from "@radix-ui/react-icons";
+import CompareMenu from "@/components/CompareMenu";
 import { useSearchConfigContext } from "@/stores";
 
 interface Props {
   type: "reset" | "back";
+  showCompare?: boolean;
 }
 
-const ButtonGroup: React.FC<Props> = ({ type }) => {
+const ButtonGroup: React.FC<Props> = ({ type, showCompare = false }) => {
   const { reset: resetSearchConfig } = useSearchConfigContext();
   const [isCopied, setIsCopied] = useState(false);
 
@@ -18,7 +20,7 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
   };
 
   return (
-    <div className="flex flex-row justify-center my-4">
+    <div className="flex flex-row justify-center items-center my-4">
       {type === "reset" ? (
         <Button className="mr-2" onClick={() => void resetSearchConfig()}>
           Reset
@@ -37,6 +39,12 @@ const ButtonGroup: React.FC<Props> = ({ type }) => {
           "Copy URL"
         )}
       </Button>
+      {showCompare && (
+        <>
+          <Divider className="!mx-2" type="vertical" />
+          <CompareMenu />
+        </>
+      )}
     </div>
   );
 };

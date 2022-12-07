@@ -18,14 +18,14 @@ const CompareMenu: React.FC = () => {
   const [secondaryOptions, setSecondaryOptions] = useState<
     { label: string; value: number }[]
   >([]);
+  const [isInstanceSelected, setIsInstanceSelected] = useState(true);
   const router = useRouter();
 
   return (
-    <div className="w-full flex flex-col md:flex-row justify-center md:justify-start items-center pb-6">
-      <h2 className="!m-0">Compare between two different instance types:</h2>
-      <div className="mx-4 flex items-center">
+    <div className="flex flex-col md:flex-row justify-center md:justify-start items-center">
+      <div className="relative flex items-center">
         <Select
-          className="w-48 !mx-2"
+          className="w-48 !mr-2"
           showSearch
           placeholder="Instance type"
           value={comparer.first?.value}
@@ -42,6 +42,7 @@ const CompareMenu: React.FC = () => {
               second: undefined,
             });
             setSecondaryOptions(instanceTypeList.filter((_, i) => i !== index));
+            setIsInstanceSelected(true);
           }}
           options={instanceTypeList}
         />
@@ -58,31 +59,39 @@ const CompareMenu: React.FC = () => {
             return false;
           }}
           value={comparer.second?.value}
-          onSelect={(index: any): void =>
-            void setComparer({
+          onSelect={(index: any): void => {
+            setComparer({
               ...comparer,
               second: { value: instanceTypeList[index].label, index },
-            })
-          }
+            });
+            setIsInstanceSelected(true);
+          }}
           options={secondaryOptions}
         />
         <Button
           onClick={() => {
-            const compareRoute = "/compare";
-            const { first, second } = comparer;
-            const param =
-              first!.index < second!.index
-                ? nameToSlug(first!.value, second!.value)
-                : nameToSlug(second!.value, first!.value);
+            if (!comparer.first?.value || !comparer.second?.value) {
+              setIsInstanceSelected(false);
+            } else {
+              const compareRoute = "/compare";
+              const { first, second } = comparer;
+              const param =
+                first!.index < second!.index
+                  ? nameToSlug(first!.value, second!.value)
+                  : nameToSlug(second!.value, first!.value);
 
-            router.push(`${compareRoute}/${param}`);
+              router.push(`${compareRoute}/${param}`);
+            }
           }}
-          disabled={
-            comparer.first === undefined || comparer.second === undefined
-          }
+          type="primary"
         >
-          Compare
+          Compare Instances
         </Button>
+        {!isInstanceSelected && (
+          <p className="absolute m-0 -right-44 text-red-500">
+            Please select instances.
+          </p>
+        )}
       </div>
     </div>
   );
