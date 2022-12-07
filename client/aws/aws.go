@@ -22,7 +22,7 @@ func NewClient() *Client {
 	return &Client{}
 }
 
-//  pricing is the api message for AWS pricing .json file
+// pricing is the api message for AWS pricing .json file
 type pricing struct {
 	Product interface{} `json:"products"`
 	Term    interface{} `json:"terms"`
@@ -56,6 +56,7 @@ type instance struct {
 	ID string
 	// The tag here does not follow small-camel naming style, it is intended for the AWS name it this way.
 	ServiceCode    string `json:"servicecode"`
+	Location       string `json:"location"`
 	RegionCode     string `json:"regionCode"`
 	Type           string `json:"instanceType"`
 	InstanceFamily string `json:"instanceFamily"`
@@ -219,7 +220,12 @@ func fillInstancePayload(instanceRecord instanceRecord, offerList []*client.Offe
 		}
 		if _, ok := offerMap[instanceSKU]; ok {
 			for _, offer := range offerMap[instanceSKU] {
-				offer.RegionList = []string{entry.Attributes.RegionCode}
+				if entry.Attributes.RegionCode != "" {
+					offer.RegionList = []string{entry.Attributes.RegionCode}
+				} else {
+					// When we encounter empty region code, use location string directly.
+					offer.RegionList = []string{entry.Attributes.Location}
+				}
 				offer.InstancePayload = instance
 			}
 		}

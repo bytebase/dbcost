@@ -31,6 +31,11 @@ export const regionCodeNameSlugMap: [string, string, string][] = [
   ["eu-central-2", "Europe (Zurich)", "europe-zurich"],
   ["eu-south-2", "Europe (Spain)", "europe-spain"],
   ["me-central-1", "Middle East (UAE)", "middle-east-uae"],
+  [
+    "Asia Pacific (Osaka-Local)",
+    "Asia Pacific (Osaka-Local)",
+    "asia-pacific-osaka-local",
+  ],
 
   // GCP
   ["asia-east1", "Asia Pacific (Taiwan)", "asia-pacific-taiwan"],
@@ -73,6 +78,7 @@ export const regionCodeNameSlugMap: [string, string, string][] = [
   ["us-east5", "North America (Columbus)", "north-america-columbus"],
   ["europe-southwest1", "Europe (Madrid)", "europe-madrid"],
   ["us-east7", "US East (Alabama)", "us-east-alabama"],
+  ["us-central2", "US Central (Oklahoma)", "us-central-oklahoma"],
 ];
 
 export const getRegionName = (regionCode: string): string => {
