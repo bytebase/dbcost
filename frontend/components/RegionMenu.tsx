@@ -2,6 +2,7 @@ import { useReducer, useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { Checkbox } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import Icon from "@/components/Icon";
 import { useSearchConfigContext } from "@/stores";
 import { AvailableRegion, SearchConfigDefault } from "@/types";
@@ -128,6 +129,13 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
   const isIndeterminate = useMemo(
     () =>
       (parentName: string): boolean => {
+        if (parentName === "all") {
+          return (
+            checkedRegionList.length > 0 &&
+            checkedRegionList.length < activeAvailableRegionList.length
+          );
+        }
+
         const childRegionList = state.regionMap[parentName];
         const childSRegionSet = new Set(childRegionList);
         let count = 0;
@@ -139,7 +147,7 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
 
         return 0 < count && count < childRegionList.length;
       },
-    [checkedRegionList, state.regionMap]
+    [activeAvailableRegionList.length, checkedRegionList, state.regionMap]
   );
 
   const getChildRegionNameList = (
@@ -160,6 +168,18 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
           parentNameList.includes(getParentRegionName(region.name))
         )
         .map((region) => region.name);
+    }
+  };
+
+  const handleSelectAll = (e: CheckboxChangeEvent) => {
+    const { checked } = e.target;
+    if (checked) {
+      // Select all regions.
+      const newRegionList = getChildRegionNameList(state.parentRegionList);
+      setRegion(newRegionList);
+    } else {
+      // Unselect all regions.
+      setRegion([]);
     }
   };
 
@@ -241,6 +261,16 @@ const RegionMenu: React.FC<Props> = ({ availableRegionList }) => {
     <div className="flex w-full justify-start pb-4 border-b">
       {/* parent region */}
       <div className="border-r flex-col mr-4 w-48">
+        <Checkbox
+          className="!ml-2 pb-1 h-7"
+          indeterminate={isIndeterminate("all")}
+          onChange={handleSelectAll}
+          checked={
+            checkedRegionList.length === activeAvailableRegionList.length
+          }
+        >
+          Select All
+        </Checkbox>
         <Checkbox.Group
           className="mt-2"
           value={state.checkedParentRegionList}
