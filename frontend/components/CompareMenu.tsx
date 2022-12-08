@@ -25,7 +25,7 @@ const CompareMenu: React.FC = () => {
     <div className="flex flex-col md:flex-row justify-center md:justify-start items-center">
       <div className="relative flex items-center">
         <Select
-          className="w-48 !mr-2"
+          className="w-54 !mr-2"
           showSearch
           placeholder="Instance type"
           value={comparer.first?.value}
@@ -48,7 +48,7 @@ const CompareMenu: React.FC = () => {
         />
         <span>vs</span>
         <Select
-          className="w-48 !ml-2 !mr-4"
+          className="w-54 !ml-2 !mr-4"
           showSearch
           placeholder="Instance type"
           filterOption={(inputValue, option) => {

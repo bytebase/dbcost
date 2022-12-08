@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import type { NextPage, GetStaticProps } from "next";
+import { Divider } from "antd";
 import MainLayout from "@/layouts/main";
+import CompareMenu from "@/components/CompareMenu";
 import ButtonGroup from "@/components/ButtonGroup";
 import RegionMenu from "@/components/RegionMenu";
 import SearchMenu from "@/components/SearchMenu";
@@ -206,8 +208,10 @@ const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
         },
       ]}
     >
-      <div className="mx-5 mt-4 pb-2">
-        <ButtonGroup type="reset" showCompare />
+      <div className="flex flex-col items-center mx-5 mt-4 pb-2">
+        <CompareMenu />
+        <Divider className="!mb-1" />
+        <ButtonGroup type="reset" />
         <RegionMenu availableRegionList={availableRegionList} />
         <SearchMenu />
         <CompareTable
