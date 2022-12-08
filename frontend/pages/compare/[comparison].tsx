@@ -31,7 +31,8 @@ interface Props {
   specsComparisonData: BadgeRow[];
 }
 
-const virginiaCode = "us-east-1";
+const virginiaCodeAWS = "us-east-1";
+const virginiaCodeGCP = "us-east4";
 
 const generateTableData = (
   dbInstanceList: DBInstance[],
@@ -77,9 +78,13 @@ const generateTableData = (
   [instanceA, instanceB].forEach((dbInstance) => {
     const dataRowList: DataSource[] = [];
     const dataRowMap: Map<string, DataSource[]> = new Map();
-    let region = dbInstance.regionList.find(
-      (region) => region.code === virginiaCode
-    );
+    let region = dbInstance.regionList.find((region) => {
+      if (dbInstance.cloudProvider === "AWS") {
+        return region.code === virginiaCodeAWS;
+      } else if (dbInstance.cloudProvider === "GCP") {
+        return region.code === virginiaCodeGCP;
+      }
+    });
     if (!region) {
       region = dbInstance.regionList[0];
     }
@@ -369,8 +374,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
     [instanceA, instanceB].forEach((instance) => {
       const term = (
-        instance.regionList.find((region) => region.code === virginiaCode) ||
-        instance.regionList[0]
+        instance.regionList.find((region) => {
+          if (instance.cloudProvider === "AWS") {
+            return region.code === virginiaCodeAWS;
+          } else if (instance.cloudProvider === "GCP") {
+            return region.code === virginiaCodeGCP;
+          }
+        }) || instance.regionList[0]
       ).termList.find(
         (term) => term.type === "OnDemand" && term.databaseEngine === "MYSQL"
       );
