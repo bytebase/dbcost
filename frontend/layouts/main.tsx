@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useRouter } from "next/router";
 
 type Props = {
   children: React.ReactNode;
@@ -12,13 +13,19 @@ type Props = {
   }[];
 };
 
+const baseURL = "https://www.dbcost.com";
+
 const Main: React.FC<Props> = ({ children, headTitle, title, metaTagList }) => {
+  // Concat a canonical URL, and remove trailing slash if any.
+  const canonicalURL = (baseURL + useRouter().asPath).replace(/\/$/, "");
+
   return (
     <div className="flex flex-col h-screen min-w-fit">
       <Head>
         <title>
           {headTitle ?? "DB Cost | RDS & Cloud SQL Instance Pricing Sheet"}
         </title>
+        <link rel="canonical" href={canonicalURL} />
         <link rel="icon" href="/favicon.ico" />
         {metaTagList?.map(({ name, content }) => (
           <meta key={name} name={name} content={content} />
