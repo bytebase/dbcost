@@ -2,7 +2,7 @@
 module.exports = {
   siteUrl: process.env.SITE_URL || "https://www.dbcost.com",
   generateRobotsTxt: true,
-  // Currently dbcost is using SSG to pre-build all pages, and the pages count is
-  // not that large, so we can just put the sitemap in one file.
+  // Currently dbcost will generate over 10,000 pages, so let's
+  // split a huge sitemap into smaller pieces.
   sitemapSize: 5000,
 };
