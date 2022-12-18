@@ -220,7 +220,7 @@ const InstanceDetail: NextPage<Props> = ({
   return (
     <MainLayout
       title={`${name} Pricing`}
-      headTitle={`${name} Pricing`}
+      headTitle={`DB Cost | ${name} Pricing`}
       metaTagList={[
         { name: "description", content: pageDescription },
         {
