@@ -249,8 +249,8 @@ const InstanceComparison: NextPage<Props> = ({
 
   return (
     <MainLayout
-      title={`${comparerA} vs ${comparerB}`}
-      headTitle={`${comparerA} vs ${comparerB}`}
+      title={`${comparerA} vs ${comparerB} Pricing`}
+      headTitle={`DB Cost | ${comparerA} vs ${comparerB} Pricing`}
       metaTagList={[
         {
           name: "description",

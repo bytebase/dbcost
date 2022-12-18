@@ -217,7 +217,7 @@ const Region: NextPage<Props> = ({
   return (
     <MainLayout
       title={`${name} Cloud DB Instances`}
-      headTitle={`${name} Cloud DB Instances`}
+      headTitle={`DB Cost | ${name} Cloud DB Instances`}
       metaTagList={[
         {
           name: "description",
