@@ -41,5 +41,4 @@ jobs:
           labels: |
             data update
             automated
-          reviewers: Megrax
           draft: false
