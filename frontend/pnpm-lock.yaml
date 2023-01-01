@@ -6,7 +6,7 @@ specifiers:
   '@radix-ui/react-icons': ^1.1.1
   '@radix-ui/react-tooltip': ^1.0.0
   '@types/lodash': ^4.14.185
-  '@types/node': 18.11.10
+  '@types/node': 18.11.18
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.9
   '@types/slug': ^5.0.3
@@ -43,7 +43,7 @@ dependencies:
 
 devDependencies:
   '@types/lodash': 4.14.185
-  '@types/node': 18.11.10
+  '@types/node': 18.11.18
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.9
   '@types/slug': 5.0.3
@@ -783,8 +783,8 @@ packages:
     resolution: {integrity: sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==}
     dev: true
 
-  /@types/node/18.11.10:
-    resolution: {integrity: sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==}
+  /@types/node/18.11.18:
+    resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
     dev: true
 
   /@types/prop-types/15.7.5:
