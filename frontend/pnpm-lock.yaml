@@ -6,7 +6,7 @@ specifiers:
   '@radix-ui/react-icons': ^1.1.1
   '@radix-ui/react-tooltip': ^1.0.0
   '@types/lodash': ^4.14.185
-  '@types/node': 18.17.12
+  '@types/node': 18.18.3
   '@types/react': 18.2.21
   '@types/react-dom': 18.2.7
   '@types/slug': ^5.0.3
@@ -43,7 +43,7 @@ dependencies:
 
 devDependencies:
   '@types/lodash': 4.14.185
-  '@types/node': 18.17.12
+  '@types/node': 18.18.3
   '@types/react': 18.2.21
   '@types/react-dom': 18.2.7
   '@types/slug': 5.0.3
@@ -53,7 +53,7 @@ devDependencies:
   eslint: 8.48.0
   eslint-config-next: 13.4.19_cgvy6hrg3pjeapqw5wnuqcmdo4
   eslint-config-prettier: 8.5.0_eslint@8.48.0
-  next-sitemap: 3.1.29_senscvuhpfjd5g6qtou6tyodce
+  next-sitemap: 3.1.29_6mcdnd6l3e73ees653pijllatu
   postcss: 8.4.16
   tailwindcss: 3.1.8_postcss@8.4.16
   typescript: 4.9.5
@@ -206,10 +206,6 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
-    dev: true
-
-  /@next/env/13.0.2:
-    resolution: {integrity: sha512-Qb6WPuRriGIQ19qd6NBxpcrFOfj8ziN7l9eZUfwff5gl4zLXluqtuZPddYZM/oWjN53ZYcuRXzL+oowKyJeYtA==}
     dev: true
 
   /@next/env/13.4.19:
@@ -780,8 +776,8 @@ packages:
     resolution: {integrity: sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==}
     dev: true
 
-  /@types/node/18.17.12:
-    resolution: {integrity: sha512-d6xjC9fJ/nSnfDeU0AMDsaJyb1iHsqCSOdi84w4u+SlN/UgQdY5tRhpMzaFYsI4mnpvgTivEaQd0yOUhAtOnEQ==}
+  /@types/node/18.18.3:
+    resolution: {integrity: sha512-0OVfGupTl3NBFr8+iXpfZ8NR7jfFO+P1Q+IO/q0wbo02wYkP5gy36phojeYWpLQ6WAMjl+VfmqUk2YbUfp0irA==}
     dev: true
 
   /@types/prop-types/15.7.5:
@@ -2561,7 +2557,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-sitemap/3.1.29_senscvuhpfjd5g6qtou6tyodce:
+  /next-sitemap/3.1.29_6mcdnd6l3e73ees653pijllatu:
     resolution: {integrity: sha512-7UQyfpI7obOdB11aCswWYfqRn5CR0YSmWHo1r/uarrFfZD5PyyAWtQlgP6jNqDW0eX1ZJWERBwmJ2dLjl4nT8Q==}
     engines: {node: '>=14.18'}
     hasBin: true
@@ -2570,7 +2566,7 @@ packages:
       next: '*'
     dependencies:
       '@corex/deepmerge': 4.0.29
-      '@next/env': 13.0.2
+      '@next/env': 13.4.19
       minimist: 1.2.6
       next: 13.4.19_biqbaboplfbrettd7655fr4n2y
     dev: true
