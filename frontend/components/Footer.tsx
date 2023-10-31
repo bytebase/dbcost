@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Footer: React.FC = () => {
   return (
     <footer className="flex justify-center items-center">
@@ -9,23 +11,23 @@ const Footer: React.FC = () => {
           </h2>
         </div>
 
-        <div class="flex flex-row flex-wrap items-center space-x-4">
+        <div className="flex flex-row flex-wrap items-center space-x-4">
         <div
-          class="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
+          className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
-          <img class="h-6 mt-1 mr-2" src="/star-history.webp" />
+          <Image className="h-6 mt-1 mr-2" src="/star-history.webp" alt="star history"/>
           <a href="https://star-history.com" target="_blank">Star History</a>
         </div>
         <div
-          class="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
+          className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
-          <img class="h-6 mt-1 mr-2" src="/sqlchat.webp" />
+          <Image className="h-6 mt-1 mr-2" src="/sqlchat.webp" alt="sql chat"/>
           <a href="https://www.sqlchat.ai" target="_blank">SQL Chat</a>
         </div>
         <div
-          class="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
+          className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
-          <img class="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" />
+          <Image className="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" alt="mysql vs pg"/>
           <a href="https://www.mysql-vs-postgresql.com/" target="_blank"
             >MySQL or PG</a
           >
