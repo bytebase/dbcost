@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const Footer: React.FC = () => {
   return (
     <footer className="flex justify-center items-center">
@@ -15,19 +13,19 @@ const Footer: React.FC = () => {
         <div
           className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
-          <Image className="h-6 mt-1 mr-2" src="/star-history.webp" alt="star history"/>
+          <img className="h-6 mt-1 mr-2" src="/star-history.webp" alt="star history"/>
           <a href="https://star-history.com" target="_blank">Star History</a>
         </div>
         <div
           className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
-          <Image className="h-6 mt-1 mr-2" src="/sqlchat.webp" alt="sql chat"/>
+          <img className="h-6 mt-1 mr-2" src="/sqlchat.webp" alt="sql chat"/>
           <a href="https://www.sqlchat.ai" target="_blank">SQL Chat</a>
         </div>
         <div
           className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
-          <Image className="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" alt="mysql vs pg"/>
+          <img className="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" alt="mysql vs pg"/>
           <a href="https://www.mysql-vs-postgresql.com/" target="_blank"
             >MySQL or PG</a
           >
