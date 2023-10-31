@@ -9,11 +9,28 @@ const Footer: React.FC = () => {
           </h2>
         </div>
 
-        <div className="text-sm leading-8 flex flex-row flex-wrap justify-center items-center underline text-blue-700 hover:opacity-80">
-          <a href="https://star-history.com" target="_blank" rel="noreferrer">
-            GitHub Star History
-          </a>
+        <div class="flex flex-row flex-wrap items-center space-x-4">
+        <div
+          class="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
+        >
+          <img class="h-6 mt-1 mr-2" src="/star-history.webp" />
+          <a href="https://star-history.com" target="_blank">Star History</a>
         </div>
+        <div
+          class="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
+        >
+          <img class="h-6 mt-1 mr-2" src="/sqlchat.webp" />
+          <a href="https://www.sqlchat.ai" target="_blank">SQL Chat</a>
+        </div>
+        <div
+          class="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
+        >
+          <img class="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" />
+          <a href="https://www.mysql-vs-postgresql.com/" target="_blank"
+            >MySQL or PG</a
+          >
+        </div>
+      </div>
 
         <div className="text-sm leading-8 flex flex-row flex-nowrap justify-center items-center">
           <span className="text-gray-600">
