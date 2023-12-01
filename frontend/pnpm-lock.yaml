@@ -20,7 +20,7 @@ specifiers:
   lodash: ^4.17.21
   next: 13.4.19
   next-sitemap: ^3.1.29
-  nextjs-bundle-analysis: ^0.4.0
+  nextjs-bundle-analysis: ^0.5.0
   postcss: ^8.4.14
   react: 18.2.0
   react-dom: 18.2.0
@@ -36,7 +36,7 @@ dependencies:
   antd: 4.23.1_biqbaboplfbrettd7655fr4n2y
   lodash: 4.17.21
   next: 13.4.19_biqbaboplfbrettd7655fr4n2y
-  nextjs-bundle-analysis: 0.4.0
+  nextjs-bundle-analysis: 0.5.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   slug: 8.2.2
@@ -2612,8 +2612,8 @@ packages:
       - '@babel/core'
       - babel-plugin-macros
 
-  /nextjs-bundle-analysis/0.4.0:
-    resolution: {integrity: sha512-0dBfl80w9bvpqHuRMMPNsl3X5shUeGuNB1MC7gOFFWptz0rQojXE1YElys74hkmRCaoV5IsoT3o5kcgj0xT8VA==}
+  /nextjs-bundle-analysis/0.5.0:
+    resolution: {integrity: sha512-PyB/DkfdnVzDSiSSm0IAsOWF+Sb6xMSV9+cY3x81ycFpOqSAs0Zs09YrD/gwve+kqJKk8VfYaPDO2NcVtcbXpQ==}
     hasBin: true
     dependencies:
       filesize: 7.0.0
