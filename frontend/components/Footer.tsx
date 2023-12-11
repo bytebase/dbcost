@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
           className="flex flex-row text-sm leading-8 underline text-blue-700 hover:opacity-80"
         >
           <img className="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" alt="mysql vs pg"/>
-          <a href="https://www.mysql-vs-postgresql.com/" target="_blank"
+          <a href="https://www.mysql-vs-postgres.com/" target="_blank"
             >MySQL or PG</a
           >
         </div>
