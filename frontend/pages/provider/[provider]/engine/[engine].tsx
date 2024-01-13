@@ -214,19 +214,19 @@ const Provider: NextPage<Props> = ({
 
   return (
     <MainLayout
-      title={`The Simple ${
-        provider === "aws" ? "AWS RDS" : "Google Cloud SQL"
-      } ${engine === "mysql" ? "MySQL" : "PostgreSQL"} Instance Pricing Sheet`}
+      title={`${
+        provider === "aws" ? "AWS RDS" : "GCP Cloud SQL"
+      } ${engine === "mysql" ? "MySQL" : "PostgreSQL"} Pricing Sheet`}
       metaTagList={[
         {
           name: "description",
-          content: `A specs sheet and pricing calculator for ${
-            provider === "aws" ? "AWS RDS" : "Google Cloud SQL"
+          content: `Pricing calculator for ${
+            provider === "aws" ? "AWS RDS" : "GCP Cloud SQL"
           } ${engine === "mysql" ? "MySQL" : "PostgreSQL"} instances.`,
         },
         {
           name: "keywords",
-          content: `${provider === "aws" ? "AWS RDS" : "Google Cloud SQL"} ${
+          content: `${provider === "aws" ? "AWS RDS" : "GCP Cloud SQL"} ${
             engine === "mysql" ? "MySQL" : "PostgreSQL"
           } pricing, price calculator, Cloud DB Instances, ${
             engine === "mysql" ? "MySQL" : "PostgreSQL"

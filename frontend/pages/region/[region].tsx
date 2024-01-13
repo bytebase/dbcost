@@ -221,11 +221,11 @@ const Region: NextPage<Props> = ({
       metaTagList={[
         {
           name: "description",
-          content: `A complete list and handy pricing comparing tool for AWS RDS and Google Cloud SQL instances located in ${name}.`,
+          content: `A complete list and handy pricing comparing tool for AWS RDS and GCP Cloud SQL instances located in ${name}.`,
         },
         {
           name: "keywords",
-          content: `${name}, AWS RDS, Google Cloud SQL, Cloud DB Instances, pricing`,
+          content: `${name}, AWS RDS, GCP Cloud SQL, Cloud DB Instances, pricing`,
         },
       ]}
     >

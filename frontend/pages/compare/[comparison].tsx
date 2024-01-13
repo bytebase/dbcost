@@ -258,7 +258,7 @@ const InstanceComparison: NextPage<Props> = ({
         },
         {
           name: "keywords",
-          content: `${comparerA} vs ${comparerB}, compare, specs, AWS RDS, Google Cloud SQL, Cloud DB Instances, rds pricing, price calculator, MySQL instance pricing, Postgres instance pricing`,
+          content: `${comparerA} vs ${comparerB}, compare, specs, AWS RDS, GCP Cloud SQL, Cloud DB Instances, rds pricing, price calculator, MySQL instance pricing, Postgres instance pricing`,
         },
       ]}
     >

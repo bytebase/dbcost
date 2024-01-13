@@ -194,17 +194,17 @@ const Home: NextPage<Props> = ({ serverSideCompareTableData }) => {
 
   return (
     <MainLayout
-      title="The Simple AWS RDS and Google Cloud SQL Instance Pricing Sheet"
+      title="The Ultimate AWS RDS and GCP Cloud SQL Pricing"
       metaTagList={[
         {
           name: "description",
           content:
-            "DB Cost is a specs sheet and pricing calculator for AWS RDS and Google Cloud SQL instances.",
+            "AWS RDS and GCP Cloud SQL pricing sheet.",
         },
         {
           name: "keywords",
           content:
-            "AWS RDS, Google Cloud SQL, Cloud DB Instances, rds pricing, price calculator, MySQL instance pricing, Postgres instance pricing",
+            "AWS RDS pricing, AWS MySQL pricing, AWS Postgres pricing, GCP Cloud SQL pricing, GCP MySQL pricing, GCP Postgres pricing",
         },
       ]}
     >

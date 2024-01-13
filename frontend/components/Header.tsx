@@ -4,8 +4,6 @@ import { useRouter } from "next/router";
 import Tooltip from "@/components/primitives/Tooltip";
 import { useSearchConfigContext } from "@/stores";
 
-const cloudEmoji = "☁️";
-const moneyEmoji = "💸";
 const providerList = ["aws", "gcp"];
 const engineList = ["mysql", "postgres"];
 const providerPagePathname = "/provider/[provider]";
@@ -34,45 +32,6 @@ const Header: React.FC = () => {
               />
             </div>
           </Link>
-          {!router.pathname.startsWith(providerPagePathname) &&
-            providerList.map((provider: string) => (
-              <Link href={`/provider/${provider}`} key={provider} passHref>
-                <span
-                  className={`${
-                    providerInRoute === provider ? "border-b" : ""
-                  } h-8 text-lg pt-0.5 text-white cursor-pointer`}
-                  onClick={() => void resetSearchConfig()}
-                >
-                  {provider.toUpperCase()}
-                </span>
-              </Link>
-            ))}
-          {router.pathname.startsWith(providerPagePathname) &&
-            engineList.map((engine: string) => (
-              <Link
-                href={`/provider/${providerInRoute}/engine/${engine}`}
-                key={engine}
-                passHref
-              >
-                <span
-                  className={`${
-                    engineInRouter === engine ? "border-b" : ""
-                  } h-8 text-lg pt-0.5 text-white cursor-pointer`}
-                  onClick={() => void resetSearchConfig()}
-                >
-                  {engine.toUpperCase()}
-                </span>
-              </Link>
-            ))}
-        </div>
-
-        {/* emoji group */}
-        <div className="flex flex-row justify-center items-center text-3xl whitespace-nowrap flex-grow shrink-0 basis-0">
-          {`${cloudEmoji} ${moneyEmoji} ${cloudEmoji} ${moneyEmoji} ${cloudEmoji}`}
-        </div>
-
-        {/* star and sponsor */}
-        <div className="flex justify-end items-center space-x-2  flex-grow shrink-0 basis-0">
           <iframe
             src="https://ghbtns.com/github-btn.html?user=bytebase&repo=dbcost&type=star&count=true"
             frameBorder="0"
@@ -81,6 +40,33 @@ const Header: React.FC = () => {
             height="20"
             title="GitHub"
           ></iframe>
+        </div>
+
+        <div className="flex flex-row justify-center items-center text-base space-x-2">
+          <Link href="/provider/aws/engine/mysql" passHref>
+            <span className=" text-yellow-100 cursor-pointer">
+              AWS MySQL |
+            </span>
+          </Link>
+          <Link href="/provider/aws/engine/postgres" passHref>
+            <span className=" text-yellow-100  cursor-pointer">
+              AWS Postgres |
+            </span>
+          </Link>
+          <Link href="/provider/gcp/engine/mysql" passHref>
+            <span className=" text-yellow-100  cursor-pointer">
+              GCP MySQL |
+            </span>
+          </Link>
+          <Link href="/provider/gcp/engine/postgres" passHref>
+            <span className=" text-yellow-100  cursor-pointer">
+              GCP Postgres
+            </span>
+          </Link>
+        </div>
+
+        {/* star and sponsor */}
+        <div className="flex justify-end items-center space-x-2  flex-grow shrink-0 basis-0">
           <div className="flex items-center">
             <span>by</span>
             <div className="flex flex-row space-x-1 ml-1">
