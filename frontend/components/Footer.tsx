@@ -4,8 +4,8 @@ const Footer: React.FC = () => {
       <div className="w-full 2xl:w-5/6 2xl:max-w-7xl flex-grow-0 px-3 my-5 pt-4 mx-2 border-t border-gray-200 md:flex md:items-center md:justify-between">
         <div className="flex items-center justify-center space-x-1 mb-0">
           <h2>
-            The simple cloud database pricing sheet for AWS RDS and Google Cloud
-            SQL instance
+            The ultimate AWS RDS and GCP Cloud
+            SQL pricing sheet
           </h2>
         </div>
 
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
         >
           <img className="h-6 mt-1 mr-2" src="/mysql-vs-pg.webp" alt="mysql vs pg"/>
           <a href="https://www.mysql-vs-postgres.com/" target="_blank"
-            >MySQL or PG</a
+            >MySQL vs Postgres</a
           >
         </div>
       </div>
