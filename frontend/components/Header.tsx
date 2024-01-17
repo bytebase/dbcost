@@ -43,24 +43,15 @@ const Header: React.FC = () => {
         </div>
 
         <div className="flex flex-row justify-center items-center text-base space-x-2">
-          <Link href="/provider/aws/engine/mysql" passHref>
+          <Link href="/provider/aws" passHref>
             <span className=" text-yellow-100 cursor-pointer">
-              AWS MySQL |
+              AWS RDS
             </span>
           </Link>
-          <Link href="/provider/aws/engine/postgres" passHref>
+          <div>|</div>
+          <Link href="/provider/gcp" passHref>
             <span className=" text-yellow-100  cursor-pointer">
-              AWS Postgres |
-            </span>
-          </Link>
-          <Link href="/provider/gcp/engine/mysql" passHref>
-            <span className=" text-yellow-100  cursor-pointer">
-              GCP MySQL |
-            </span>
-          </Link>
-          <Link href="/provider/gcp/engine/postgres" passHref>
-            <span className=" text-yellow-100  cursor-pointer">
-              GCP Postgres
+              GCP Cloud SQL
             </span>
           </Link>
         </div>
