@@ -16,7 +16,7 @@ dependencies:
     version: 1.1.1(react@18.2.0)
   '@radix-ui/react-tooltip':
     specifier: ^1.0.0
-    version: 1.0.0(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
+    version: 1.0.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   antd:
     specifier: ^4.23.0
     version: 4.23.1(react-dom@18.2.0)(react@18.2.0)
@@ -47,8 +47,8 @@ devDependencies:
     specifier: 18.19.12
     version: 18.19.12
   '@types/react':
-    specifier: 18.2.47
-    version: 18.2.47
+    specifier: 18.2.48
+    version: 18.2.48
   '@types/react-dom':
     specifier: 18.2.18
     version: 18.2.18
@@ -202,7 +202,7 @@ packages:
       '@floating-ui/core': 0.7.3
     dev: false
 
-  /@floating-ui/react-dom@0.7.2(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0):
+  /@floating-ui/react-dom@0.7.2(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-1T0sJcpHgX/u4I1OzIEhlcrvkUN8ln39nz7fMoE/2HDHrPiMFoOGR7++GYyfUmIQHkkrTinaeQsO3XWubjSvGg==}
     peerDependencies:
       react: '>=16.8.0'
@@ -211,7 +211,7 @@ packages:
       '@floating-ui/dom': 0.5.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.47)(react@18.2.0)
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.48)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -559,14 +559,14 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@radix-ui/react-popper@1.0.0(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0):
+  /@radix-ui/react-popper@1.0.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-k2dDd+1Wl0XWAMs9ZvAxxYsB9sOsEhrFQV4CINd7IUZf0wfdye4OHen9siwxvZImbzhgVeKTJi68OQmPRvVdMg==}
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
       '@babel/runtime': 7.19.0
-      '@floating-ui/react-dom': 0.7.2(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react-dom': 0.7.2(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-arrow': 1.0.0(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.0(react@18.2.0)
       '@radix-ui/react-context': 1.0.0(react@18.2.0)
@@ -628,7 +628,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@radix-ui/react-tooltip@1.0.0(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0):
+  /@radix-ui/react-tooltip@1.0.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-RB06pov+O4Npy10ei1C6fsyB9QoOjz7Ubo8Sl3qdKtLgkL9iI96925DYtH0bxx6MH6YB2FuzLU6B75qn3AQQQw==}
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
@@ -640,7 +640,7 @@ packages:
       '@radix-ui/react-context': 1.0.0(react@18.2.0)
       '@radix-ui/react-dismissable-layer': 1.0.0(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-id': 1.0.0(react@18.2.0)
-      '@radix-ui/react-popper': 1.0.0(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-popper': 1.0.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-portal': 1.0.0(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-presence': 1.0.0(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -816,11 +816,11 @@ packages:
   /@types/react-dom@18.2.18:
     resolution: {integrity: sha512-TJxDm6OfAX2KJWJdMEVTwWke5Sc/E/RlnPGvGfS0W7+6ocy2xhDVQVh/KvC2Uf7kACs+gDytdusDSdWfWkaNzw==}
     dependencies:
-      '@types/react': 18.2.47
+      '@types/react': 18.2.48
     dev: true
 
-  /@types/react@18.2.47:
-    resolution: {integrity: sha512-xquNkkOirwyCgoClNk85BjP+aqnIS+ckAJ8i37gAbDs14jfW/J23f2GItAf33oiUPQnqNMALiFeoM9Y5mbjpVQ==}
+  /@types/react@18.2.48:
+    resolution: {integrity: sha512-qboRCl6Ie70DQQG9hhNREz81jqC1cs9EVNcjQ1AU+jH6NFfSAhVVbrrY/+nSF+Bsk4AOwm9Qa61InvMCyV+H3w==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -4291,7 +4291,7 @@ packages:
       punycode: 2.1.1
     dev: true
 
-  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.47)(react@18.2.0):
+  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.48)(react@18.2.0):
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
     peerDependencies:
       '@types/react': '*'
@@ -4300,7 +4300,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.47
+      '@types/react': 18.2.48
       react: 18.2.0
     dev: false
 
