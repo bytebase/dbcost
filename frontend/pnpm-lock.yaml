@@ -75,7 +75,7 @@ devDependencies:
     version: 8.5.0(eslint@8.56.0)
   next-sitemap:
     specifier: ^3.1.29
-    version: 3.1.29(@next/env@14.1.0)(next@13.4.19)
+    version: 3.1.55(@next/env@14.1.0)(next@13.4.19)
   postcss:
     specifier: ^8.4.14
     version: 8.4.16
@@ -146,8 +146,8 @@ packages:
       regenerator-runtime: 0.14.1
     dev: true
 
-  /@corex/deepmerge@4.0.29:
-    resolution: {integrity: sha512-q/yVUnqckA8Do+EvAfpy7RLdumnBy9ZsducMUtZTvpdbJC7azEf1hGtnYYxm0QfphYxjwggv6XtH64prvS1W+A==}
+  /@corex/deepmerge@4.0.43:
+    resolution: {integrity: sha512-N8uEMrMPL0cu/bdboEWpQYb/0i2K5Qn8eCsxzOmxSggJbbQte7ljMRoXm917AbntqTGOzdTu+vP3KOOzoC70HQ==}
     dev: true
 
   /@ctrl/tinycolor@3.4.1:
@@ -1578,7 +1578,7 @@ packages:
     dependencies:
       acorn-node: 1.8.2
       defined: 1.0.0
-      minimist: 1.2.6
+      minimist: 1.2.8
     dev: true
 
   /didyoumean@1.2.2:
@@ -2710,7 +2710,7 @@ packages:
     resolution: {integrity: sha512-g1MWMLBiz8FKi1e4w0UyVL3w+iJceWAFBAaBnnGKOpNa5f8TLktkbre1+s6oICydWAm+HRUGTmI+//xv2hvXYA==}
     hasBin: true
     dependencies:
-      minimist: 1.2.6
+      minimist: 1.2.8
     dev: true
 
   /jsx-ast-utils@3.3.3:
@@ -2819,8 +2819,8 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
-  /minimist@1.2.6:
-    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
+  /minimist@1.2.8:
+    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
     dev: true
 
   /mkdirp@1.0.4:
@@ -2854,17 +2854,17 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-sitemap@3.1.29(@next/env@14.1.0)(next@13.4.19):
-    resolution: {integrity: sha512-7UQyfpI7obOdB11aCswWYfqRn5CR0YSmWHo1r/uarrFfZD5PyyAWtQlgP6jNqDW0eX1ZJWERBwmJ2dLjl4nT8Q==}
+  /next-sitemap@3.1.55(@next/env@14.1.0)(next@13.4.19):
+    resolution: {integrity: sha512-ZjkRfkqoSLbU+e8W9TWWe0zfOGNA47lpvm35kNcUCmj73gpLX2PIn51gwHT/B6bgGVAFYY0OXixJDrxIIwcEHw==}
     engines: {node: '>=14.18'}
     hasBin: true
     peerDependencies:
       '@next/env': '*'
       next: '*'
     dependencies:
-      '@corex/deepmerge': 4.0.29
+      '@corex/deepmerge': 4.0.43
       '@next/env': 14.1.0
-      minimist: 1.2.6
+      minimist: 1.2.8
       next: 13.4.19(react-dom@18.2.0)(react@18.2.0)
     dev: true
 
@@ -4183,7 +4183,7 @@ packages:
     dependencies:
       '@types/json5': 0.0.29
       json5: 1.0.2
-      minimist: 1.2.6
+      minimist: 1.2.8
       strip-bom: 3.0.0
     dev: true
 
