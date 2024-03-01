@@ -42,7 +42,7 @@ dependencies:
 devDependencies:
   '@types/lodash':
     specifier: ^4.14.185
-    version: 4.14.185
+    version: 4.14.202
   '@types/node':
     specifier: 18.19.21
     version: 18.19.21
@@ -75,7 +75,7 @@ devDependencies:
     version: 8.5.0(eslint@8.56.0)
   next-sitemap:
     specifier: ^3.1.29
-    version: 3.1.29(@next/env@13.4.19)(next@13.4.19)
+    version: 3.1.29(@next/env@14.1.0)(next@13.4.19)
   postcss:
     specifier: ^8.4.14
     version: 8.4.16
@@ -238,6 +238,10 @@ packages:
 
   /@next/env@13.4.19:
     resolution: {integrity: sha512-FsAT5x0jF2kkhNkKkukhsyYOrRqtSxrEhfliniIq0bwWbuXLgyt3Gv0Ml+b91XwjwArmuP7NxCiGd++GGKdNMQ==}
+
+  /@next/env@14.1.0:
+    resolution: {integrity: sha512-Py8zIo+02ht82brwwhTg36iogzFqGLPXlRGKQw5s+qP/kMNc4MAyDeEwBKDijk6zTIbegEgu8Qy7C1LboslQAw==}
+    dev: true
 
   /@next/eslint-plugin-next@13.5.6:
     resolution: {integrity: sha512-ng7pU/DDsxPgT6ZPvuprxrkeew3XaRf4LAT4FabaEO/hAbvVx4P7wqnqdbTdDn1kgTvsI4tpIgT4Awn/m0bGbg==}
@@ -800,8 +804,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/lodash@4.14.185:
-    resolution: {integrity: sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==}
+  /@types/lodash@4.14.202:
+    resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
     dev: true
 
   /@types/node@18.19.21:
@@ -1340,7 +1344,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /classnames@2.3.2:
@@ -2202,8 +2206,8 @@ packages:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
 
-  /fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -2850,7 +2854,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-sitemap@3.1.29(@next/env@13.4.19)(next@13.4.19):
+  /next-sitemap@3.1.29(@next/env@14.1.0)(next@13.4.19):
     resolution: {integrity: sha512-7UQyfpI7obOdB11aCswWYfqRn5CR0YSmWHo1r/uarrFfZD5PyyAWtQlgP6jNqDW0eX1ZJWERBwmJ2dLjl4nT8Q==}
     engines: {node: '>=14.18'}
     hasBin: true
@@ -2859,7 +2863,7 @@ packages:
       next: '*'
     dependencies:
       '@corex/deepmerge': 4.0.29
-      '@next/env': 13.4.19
+      '@next/env': 14.1.0
       minimist: 1.2.6
       next: 13.4.19(react-dom@18.2.0)(react@18.2.0)
     dev: true
