@@ -54,7 +54,7 @@ devDependencies:
     version: 18.2.18
   '@types/slug':
     specifier: ^5.0.3
-    version: 5.0.7
+    version: 5.0.8
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.37.0
     version: 5.37.0(@typescript-eslint/parser@5.37.0)(eslint@8.56.0)(typescript@4.9.5)
@@ -75,7 +75,7 @@ devDependencies:
     version: 8.5.0(eslint@8.56.0)
   next-sitemap:
     specifier: ^3.1.29
-    version: 3.1.55(@next/env@14.1.0)(next@13.4.19)
+    version: 3.1.55(@next/env@14.1.4)(next@13.4.19)
   postcss:
     specifier: ^8.4.14
     version: 8.4.35
@@ -239,8 +239,8 @@ packages:
   /@next/env@13.4.19:
     resolution: {integrity: sha512-FsAT5x0jF2kkhNkKkukhsyYOrRqtSxrEhfliniIq0bwWbuXLgyt3Gv0Ml+b91XwjwArmuP7NxCiGd++GGKdNMQ==}
 
-  /@next/env@14.1.0:
-    resolution: {integrity: sha512-Py8zIo+02ht82brwwhTg36iogzFqGLPXlRGKQw5s+qP/kMNc4MAyDeEwBKDijk6zTIbegEgu8Qy7C1LboslQAw==}
+  /@next/env@14.1.4:
+    resolution: {integrity: sha512-e7X7bbn3Z6DWnDi75UWn+REgAbLEqxI8Tq2pkFOFAMpWAWApz/YCUhtWMWn410h8Q2fYiYL7Yg5OlxMOCfFjJQ==}
     dev: true
 
   /@next/eslint-plugin-next@13.5.6:
@@ -833,8 +833,8 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@types/slug@5.0.7:
-    resolution: {integrity: sha512-u5T21+PqfRpHszRWSv5gJYDIkm6lmYUXLjZVYvQyWNO9aC0zs+a11qqtbxbsNRiNLTmw0Xi+5NWK/Qz+JjaB9w==}
+  /@types/slug@5.0.8:
+    resolution: {integrity: sha512-mblTWR1OST257k1gZ3QvqG+ERSr8Ea6dyM1FH6Jtm4jeXi0/r0/95VNctofuiywPxCVQuE8AuFoqmvJ4iVUlXQ==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@5.37.0(@typescript-eslint/parser@5.37.0)(eslint@8.56.0)(typescript@4.9.5):
@@ -2854,7 +2854,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-sitemap@3.1.55(@next/env@14.1.0)(next@13.4.19):
+  /next-sitemap@3.1.55(@next/env@14.1.4)(next@13.4.19):
     resolution: {integrity: sha512-ZjkRfkqoSLbU+e8W9TWWe0zfOGNA47lpvm35kNcUCmj73gpLX2PIn51gwHT/B6bgGVAFYY0OXixJDrxIIwcEHw==}
     engines: {node: '>=14.18'}
     hasBin: true
@@ -2863,7 +2863,7 @@ packages:
       next: '*'
     dependencies:
       '@corex/deepmerge': 4.0.43
-      '@next/env': 14.1.0
+      '@next/env': 14.1.4
       minimist: 1.2.8
       next: 13.4.19(react-dom@18.2.0)(react@18.2.0)
     dev: true
