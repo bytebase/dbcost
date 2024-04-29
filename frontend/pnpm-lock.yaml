@@ -54,7 +54,7 @@ devDependencies:
     version: 18.2.18
   '@types/slug':
     specifier: ^5.0.3
-    version: 5.0.7
+    version: 5.0.8
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.37.0
     version: 5.37.0(@typescript-eslint/parser@5.37.0)(eslint@8.56.0)(typescript@4.9.5)
@@ -833,8 +833,8 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@types/slug@5.0.7:
-    resolution: {integrity: sha512-u5T21+PqfRpHszRWSv5gJYDIkm6lmYUXLjZVYvQyWNO9aC0zs+a11qqtbxbsNRiNLTmw0Xi+5NWK/Qz+JjaB9w==}
+  /@types/slug@5.0.8:
+    resolution: {integrity: sha512-mblTWR1OST257k1gZ3QvqG+ERSr8Ea6dyM1FH6Jtm4jeXi0/r0/95VNctofuiywPxCVQuE8AuFoqmvJ4iVUlXQ==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@5.37.0(@typescript-eslint/parser@5.37.0)(eslint@8.56.0)(typescript@4.9.5):
