@@ -42,7 +42,7 @@ dependencies:
 devDependencies:
   '@types/lodash':
     specifier: ^4.14.185
-    version: 4.17.6
+    version: 4.17.7
   '@types/node':
     specifier: 18.19.39
     version: 18.19.39
@@ -75,7 +75,7 @@ devDependencies:
     version: 8.10.0(eslint@8.57.0)
   next-sitemap:
     specifier: ^3.1.29
-    version: 3.1.55(@next/env@14.2.4)(next@14.1.1)
+    version: 3.1.55(@next/env@14.2.5)(next@14.1.1)
   postcss:
     specifier: ^8.4.14
     version: 8.4.39
@@ -294,8 +294,8 @@ packages:
   /@next/env@14.1.1:
     resolution: {integrity: sha512-7CnQyD5G8shHxQIIg3c7/pSeYFeMhsNbpU/bmvH7ZnDql7mNRgg8O2JZrhrc/soFnfBnKP4/xXNiiSIPn2w8gA==}
 
-  /@next/env@14.2.4:
-    resolution: {integrity: sha512-3EtkY5VDkuV2+lNmKlbkibIJxcO4oIHEhBWne6PaAp+76J9KoSsGvNikp6ivzAT8dhhBMYrm6op2pS1ApG0Hzg==}
+  /@next/env@14.2.5:
+    resolution: {integrity: sha512-/zZGkrTOsraVfYjGP8uM0p6r0BDT6xWpkjdVbcz66PJVSpwXX3yNiRycxAuDfBKGWBrZBXRuK/YVlkNgxHGwmA==}
     dev: true
 
   /@next/eslint-plugin-next@13.5.6:
@@ -985,8 +985,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/lodash@4.17.6:
-    resolution: {integrity: sha512-OpXEVoCKSS3lQqjx9GGGOapBeuW5eUboYHRlHP9urXPX25IKZ6AnP5ZRxtVf63iieUbsHxLn8NQ5Nlftc6yzAA==}
+  /@types/lodash@4.17.7:
+    resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
     dev: true
 
   /@types/node@18.19.39:
@@ -3088,7 +3088,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-sitemap@3.1.55(@next/env@14.2.4)(next@14.1.1):
+  /next-sitemap@3.1.55(@next/env@14.2.5)(next@14.1.1):
     resolution: {integrity: sha512-ZjkRfkqoSLbU+e8W9TWWe0zfOGNA47lpvm35kNcUCmj73gpLX2PIn51gwHT/B6bgGVAFYY0OXixJDrxIIwcEHw==}
     engines: {node: '>=14.18'}
     hasBin: true
@@ -3097,7 +3097,7 @@ packages:
       next: '*'
     dependencies:
       '@corex/deepmerge': 4.0.43
-      '@next/env': 14.2.4
+      '@next/env': 14.2.5
       minimist: 1.2.8
       next: 14.1.1(react-dom@18.3.1)(react@18.3.1)
     dev: true
