@@ -46,8 +46,8 @@ importers:
         specifier: ^4.14.185
         version: 4.17.7
       '@types/node':
-        specifier: 18.19.42
-        version: 18.19.42
+        specifier: 18.19.47
+        version: 18.19.47
       '@types/react':
         specifier: 18.3.3
         version: 18.3.3
@@ -589,8 +589,8 @@ packages:
   '@types/lodash@4.17.7':
     resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
 
-  '@types/node@18.19.42':
-    resolution: {integrity: sha512-d2ZFc/3lnK2YCYhos8iaNIYu9Vfhr92nHiyJHRltXWjXUBjEE+A4I58Tdbnw4VhggSW+2j5y5gTrLs4biNnubg==}
+  '@types/node@18.19.47':
+    resolution: {integrity: sha512-1f7dB3BL/bpd9tnDJrrHb66Y+cVrhxSOTGorRNdHwYTUlTay3HuTDPKo9a/4vX9pMQkhYBcAbL4jQdNlhCFP9A==}
 
   '@types/prop-types@15.7.5':
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -3007,7 +3007,7 @@ snapshots:
 
   '@types/lodash@4.17.7': {}
 
-  '@types/node@18.19.42':
+  '@types/node@18.19.47':
     dependencies:
       undici-types: 5.26.5
 
