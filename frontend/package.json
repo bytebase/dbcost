@@ -41,5 +41,8 @@
     "budget": 358400,
     "budgetPercentIncreaseRed": 20,
     "showDetails": true
+  },
+  "engines": {
+    "node": ">=18.18.0"
   }
 }
